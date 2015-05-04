@@ -1,12 +1,16 @@
-
-
 package com.flowlikeariver.kakuro;
 
+public class AcrossCell implements Cell, Across {
 
-public class AcrossCell implements Cell {
+int total;
+
+public AcrossCell(int total) {
+  this.total = total;
+}
 
 @Override
 public void draw() {
+  System.out.printf("    -\\%2d   ", total);
 }
 
 @Override
@@ -22,6 +26,10 @@ public boolean isDown() {
 @Override
 public boolean isEmpty() {
   return false;
+}
+
+public int getAcrossTotal() {
+  return total;
 }
 
 }

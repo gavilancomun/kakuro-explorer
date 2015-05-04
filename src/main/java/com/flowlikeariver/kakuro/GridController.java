@@ -8,7 +8,7 @@ public class GridController {
 
 final Map<Integer, Map<Integer, Cell>> grid = new HashMap<>();
 final LinkedList<RowDef> rows = new LinkedList<>();
-final LinkedList<Integer> sums = new LinkedList<>();
+final LinkedList<Sum> sums = new LinkedList<>();
 RowDef currentRowDef;
 
 public GridController() {
@@ -23,17 +23,27 @@ public int height() {
 }
 
 public Cell get(int i, int j) {
-  return grid.get(i).get(j);
+  if (grid.containsKey(i)) {
+    if (grid.get(i).containsKey(j)) {
+      return grid.get(i).get(j);
+    }
+    else {
+      return null;
+    }
+  }
+  else {
+    return null;
+  }
 }
 
-public void set(int i, int j, Cell value) {
+public void set(int i, int j, Cell cell) {
   if (!grid.containsKey(i)) {
     grid.put(i, new HashMap<>());
   }
-  grid.get(i).put(j, value);
+  grid.get(i).put(j, cell);
 }
 
-public void addSum(int sum) {
+public void addSum(Sum sum) {
   sums.push(sum);
 }
 
@@ -73,15 +83,15 @@ public boolean defined(Cell c) {
 }
 
 public void createAcrossSums() {
-  for (int r = 1; r <= height(); ++r) {
-    for (int c = 1; c <= width(); ++c) {
+  for (int r = 0; r < height(); ++r) {
+    for (int c = 0; c < width(); ++c) {
       Cell cell = get(r, c);
       if (cell.isAcross()) {
-        int sum = new Sum(cell.getAcrossTotal());
+        Sum sum = new Sum(((Across) cell).getAcrossTotal());
         int pos = c + 1;
         Cell blank = get(r, pos);
         while (defined(blank) && blank.isEmpty()) {
-          sum.add(blank);
+          sum.add((EmptyCell) blank);
           ++pos;
           blank = get(r, pos);
         }
@@ -92,15 +102,15 @@ public void createAcrossSums() {
 }
 
 public void createDownSums() {
-  for (int c=1; c <= width(); ++c) {
-    for (int r = 1; r <= height(); ++r) {
+  for (int c = 0; c < width(); ++c) {
+    for (int r = 0; r < height(); ++r) {
       Cell cell = get(r, c);
       if (cell.isDown()) {
-        int sum = new Sum(cell.getDownTotal());
+        Sum sum = new Sum(((Down) cell).getDownTotal());
         int pos = r + 1;
         Cell blank = get(pos, c);
         while (defined(blank) && blank.isEmpty()) {
-          sum.add(blank);
+          sum.add((EmptyCell) blank);
           ++pos;
           blank = get(pos, c);
         }
@@ -116,9 +126,9 @@ public void createSums() {
 }
 
 public void parseDef() {
-  int r = 1;
-  for (RowDef row :rows) {
-    for(int c = 1; c <= row.size(); ++c) {
+  int r = 0;
+  for (RowDef row : rows) {
+    for (int c = 0; c < row.size(); ++c) {
       set(r, c, row.get(c));
     }
     ++r;
@@ -126,10 +136,10 @@ public void parseDef() {
   createSums();
 }
 
-public int OneScan() {
+public int oneScan() {
   int result = 0;
-  for (int sum: sums) {
-    result += sum.solve(); 
+  for (Sum sum : sums) {
+    result += sum.solve();
   }
   return result;
 }
@@ -137,11 +147,11 @@ public int OneScan() {
 public void solve() {
   parseDef();
   draw();
-  int result = OneScan();
+  int result = oneScan();
   while (result > 0) {
     System.out.println("\nresult " + result);
     draw();
-    result = OneScan();
+    result = oneScan();
   }
 }
 

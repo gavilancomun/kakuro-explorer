@@ -1,16 +1,10 @@
 package com.flowlikeariver.kakuro;
 
-public class DownCell implements Cell, Down {
-
-int total;
-
-public DownCell(int total) {
-  this.total = total;
-}
+public class SolidCell implements Cell {
 
 @Override
 public void draw() {
-  System.out.printf("    %2d\\-   ", total);
+  System.out.print(" XXXXXXXXX ");
 }
 
 @Override
@@ -20,16 +14,12 @@ public boolean isAcross() {
 
 @Override
 public boolean isDown() {
-  return true;
+  return false;
 }
 
 @Override
 public boolean isEmpty() {
   return false;
-}
-
-public int getDownTotal() {
-  return total;
 }
 
 }
