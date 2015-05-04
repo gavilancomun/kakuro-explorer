@@ -23,26 +23,31 @@ public void draw() {
   System.out.println();
 }
 
-public void addSolid() {
+public RowDef addSolid() {
   cells.add(new SolidCell());
+  return this;
 }
 
-public void addEmpty(int n) {
+public RowDef addEmpty(int n) {
   for (int i = 0; i < n; ++i) {
     cells.add(new EmptyCell());
   }
+  return this;
 }
 
-public void addDown(int n) {
+public RowDef addDown(int n) {
   cells.add(new DownCell(n));
+  return this;
 }
 
-public void addAcross(int n) {
+public RowDef addAcross(int n) {
   cells.add(new AcrossCell(n));
+  return this;
 }
 
-public void addDownAcross(int down, int across) {
+public RowDef addDownAcross(int down, int across) {
   cells.add(new DownAcrossCell(down, across));
+  return this;
 }
 
 public Cell get(int i) {

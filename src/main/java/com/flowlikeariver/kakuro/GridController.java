@@ -43,10 +43,6 @@ public void set(int i, int j, Cell cell) {
   grid.get(i).put(j, cell);
 }
 
-public void addSum(Sum sum) {
-  sums.push(sum);
-}
-
 public RowDef newRowDef() {
   currentRowDef = new RowDef(1 + rows.size());
   rows.add(currentRowDef);
@@ -95,7 +91,7 @@ public void createAcrossSums() {
           ++pos;
           blank = get(r, pos);
         }
-        addSum(sum);
+        sums.push(sum);
       }
     }
   }
@@ -114,7 +110,7 @@ public void createDownSums() {
           ++pos;
           blank = get(pos, c);
         }
-        addSum(sum);
+        sums.push(sum);
       }
     }
   }
