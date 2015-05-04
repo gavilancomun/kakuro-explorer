@@ -7,13 +7,17 @@ public class EmptyCell implements Cell {
 
 Set<Integer> values = new TreeSet<>();
 
+public EmptyCell() {
+  reset();
+}
+
 @Override
 public void draw() {
   System.out.print(" ");
   if (1 == values.size()) {
-    for (Integer i : values) {
+    values.forEach(i -> {
       System.out.print("   <" + i + ">   ");
-    }
+    });
   }
   else {
     for (int i = 1; i < 10; ++i) {
@@ -57,7 +61,7 @@ boolean setImpossible(int value) {
   }
 }
 
-void reset() {
+final void reset() {
   for (int i = 1; i < 10; ++i) {
     values.add(i);
   }

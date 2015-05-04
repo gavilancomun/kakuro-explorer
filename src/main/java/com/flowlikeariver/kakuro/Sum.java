@@ -10,7 +10,7 @@ public class Sum {
 
 private final int total;
 private final LinkedList<EmptyCell> cells = new LinkedList<>();
-Map<Integer, Map<Integer, Boolean>> possibles = new HashMap<>();
+Map<Integer, Set<Integer>> possibles = new HashMap<>();
 private final LinkedList<Integer> candidate = new LinkedList<>();
 
 public Sum(int total) {
@@ -23,9 +23,9 @@ public void add(EmptyCell cell) {
 
 private int addPossible(int pos, int value) {
   if (!possibles.containsKey(pos)) {
-    possibles.put(pos, new HashMap<>());
+    possibles.put(pos, new HashSet<>());
   }
-  possibles.get(pos).put(value, true);
+  possibles.get(pos).add(value);
   return 1;
 }
 
@@ -68,23 +68,19 @@ private int solvePart(int total, int pos) {
 
 private boolean isPossible(int pos, int value) {
   if (possibles.containsKey(pos)) {
-    if (possibles.get(pos).containsKey(value)) {
-      return possibles.get(pos).get(value);
-    }
-    else {
-      return false;
-    }
+    return possibles.get(pos).contains(value);
   }
   else {
     return false;
   }
 }
 
-public int applyResult() {
+public int countRecentImpossibles() {
   int result = 0;
   int pos = 0;
   for (EmptyCell cell : cells) {
-    for (int value : cell.getValues()) {
+    Set<Integer> values = new HashSet<>(cell.getValues());
+    for (int value : values) {
       if (!isPossible(pos, value)) {
         result += cell.setImpossible(value) ? 1 : 0;
       }
@@ -97,7 +93,9 @@ public int applyResult() {
 public int solve() {
   possibles = new HashMap<>();
   solvePart(total, 0);
-  return applyResult();
+  int result = countRecentImpossibles();
+  System.out.println("solve: " + result);
+  return result;
 }
 
 }

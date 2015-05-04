@@ -49,13 +49,13 @@ public void addSum(Sum sum) {
 
 public RowDef newRowDef() {
   currentRowDef = new RowDef(1 + rows.size());
-  rows.push(currentRowDef);
+  rows.add(currentRowDef);
   return currentRowDef;
 }
 
 public void draw() {
   System.out.println();
-  rows.stream().forEach(r -> r.draw());
+  rows.forEach(r -> r.draw());
 }
 
 public void addSolid() {
@@ -137,11 +137,9 @@ public void parseDef() {
 }
 
 public int oneScan() {
-  int result = 0;
-  for (Sum sum : sums) {
-    result += sum.solve();
-  }
-  return result;
+  return sums.stream()
+    .mapToInt(sum -> sum.solve())
+    .sum();
 }
 
 public void solve() {
