@@ -1,9 +1,12 @@
 package com.flowlikeariver.kakuro;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.IntStream;
 
-public class RowDef {
+public class RowDef implements Iterable<Cell> {
 
 private final int pos;
 List<Cell> cells = new ArrayList<>();
@@ -17,9 +20,7 @@ public int size() {
 }
 
 public void draw() {
-  for (Cell c : cells) {
-    c.draw();
-  }
+  cells.forEach(c -> c.draw());
   System.out.println();
 }
 
@@ -29,9 +30,9 @@ public RowDef addSolid() {
 }
 
 public RowDef addEmpty(int n) {
-  for (int i = 0; i < n; ++i) {
-    cells.add(new EmptyCell());
-  }
+  cells.addAll(IntStream.rangeClosed(1, n)
+    .mapToObj(i -> new EmptyCell())
+    .collect(toList()));
   return this;
 }
 
@@ -52,5 +53,10 @@ public RowDef addDownAcross(int down, int across) {
 
 public Cell get(int i) {
   return cells.get(i);
+}
+
+@Override
+public Iterator<Cell> iterator() {
+  return cells.iterator();
 }
 }

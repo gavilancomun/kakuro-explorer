@@ -82,7 +82,7 @@ public int countRecentImpossibles() {
     Set<Integer> values = new HashSet<>(cell.getValues());
     for (int value : values) {
       if (!isPossible(pos, value)) {
-        result += cell.setImpossible(value) ? 1 : 0;
+        result += cell.removeImpossible(value) ? 1 : 0;
       }
     }
     ++pos;

@@ -1,11 +1,12 @@
 package com.flowlikeariver.kakuro;
 
 import java.util.Set;
-import java.util.TreeSet;
+import static java.util.stream.Collectors.toSet;
+import java.util.stream.IntStream;
 
 public class EmptyCell implements Cell {
 
-Set<Integer> values = new TreeSet<>();
+Set<Integer> values;
 
 public EmptyCell() {
   reset();
@@ -13,23 +14,14 @@ public EmptyCell() {
 
 @Override
 public void draw() {
-  System.out.print(" ");
   if (1 == values.size()) {
-    values.forEach(i -> {
-      System.out.print("   <" + i + ">   ");
-    });
+    values.forEach(i -> System.out.print("    <" + i + ">    "));
   }
   else {
-    for (int i = 1; i < 10; ++i) {
-      if (isPossible(i)) {
-        System.out.print(i);
-      }
-      else {
-        System.out.print(".");
-      }
-    }
+    System.out.print(" ");
+    IntStream.rangeClosed(1, 9).forEach(i -> System.out.print(isPossible(i) ? i : "."));
+    System.out.print(" ");
   }
-  System.out.print(" ");
 }
 
 @Override
@@ -51,7 +43,7 @@ boolean isPossible(int value) {
   return values.contains(value);
 }
 
-boolean setImpossible(int value) {
+boolean removeImpossible(int value) {
   if (values.contains(value)) {
     values.remove(value);
     return true;
@@ -62,9 +54,7 @@ boolean setImpossible(int value) {
 }
 
 final void reset() {
-  for (int i = 1; i < 10; ++i) {
-    values.add(i);
-  }
+  values = IntStream.rangeClosed(1, 9).mapToObj(i -> i).collect(toSet());
 }
 
 Set<Integer> getValues() {
