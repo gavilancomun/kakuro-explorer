@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 
@@ -13,17 +14,21 @@ Set<Integer> values;
 List<Sum> sums = new ArrayList<>();
 
 public EmptyCell() {
-  values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(i -> i).collect(toSet()));
+  values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(Integer::new).collect(toSet()));
 }
 
 @Override
 public void draw() {
   if (1 == values.size()) {
-    values.forEach(i -> System.out.print("    <" + i + ">    "));
+    System.out.print(values.stream()
+            .map(i -> "    <" + i + ">    ")
+            .collect(joining()));
   }
   else {
     System.out.print(" ");
-    IntStream.rangeClosed(1, 9).forEach(i -> System.out.print(isPossible(i) ? i : "."));
+    System.out.print(IntStream.rangeClosed(1, 9)
+            .mapToObj(i -> isPossible(i) ? String.valueOf(i) : ".")
+            .collect(joining()));
     System.out.print(" ");
   }
 }

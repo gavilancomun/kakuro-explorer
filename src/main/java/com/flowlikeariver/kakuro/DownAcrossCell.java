@@ -32,10 +32,12 @@ public boolean isEmpty() {
   return false;
 }
 
+@Override
 public int getAcrossTotal() {
   return across;
 }
 
+@Override
 public int getDownTotal() {
   return down;
 }

@@ -28,6 +28,7 @@ public boolean isEmpty() {
   return false;
 }
 
+@Override
 public int getDownTotal() {
   return total;
 }
