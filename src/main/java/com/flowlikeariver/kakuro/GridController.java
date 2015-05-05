@@ -2,7 +2,6 @@ package com.flowlikeariver.kakuro;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class GridController {
@@ -14,19 +13,15 @@ RowDef currentRowDef;
 public GridController() {
 }
 
-public Optional<Cell> get(int i, int j) {
-  return (i >= rows.size()) ? Optional.empty() : rows.get(i).get(j);
-}
-
-public RowDef newRowDef() {
-  currentRowDef = new RowDef(1 + rows.size());
+public RowDef createRow() {
+  currentRowDef = new RowDef();
   rows.add(currentRowDef);
   return currentRowDef;
 }
 
 public void draw() {
   System.out.println();
-  rows.forEach(r -> r.draw());
+  rows.forEach(RowDef::draw);
 }
 
 public void addSolid() {
@@ -64,10 +59,10 @@ public void createAcrossSums() {
 public void createDownSums() {
   IntStream.range(0, rows.size()).forEach(r -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
-      get(r, c).filter(cell -> cell instanceof Down)
+      rows.get(r).get(c).filter(cell -> cell instanceof Down)
               .ifPresent(cell -> sums.add(new Sum(((Down) cell).getDownTotal(),
                                       IntStream.range(r + 1, rows.size())
-                                      .mapToObj(pos -> get(pos, c).orElse(new SolidCell()))
+                                      .mapToObj(pos -> rows.get(pos).get(c).orElse(new SolidCell()))
                                       .collect(new WhileEmpty()))));
     });
   });
@@ -79,9 +74,7 @@ public void createSums() {
 }
 
 public int oneScan() {
-  return sums.stream()
-          .mapToInt(sum -> sum.solve())
-          .sum();
+  return sums.stream().mapToInt(Sum::solve).sum();
 }
 
 public void solve() {

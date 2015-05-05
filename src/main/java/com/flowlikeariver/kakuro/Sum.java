@@ -15,7 +15,6 @@ public class Sum {
 private final int total;
 private final List<EmptyCell> cells = new ArrayList<>();
 Map<Integer, Set<Integer>> possibles = new HashMap<>();
-private final LinkedList<Integer> candidates = new LinkedList<>();
 
 public Sum(int total) {
   this.total = total;
@@ -41,38 +40,43 @@ private void addPossible(int pos, int value) {
   possibles.get(pos).add(value);
 }
 
-private int handleCandidate(int value) {
+// All different is part of the definition of a kakuro puzzle
+private boolean allDifferent(LinkedList<Integer> candidates, int value) {
   List<Integer> trial = new ArrayList<>(candidates);
   trial.add(value);
-  Set<Integer> done = new HashSet<>(trial);
-  if (done.size() < trial.size()) {
-    return 0;
-  }
-  else {
-    IntStream.range(0, trial.size())
-            .forEach(i -> addPossible(i, trial.get(i)));
-    return 1;
+  return (new HashSet<>(trial).size() == trial.size());
+}
+
+private void recordPossible(LinkedList<Integer> candidates, int value) {
+  IntStream.range(0, candidates.size())
+          .forEach(i -> addPossible(i, candidates.get(i)));
+  addPossible(candidates.size(), value);
+}
+
+private void handleLast(EmptyCell cell, int target, LinkedList<Integer> candidates) {
+  if (target >= 1) {
+    if (cell.isPossible(target) && allDifferent(candidates, target)) {
+      recordPossible(candidates, target);
+    }
   }
 }
 
-private int solvePart(int target, int pos) {
-  int result = 0;
-  if (target < 1) {
-    return 0;
+private void handleNotLast(EmptyCell cell, int target, int pos, LinkedList<Integer> candidates) {
+  if (target >= 1) {
+    for (int v : cell.getValues()) {
+      candidates.add(v);
+      solvePart(target - v, pos + 1, candidates);
+      candidates.removeLast();
+    }
+  }
+}
+
+private void solvePart(int target, int pos, LinkedList<Integer> candidates) {
+  if (pos == (cells.size() - 1)) {
+    handleLast(cells.get(pos), target, candidates);
   }
   else {
-    EmptyCell cell = cells.get(pos);
-    if (pos == (cells.size() - 1)) {
-      return cell.isPossible(target) ? handleCandidate(target) : 0;
-    }
-    else {
-      for (int v : cell.getValues()) {
-        candidates.add(v);
-        result += solvePart(target - v, pos + 1);
-        candidates.removeLast();
-      }
-    }
-    return result;
+    handleNotLast(cells.get(pos), target, pos, candidates);
   }
 }
 
@@ -104,7 +108,7 @@ public int countRecentImpossibles() {
 
 public int solve() {
   possibles = new HashMap<>();
-  solvePart(total, 0);
+  solvePart(total, 0, new LinkedList<>());
   int result = countRecentImpossibles();
   return result;
 }

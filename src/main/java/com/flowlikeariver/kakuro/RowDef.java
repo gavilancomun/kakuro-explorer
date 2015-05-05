@@ -10,11 +10,9 @@ import java.util.stream.Stream;
 
 public class RowDef implements Iterable<Cell> {
 
-private final int pos;
 List<Cell> cells = new ArrayList<>();
 
-public RowDef(int pos) {
-  this.pos = pos;
+public RowDef() {
 }
 
 public int size() {
@@ -22,7 +20,7 @@ public int size() {
 }
 
 public void draw() {
-  cells.forEach(c -> c.draw());
+  cells.forEach(Cell::draw);
   System.out.println();
 }
 
