@@ -13,7 +13,6 @@ public void test1() {
   grid.newRowDef().addSolid().addDownAcross(17, 23).addEmpty(3).addDown(14);
   grid.newRowDef().addAcross(9).addEmpty(2).addAcross(6).addEmpty(2);
   grid.newRowDef().addAcross(15).addEmpty(2).addAcross(12).addEmpty(2);
-  System.out.println("Size " + grid.width() + " x " + grid.height());
   grid.solve();
 }
 }

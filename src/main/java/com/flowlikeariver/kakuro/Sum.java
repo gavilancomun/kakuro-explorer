@@ -1,13 +1,13 @@
 package com.flowlikeariver.kakuro;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import static java.util.stream.Collectors.joining;
 import java.util.stream.IntStream;
 
 public class Sum {
@@ -24,6 +24,10 @@ public Sum(int total) {
 public void add(EmptyCell cell) {
   cell.hasSum(this);
   cells.add(cell);
+}
+
+public void addAll(Collection<EmptyCell> cells) {
+  cells.addAll(cells);
 }
 
 private void addPossible(int pos, int value) {

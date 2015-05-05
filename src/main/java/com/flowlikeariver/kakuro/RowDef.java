@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class RowDef implements Iterable<Cell> {
 
@@ -59,5 +60,9 @@ public Optional<Cell> get(int i) {
 @Override
 public Iterator<Cell> iterator() {
   return cells.iterator();
+}
+
+public Stream<Cell> stream() {
+  return cells.stream();
 }
 }

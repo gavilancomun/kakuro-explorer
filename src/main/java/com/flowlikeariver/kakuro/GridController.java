@@ -14,14 +14,6 @@ RowDef currentRowDef;
 public GridController() {
 }
 
-public int width() {
-  return rows.get(0).size();
-}
-
-public int height() {
-  return rows.size();
-}
-
 public Optional<Cell> get(int i, int j) {
   return (i >= rows.size()) ? Optional.empty() : rows.get(i).get(j);
 }
@@ -56,10 +48,25 @@ public void addAcross(int n) {
 public void addDownAcross(int down, int across) {
   currentRowDef.addDownAcross(down, across);
 }
+//
+//public void createAcrossSums() {
+//  rows.forEach(row -> {
+//    IntStream.range(0, rows.get(0).size()).forEach(c -> {
+//      row.get(c).filter(cell -> cell instanceof Across)
+//              .ifPresent(cell -> {
+//                Sum sum = new Sum(((Across) cell).getAcrossTotal());
+//                sum.addAll(row.stream()
+//                        .skip(c + 1)
+//                        .collect(new WhileCollector()));
+//                sums.add(sum);
+//              });
+//    });
+//  });
+//}
 
 public void createAcrossSums() {
-  IntStream.range(0, height()).forEach(r -> {
-    IntStream.range(0, width()).forEach(c -> {
+  IntStream.range(0, rows.size()).forEach(r -> {
+    IntStream.range(0, rows.get(0).size()).forEach(c -> {
       get(r, c).filter(cell -> cell instanceof Across)
               .ifPresent(cell -> {
                 Sum sum = new Sum(((Across) cell).getAcrossTotal());
@@ -77,14 +84,14 @@ public void createAcrossSums() {
 }
 
 public void createDownSums() {
-  IntStream.range(0, width()).forEach(c -> {
-    IntStream.range(0, height()).forEach(r -> {
+  IntStream.range(0, rows.get(0).size()).forEach(c -> {
+    IntStream.range(0, rows.size()).forEach(r -> {
       get(r, c).filter(cell -> cell instanceof Down)
               .ifPresent(cell -> {
                 Sum sum = new Sum(((Down) cell).getDownTotal());
                 int pos = r + 1;
                 Optional<Cell> optCell = get(pos, c);
-                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
+                while ((pos < rows.size()) && optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
                   sum.add((EmptyCell) optCell.get());
                   ++pos;
                   optCell = get(pos, c);
