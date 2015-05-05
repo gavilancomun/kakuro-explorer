@@ -1,15 +1,19 @@
 package com.flowlikeariver.kakuro;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 
 public class EmptyCell implements Cell {
 
 Set<Integer> values;
+List<Sum> sums = new ArrayList<>();
 
 public EmptyCell() {
-  reset();
+  values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(i -> i).collect(toSet()));
 }
 
 @Override
@@ -43,9 +47,12 @@ boolean isPossible(int value) {
   return values.contains(value);
 }
 
-boolean removeImpossible(int value) {
+boolean remove(int value) {
   if (values.contains(value)) {
     values.remove(value);
+    System.out.print("remove " + value);
+    sums.forEach(sum -> System.out.print(" " + sum));
+    System.out.println();
     return true;
   }
   else {
@@ -53,12 +60,12 @@ boolean removeImpossible(int value) {
   }
 }
 
-final void reset() {
-  values = IntStream.rangeClosed(1, 9).mapToObj(i -> i).collect(toSet());
-}
-
 Set<Integer> getValues() {
   return values;
+}
+
+void hasSum(Sum sum) {
+  sums.add(sum);
 }
 
 }

@@ -3,6 +3,7 @@ package com.flowlikeariver.kakuro;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class GridController {
 
@@ -78,42 +79,48 @@ public boolean defined(Cell c) {
   return null != c;
 }
 
+public boolean isEmpty(Cell c) {
+  return defined(c) && (c instanceof EmptyCell);
+}
+
 public void createAcrossSums() {
-  for (int r = 0; r < height(); ++r) {
-    for (int c = 0; c < width(); ++c) {
+  IntStream.range(0, height()).forEach(r -> {
+    IntStream.range(0, width()).forEach(c -> {
       Cell cell = get(r, c);
-      if (cell.isAcross()) {
+      if (cell instanceof Across) {
         Sum sum = new Sum(((Across) cell).getAcrossTotal());
         int pos = c + 1;
-        Cell blank = get(r, pos);
-        while (defined(blank) && blank.isEmpty()) {
-          sum.add((EmptyCell) blank);
+        Cell nextCell = get(r, pos);
+        while (isEmpty(nextCell)) {
+          sum.add((EmptyCell) nextCell);
           ++pos;
-          blank = get(r, pos);
+          nextCell = get(r, pos);
         }
+//        System.out.println("across " + r + " " + c + " " + sum.size());
         sums.push(sum);
       }
-    }
-  }
+    });
+  });
 }
 
 public void createDownSums() {
-  for (int c = 0; c < width(); ++c) {
-    for (int r = 0; r < height(); ++r) {
+  IntStream.range(0, width()).forEach(c -> {
+    IntStream.range(0, height()).forEach(r -> {
       Cell cell = get(r, c);
-      if (cell.isDown()) {
+      if (cell instanceof Down) {
         Sum sum = new Sum(((Down) cell).getDownTotal());
         int pos = r + 1;
-        Cell blank = get(pos, c);
-        while (defined(blank) && blank.isEmpty()) {
-          sum.add((EmptyCell) blank);
+        Cell nextCell = get(pos, c);
+        while (isEmpty(nextCell)) {
+          sum.add((EmptyCell) nextCell);
           ++pos;
-          blank = get(pos, c);
+          nextCell = get(pos, c);
         }
+//        System.out.println("down " + r + " " + c + " " + sum.size());
         sums.push(sum);
       }
-    }
-  }
+    });
+  });
 }
 
 public void createSums() {
@@ -122,20 +129,18 @@ public void createSums() {
 }
 
 public void parseDef() {
-  int r = 0;
-  for (RowDef row : rows) {
-    for (int c = 0; c < row.size(); ++c) {
-      set(r, c, row.get(c));
-    }
-    ++r;
-  }
+  IntStream.range(0, rows.size()).forEach(r -> {
+    RowDef row = rows.get(r);
+    IntStream.range(0, row.size())
+            .forEach(c -> set(r, c, row.get(c)));
+  });
   createSums();
 }
 
 public int oneScan() {
   return sums.stream()
-    .mapToInt(sum -> sum.solve())
-    .sum();
+          .mapToInt(sum -> sum.solve())
+          .sum();
 }
 
 public void solve() {
