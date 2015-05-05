@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class WhileCollector implements Collector<Cell, List<EmptyCell>, List<EmptyCell>> {
+public class WhileEmpty implements Collector<Cell, List<EmptyCell>, List<EmptyCell>> {
 
 AtomicBoolean done = new AtomicBoolean(false);
 
@@ -42,10 +42,7 @@ public BinaryOperator<List<EmptyCell>> combiner() {
 
 @Override
 public Function<List<EmptyCell>, List<EmptyCell>> finisher() {
-  return acc -> {
-    System.out.println("finisher: " + acc.size());
-    return acc;
-  };
+  return acc -> acc;
 }
 
 @Override

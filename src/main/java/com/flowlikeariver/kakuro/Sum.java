@@ -22,12 +22,11 @@ public Sum(int total) {
 }
 
 public void add(EmptyCell cell) {
-  cell.hasSum(this);
   cells.add(cell);
 }
 
-public void addAll(Collection<EmptyCell> cells) {
-  cells.addAll(cells);
+public void addAll(Collection<EmptyCell> emptyCells) {
+  cells.addAll(emptyCells);
 }
 
 private void addPossible(int pos, int value) {

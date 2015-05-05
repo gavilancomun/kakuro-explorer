@@ -48,40 +48,40 @@ public void addAcross(int n) {
 public void addDownAcross(int down, int across) {
   currentRowDef.addDownAcross(down, across);
 }
-//
-//public void createAcrossSums() {
-//  rows.forEach(row -> {
-//    IntStream.range(0, rows.get(0).size()).forEach(c -> {
-//      row.get(c).filter(cell -> cell instanceof Across)
-//              .ifPresent(cell -> {
-//                Sum sum = new Sum(((Across) cell).getAcrossTotal());
-//                sum.addAll(row.stream()
-//                        .skip(c + 1)
-//                        .collect(new WhileCollector()));
-//                sums.add(sum);
-//              });
-//    });
-//  });
-//}
 
 public void createAcrossSums() {
-    rows.forEach(row -> {
+  rows.forEach(row -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       row.get(c).filter(cell -> cell instanceof Across)
               .ifPresent(cell -> {
                 Sum sum = new Sum(((Across) cell).getAcrossTotal());
-                int pos = c + 1;
-                Optional<Cell> optCell = row.get(pos);
-                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
-                  sum.add((EmptyCell) optCell.get());
-                  ++pos;
-                  optCell = row.get(pos);
-                }
+                sum.addAll(row.stream()
+                        .skip(c + 1)
+                        .collect(new WhileEmpty()));
                 sums.add(sum);
               });
     });
   });
 }
+//
+//public void createAcrossSums() {
+//    rows.forEach(row -> {
+//    IntStream.range(0, rows.get(0).size()).forEach(c -> {
+//      row.get(c).filter(cell -> cell instanceof Across)
+//              .ifPresent(cell -> {
+//                Sum sum = new Sum(((Across) cell).getAcrossTotal());
+//                int pos = c + 1;
+//                Optional<Cell> optCell = row.get(pos);
+//                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
+//                  sum.add((EmptyCell) optCell.get());
+//                  ++pos;
+//                  optCell = row.get(pos);
+//                }
+//                sums.add(sum);
+//              });
+//    });
+//  });
+//}
 
 public void createDownSums() {
   IntStream.range(0, rows.get(0).size()).forEach(c -> {
