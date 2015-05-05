@@ -1,14 +1,11 @@
 package com.flowlikeariver.kakuro;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 public class GridController {
 
-final Map<Integer, Map<Integer, Cell>> grid = new HashMap<>();
 final List<RowDef> rows = new ArrayList<>();
 final List<Sum> sums = new ArrayList<>();
 RowDef currentRowDef;
@@ -25,24 +22,22 @@ public int height() {
 }
 
 public Cell get(int i, int j) {
-  if (grid.containsKey(i)) {
-    if (grid.get(i).containsKey(j)) {
-      return grid.get(i).get(j);
+  if ((i >= rows.size()) || (j > rows.get(i).size()))  {
+    return null;
+  }
+  else {
+    if (null != rows.get(i)) {
+      if (null != rows.get(i).get(j)) {
+        return rows.get(i).get(j);
+      }
+      else {
+        return null;
+      }
     }
     else {
       return null;
     }
   }
-  else {
-    return null;
-  }
-}
-
-public void set(int i, int j, Cell cell) {
-  if (!grid.containsKey(i)) {
-    grid.put(i, new HashMap<>());
-  }
-  grid.get(i).put(j, cell);
 }
 
 public RowDef newRowDef() {
@@ -76,12 +71,8 @@ public void addDownAcross(int down, int across) {
   currentRowDef.addDownAcross(down, across);
 }
 
-public boolean defined(Cell c) {
-  return null != c;
-}
-
 public boolean isEmpty(Cell c) {
-  return defined(c) && (c instanceof EmptyCell);
+  return null != c && (c instanceof EmptyCell);
 }
 
 public void createAcrossSums() {
@@ -129,14 +120,6 @@ public void createSums() {
   createDownSums();
 }
 
-public void parseDef() {
-  IntStream.range(0, rows.size()).forEach(r -> {
-    RowDef row = rows.get(r);
-    IntStream.range(0, row.size())
-            .forEach(c -> set(r, c, row.get(c)));
-  });
-  createSums();
-}
 
 public int oneScan() {
   return sums.stream()
@@ -145,7 +128,7 @@ public int oneScan() {
 }
 
 public void solve() {
-  parseDef();
+  createSums();
   draw();
   int result = oneScan();
   while (result > 0) {

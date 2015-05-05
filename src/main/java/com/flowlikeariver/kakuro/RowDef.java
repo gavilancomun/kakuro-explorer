@@ -31,8 +31,8 @@ public RowDef addSolid() {
 
 public RowDef addEmpty(int n) {
   cells.addAll(IntStream.rangeClosed(1, n)
-    .mapToObj(i -> new EmptyCell())
-    .collect(toList()));
+          .mapToObj(i -> new EmptyCell())
+          .collect(toList()));
   return this;
 }
 
@@ -52,7 +52,12 @@ public RowDef addDownAcross(int down, int across) {
 }
 
 public Cell get(int i) {
-  return cells.get(i);
+  if (i >= cells.size()) {
+    return null;
+  }
+  else {
+    return cells.get(i);
+  }
 }
 
 @Override
