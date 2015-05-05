@@ -36,9 +36,7 @@ private void addPossible(int pos, int value) {
 private int handleCandidate(int value) {
   List<Integer> trial = new ArrayList<>(candidates);
   trial.add(value);
-  System.out.print("handle [" + total + "] " + trial.stream().map(i -> i.toString()).collect(joining(" ")));
   Set<Integer> done = new HashSet<>(trial);
-  System.out.println((done.size() < trial.size()) ? " fail" : " success");
   if (done.size() < trial.size()) {
     return 0;
   }
@@ -50,7 +48,6 @@ private int handleCandidate(int value) {
 }
 
 private int solvePart(int target, int pos) {
-  System.out.println("solvePart: " + target + " " + pos);
   int result = 0;
   if (target < 1) {
     return 0;
@@ -58,21 +55,13 @@ private int solvePart(int target, int pos) {
   else {
     EmptyCell cell = cells.get(pos);
     if (pos == (cells.size() - 1)) {
-      if (3 == total) {
-        System.out.println("solvePart: " + cell.getValues().stream().map(i -> i.toString()).collect(joining(" ")));
-      }
       return cell.isPossible(target) ? handleCandidate(target) : 0;
     }
     else {
       for (int v : cell.getValues()) {
-        candidates.push(v);
-        if (3 == total) {
-          System.out.println("solvePart: value [" + v + "] " + candidates.stream()
-                  .map(i -> i.toString())
-                  .collect(joining(" ")));
-        }
+        candidates.add(v);
         result += solvePart(target - v, pos + 1);
-        candidates.pop();
+        candidates.removeLast();
       }
     }
     return result;
@@ -109,7 +98,6 @@ public int solve() {
   possibles = new HashMap<>();
   solvePart(total, 0);
   int result = countRecentImpossibles();
-  System.out.println("solve: " + total + " " + result);
   return result;
 }
 

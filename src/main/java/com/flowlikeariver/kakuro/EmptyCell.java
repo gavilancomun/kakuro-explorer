@@ -50,9 +50,6 @@ boolean isPossible(int value) {
 boolean remove(int value) {
   if (values.contains(value)) {
     values.remove(value);
-    System.out.print("remove " + value);
-    sums.forEach(sum -> System.out.print(" " + sum));
-    System.out.println();
     return true;
   }
   else {

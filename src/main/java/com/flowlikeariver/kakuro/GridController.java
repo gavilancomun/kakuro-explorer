@@ -1,15 +1,16 @@
 package com.flowlikeariver.kakuro;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 public class GridController {
 
 final Map<Integer, Map<Integer, Cell>> grid = new HashMap<>();
-final LinkedList<RowDef> rows = new LinkedList<>();
-final LinkedList<Sum> sums = new LinkedList<>();
+final List<RowDef> rows = new ArrayList<>();
+final List<Sum> sums = new ArrayList<>();
 RowDef currentRowDef;
 
 public GridController() {
@@ -97,7 +98,7 @@ public void createAcrossSums() {
           nextCell = get(r, pos);
         }
 //        System.out.println("across " + r + " " + c + " " + sum.size());
-        sums.push(sum);
+        sums.add(sum);
       }
     });
   });
@@ -117,7 +118,7 @@ public void createDownSums() {
           nextCell = get(pos, c);
         }
 //        System.out.println("down " + r + " " + c + " " + sum.size());
-        sums.push(sum);
+        sums.add(sum);
       }
     });
   });
