@@ -65,17 +65,17 @@ public void addDownAcross(int down, int across) {
 //}
 
 public void createAcrossSums() {
-  IntStream.range(0, rows.size()).forEach(r -> {
+    rows.forEach(row -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
-      get(r, c).filter(cell -> cell instanceof Across)
+      row.get(c).filter(cell -> cell instanceof Across)
               .ifPresent(cell -> {
                 Sum sum = new Sum(((Across) cell).getAcrossTotal());
                 int pos = c + 1;
-                Optional<Cell> optCell = get(r, pos);
+                Optional<Cell> optCell = row.get(pos);
                 while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
                   sum.add((EmptyCell) optCell.get());
                   ++pos;
-                  optCell = get(r, pos);
+                  optCell = row.get(pos);
                 }
                 sums.add(sum);
               });
