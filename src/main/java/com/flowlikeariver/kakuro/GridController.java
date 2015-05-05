@@ -53,51 +53,22 @@ public void createAcrossSums() {
   rows.forEach(row -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       row.get(c).filter(cell -> cell instanceof Across)
-              .ifPresent(cell -> {
-                Sum sum = new Sum(((Across) cell).getAcrossTotal());
-                sum.addAll(row.stream()
-                        .skip(c + 1)
-                        .collect(new WhileEmpty()));
-                sums.add(sum);
-              });
+              .ifPresent(cell -> sums.add(new Sum(((Across) cell).getAcrossTotal(),
+                                      row.stream()
+                                      .skip(c + 1)
+                                      .collect(new WhileEmpty()))));
     });
   });
 }
-//
-//public void createAcrossSums() {
-//    rows.forEach(row -> {
-//    IntStream.range(0, rows.get(0).size()).forEach(c -> {
-//      row.get(c).filter(cell -> cell instanceof Across)
-//              .ifPresent(cell -> {
-//                Sum sum = new Sum(((Across) cell).getAcrossTotal());
-//                int pos = c + 1;
-//                Optional<Cell> optCell = row.get(pos);
-//                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
-//                  sum.add((EmptyCell) optCell.get());
-//                  ++pos;
-//                  optCell = row.get(pos);
-//                }
-//                sums.add(sum);
-//              });
-//    });
-//  });
-//}
 
 public void createDownSums() {
-  IntStream.range(0, rows.get(0).size()).forEach(c -> {
-    IntStream.range(0, rows.size()).forEach(r -> {
+  IntStream.range(0, rows.size()).forEach(r -> {
+    IntStream.range(0, rows.get(0).size()).forEach(c -> {
       get(r, c).filter(cell -> cell instanceof Down)
-              .ifPresent(cell -> {
-                Sum sum = new Sum(((Down) cell).getDownTotal());
-                int pos = r + 1;
-                Optional<Cell> optCell = get(pos, c);
-                while ((pos < rows.size()) && optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
-                  sum.add((EmptyCell) optCell.get());
-                  ++pos;
-                  optCell = get(pos, c);
-                }
-                sums.add(sum);
-              });
+              .ifPresent(cell -> sums.add(new Sum(((Down) cell).getDownTotal(),
+                                      IntStream.range(r + 1, rows.size())
+                                      .mapToObj(pos -> get(pos, c).orElse(new SolidCell()))
+                                      .collect(new WhileEmpty()))));
     });
   });
 }

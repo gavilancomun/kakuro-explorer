@@ -21,6 +21,11 @@ public Sum(int total) {
   this.total = total;
 }
 
+public Sum(int total, Collection<EmptyCell> emptyCells) {
+  this.total = total;
+  cells.addAll(emptyCells);
+}
+
 public void add(EmptyCell cell) {
   cells.add(cell);
 }
