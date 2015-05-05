@@ -2,6 +2,7 @@ package com.flowlikeariver.kakuro;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class GridController {
@@ -21,23 +22,8 @@ public int height() {
   return rows.size();
 }
 
-public Cell get(int i, int j) {
-  if ((i >= rows.size()) || (j > rows.get(i).size()))  {
-    return null;
-  }
-  else {
-    if (null != rows.get(i)) {
-      if (null != rows.get(i).get(j)) {
-        return rows.get(i).get(j);
-      }
-      else {
-        return null;
-      }
-    }
-    else {
-      return null;
-    }
-  }
+public Optional<Cell> get(int i, int j) {
+  return (i >= rows.size()) ? Optional.empty() : rows.get(i).get(j);
 }
 
 public RowDef newRowDef() {
@@ -72,25 +58,24 @@ public void addDownAcross(int down, int across) {
 }
 
 public boolean isEmpty(Cell c) {
-  return null != c && (c instanceof EmptyCell);
+  return (c instanceof EmptyCell);
 }
 
 public void createAcrossSums() {
   IntStream.range(0, height()).forEach(r -> {
     IntStream.range(0, width()).forEach(c -> {
-      Cell cell = get(r, c);
-      if (cell instanceof Across) {
-        Sum sum = new Sum(((Across) cell).getAcrossTotal());
-        int pos = c + 1;
-        Cell nextCell = get(r, pos);
-        while (isEmpty(nextCell)) {
-          sum.add((EmptyCell) nextCell);
-          ++pos;
-          nextCell = get(r, pos);
-        }
-//        System.out.println("across " + r + " " + c + " " + sum.size());
-        sums.add(sum);
-      }
+      get(r, c).filter(cell -> cell instanceof Across)
+              .ifPresent(cell -> {
+                Sum sum = new Sum(((Across) cell).getAcrossTotal());
+                int pos = c + 1;
+                Optional<Cell> optCell = get(r, pos);
+                while (optCell.isPresent() && isEmpty(optCell.get())) {
+                  sum.add((EmptyCell) optCell.get());
+                  ++pos;
+                  optCell = get(r, pos);
+                }
+                sums.add(sum);
+              });
     });
   });
 }
@@ -98,19 +83,18 @@ public void createAcrossSums() {
 public void createDownSums() {
   IntStream.range(0, width()).forEach(c -> {
     IntStream.range(0, height()).forEach(r -> {
-      Cell cell = get(r, c);
-      if (cell instanceof Down) {
-        Sum sum = new Sum(((Down) cell).getDownTotal());
-        int pos = r + 1;
-        Cell nextCell = get(pos, c);
-        while (isEmpty(nextCell)) {
-          sum.add((EmptyCell) nextCell);
-          ++pos;
-          nextCell = get(pos, c);
-        }
-//        System.out.println("down " + r + " " + c + " " + sum.size());
-        sums.add(sum);
-      }
+      get(r, c).filter(cell -> cell instanceof Down)
+              .ifPresent(cell -> {
+                Sum sum = new Sum(((Down) cell).getDownTotal());
+                int pos = r + 1;
+                Optional<Cell> optCell = get(pos, c);
+                while (optCell.isPresent() && isEmpty(optCell.get())) {
+                  sum.add((EmptyCell) optCell.get());
+                  ++pos;
+                  optCell = get(pos, c);
+                }
+                sums.add(sum);
+              });
     });
   });
 }
@@ -119,7 +103,6 @@ public void createSums() {
   createAcrossSums();
   createDownSums();
 }
-
 
 public int oneScan() {
   return sums.stream()

@@ -3,6 +3,7 @@ package com.flowlikeariver.kakuro;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 
@@ -51,13 +52,8 @@ public RowDef addDownAcross(int down, int across) {
   return this;
 }
 
-public Cell get(int i) {
-  if (i >= cells.size()) {
-    return null;
-  }
-  else {
-    return cells.get(i);
-  }
+public Optional<Cell> get(int i) {
+  return (i >= cells.size()) ? Optional.empty() : Optional.ofNullable(cells.get(i));
 }
 
 @Override
