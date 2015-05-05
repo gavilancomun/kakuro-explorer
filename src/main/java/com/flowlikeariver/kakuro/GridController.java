@@ -57,10 +57,6 @@ public void addDownAcross(int down, int across) {
   currentRowDef.addDownAcross(down, across);
 }
 
-public boolean isEmpty(Cell c) {
-  return (c instanceof EmptyCell);
-}
-
 public void createAcrossSums() {
   IntStream.range(0, height()).forEach(r -> {
     IntStream.range(0, width()).forEach(c -> {
@@ -69,7 +65,7 @@ public void createAcrossSums() {
                 Sum sum = new Sum(((Across) cell).getAcrossTotal());
                 int pos = c + 1;
                 Optional<Cell> optCell = get(r, pos);
-                while (optCell.isPresent() && isEmpty(optCell.get())) {
+                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
                   sum.add((EmptyCell) optCell.get());
                   ++pos;
                   optCell = get(r, pos);
@@ -88,7 +84,7 @@ public void createDownSums() {
                 Sum sum = new Sum(((Down) cell).getDownTotal());
                 int pos = r + 1;
                 Optional<Cell> optCell = get(pos, c);
-                while (optCell.isPresent() && isEmpty(optCell.get())) {
+                while (optCell.isPresent() && (optCell.get() instanceof EmptyCell)) {
                   sum.add((EmptyCell) optCell.get());
                   ++pos;
                   optCell = get(pos, c);
