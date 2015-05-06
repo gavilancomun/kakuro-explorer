@@ -1,6 +1,7 @@
 package com.flowlikeariver.kakuro;
 
 import java.io.StringReader;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestSolver {
@@ -17,6 +18,7 @@ public void testAPI() {
   grid.solve();
 }
 
+@Ignore
 @Test
 public void testParse() {
   String k = "XXXXX  4\\-   22\\-  XXXXX  16\\-  3\\-\n" +

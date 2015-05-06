@@ -45,21 +45,21 @@ public boolean isEmpty() {
   return true;
 }
 
-boolean isPossible(int value) {
+public boolean isPossible(int value) {
   return values.contains(value);
 }
 
-boolean remove(int value) {
+public int remove(int value) {
   if (values.contains(value)) {
     values.remove(value);
-    return true;
+    return 1;
   }
   else {
-    return false;
+    return 0;
   }
 }
 
-Set<Integer> getValues() {
+public Set<Integer> getValues() {
   return values;
 }
 
