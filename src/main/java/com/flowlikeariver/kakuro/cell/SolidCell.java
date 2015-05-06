@@ -4,7 +4,7 @@ public class SolidCell implements Cell {
 
 @Override
 public void draw() {
-  System.out.print(" XXXXXXXXX ");
+  System.out.print("   =====  ");
 }
 
 @Override

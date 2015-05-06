@@ -18,7 +18,7 @@ public EmptyCell() {
 public void draw() {
   if (1 == values.size()) {
     System.out.print(values.stream()
-            .map(i -> "    <" + i + ">    ")
+            .map(i -> "    [" + i + "]   ")
             .collect(joining()));
   }
   else {
@@ -26,7 +26,6 @@ public void draw() {
     System.out.print(IntStream.rangeClosed(1, 9)
             .mapToObj(i -> isPossible(i) ? String.valueOf(i) : ".")
             .collect(joining()));
-    System.out.print(" ");
   }
 }
 

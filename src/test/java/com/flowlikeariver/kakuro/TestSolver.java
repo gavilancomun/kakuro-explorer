@@ -30,4 +30,18 @@ public void testParse() {
   GridController gc = Interpreter.interpret(new StringReader(k));
   gc.solve();
 }
+
+@Test
+public void testWikipediaExample() {
+  String k = "XXXXXX 23\\- 30\\-  XXXXXX XXXXXX 27\\- 12\\- 16\\- \n" +
+             "-\\16  .     .      XXXXXX 17\\24 .     .     .     \n" +
+             "-\\17  .     .      15\\29 .      .     .     .     \n" +
+             "-\\35  .     .      .      .      .     12\\- XXXXXX\n" +
+             "XXXXXX -\\7  .      .      7\\8   .     .     7\\-  \n" +
+             "XXXXXX 11\\- 10\\16 .      .      .     .     .     \n" +
+             "-\\21  .     .      .      .      -\\5  .     .     \n" +
+             "-\\6   .     .      .      XXXXXX -\\3  .     .     \n";
+  GridController gc = Interpreter.interpret(new StringReader(k));
+  gc.solve();
+}
 }

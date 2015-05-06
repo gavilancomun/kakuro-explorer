@@ -10,7 +10,7 @@ public DownCell(int total) {
 
 @Override
 public void draw() {
-  System.out.printf("    %2d\\-   ", total);
+  System.out.printf("   %2d\\--  ", total);
 }
 
 @Override
