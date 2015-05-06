@@ -27,17 +27,13 @@ private boolean allDifferent(int value, List<Integer> candidates) {
   return (new HashSet<>(trial).size() == trial.size());
 }
 
-private void recordPossible(int target, List<Integer> candidates) {
-  IntStream.range(0, candidates.size())
-          .forEach(i -> possibles.get(i).add(candidates.get(i)));
-  possibles.get(candidates.size()).add(target);
-}
-
 private void solvePart(int pos, int target, List<Integer> candidates) {
   if (target >= 1) {
     if (pos == (cells.size() - 1)) {
       if (cells.get(pos).isPossible(target) && allDifferent(target, candidates)) {
-        recordPossible(target, candidates);
+        IntStream.range(0, candidates.size())
+                .forEach((i) -> possibles.get(i).add(candidates.get(i)));
+        possibles.get(candidates.size()).add(target);
       }
     }
     else {
