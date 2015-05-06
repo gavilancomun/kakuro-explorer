@@ -1,5 +1,11 @@
 package com.flowlikeariver.kakuro;
 
+import com.flowlikeariver.kakuro.cell.EmptyCell;
+import com.flowlikeariver.kakuro.cell.Cell;
+import com.flowlikeariver.kakuro.cell.DownAcrossCell;
+import com.flowlikeariver.kakuro.cell.DownCell;
+import com.flowlikeariver.kakuro.cell.AcrossCell;
+import com.flowlikeariver.kakuro.cell.SolidCell;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

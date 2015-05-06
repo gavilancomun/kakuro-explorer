@@ -1,5 +1,7 @@
 package com.flowlikeariver.kakuro;
 
+import com.flowlikeariver.kakuro.cell.EmptyCell;
+import com.flowlikeariver.kakuro.cell.Cell;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

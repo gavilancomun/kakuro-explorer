@@ -1,5 +1,5 @@
 
-package com.flowlikeariver.kakuro;
+package com.flowlikeariver.kakuro.cell;
 
 
 public class DownAcrossCell implements Cell, Across, Down {

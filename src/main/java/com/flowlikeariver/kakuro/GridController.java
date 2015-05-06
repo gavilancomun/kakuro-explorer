@@ -1,5 +1,8 @@
 package com.flowlikeariver.kakuro;
 
+import com.flowlikeariver.kakuro.cell.Across;
+import com.flowlikeariver.kakuro.cell.SolidCell;
+import com.flowlikeariver.kakuro.cell.Down;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;

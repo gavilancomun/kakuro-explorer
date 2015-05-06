@@ -1,4 +1,4 @@
-package com.flowlikeariver.kakuro;
+package com.flowlikeariver.kakuro.cell;
 
 import java.util.Set;
 import java.util.TreeSet;
