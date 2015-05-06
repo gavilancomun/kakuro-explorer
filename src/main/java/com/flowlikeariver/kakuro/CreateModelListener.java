@@ -44,7 +44,7 @@ public void enterSolid(KakuroParser.SolidContext ctx) {
 
 @Override
 public void enterEmpty(KakuroParser.EmptyContext ctx) {
-  gc.addEmpty(1);
+  gc.addValue(1);
 }
 
 }

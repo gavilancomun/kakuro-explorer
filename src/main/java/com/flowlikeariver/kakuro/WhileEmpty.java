@@ -1,6 +1,6 @@
 package com.flowlikeariver.kakuro;
 
-import com.flowlikeariver.kakuro.cell.EmptyCell;
+import com.flowlikeariver.kakuro.cell.ValueCell;
 import com.flowlikeariver.kakuro.cell.Cell;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,20 +13,20 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class WhileEmpty implements Collector<Cell, List<EmptyCell>, List<EmptyCell>> {
+public class WhileEmpty implements Collector<Cell, List<ValueCell>, List<ValueCell>> {
 
 AtomicBoolean done = new AtomicBoolean(false);
 
 @Override
-public Supplier<List<EmptyCell>> supplier() {
+public Supplier<List<ValueCell>> supplier() {
   return ArrayList::new;
 }
 
 @Override
-public BiConsumer<List<EmptyCell>, Cell> accumulator() {
+public BiConsumer<List<ValueCell>, Cell> accumulator() {
   return (list, item) -> {
-    if (!done.get() && (item instanceof EmptyCell)) {
-      list.add((EmptyCell) item);
+    if (!done.get() && (item instanceof ValueCell)) {
+      list.add((ValueCell) item);
     }
     else {
       done.set(true);
@@ -35,7 +35,7 @@ public BiConsumer<List<EmptyCell>, Cell> accumulator() {
 }
 
 @Override
-public BinaryOperator<List<EmptyCell>> combiner() {
+public BinaryOperator<List<ValueCell>> combiner() {
   return (list1, list2) -> {
     list1.addAll(list2);
     return list1;
@@ -43,7 +43,7 @@ public BinaryOperator<List<EmptyCell>> combiner() {
 }
 
 @Override
-public Function<List<EmptyCell>, List<EmptyCell>> finisher() {
+public Function<List<ValueCell>, List<ValueCell>> finisher() {
   return acc -> acc;
 }
 

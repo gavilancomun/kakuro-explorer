@@ -24,15 +24,17 @@ public RowDef createRow() {
 }
 
 public String draw() {
-  return rows.stream().map(RowDef::draw).collect(Collectors.joining());
+  return rows.stream()
+          .map(RowDef::draw)
+          .collect(Collectors.joining());
 }
 
 public void addSolid() {
   currentRowDef.addSolid();
 }
 
-public void addEmpty(int n) {
-  currentRowDef.addEmpty(n);
+public void addValue(int n) {
+  currentRowDef.addValue(n);
 }
 
 public void addDown(int n) {
@@ -76,14 +78,14 @@ public void createSums() {
   createDownSums();
 }
 
-public int oneScan() {
+public int scan() {
   return sums.stream().mapToInt(Sum::solve).sum();
 }
 
 public void solve() {
   createSums();
   System.out.println(draw());
-  while (oneScan() > 0) {
+  while (scan() > 0) {
     System.out.println(draw());
   }
 }

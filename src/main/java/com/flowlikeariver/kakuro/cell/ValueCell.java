@@ -6,11 +6,11 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 
-public class EmptyCell implements Cell {
+public class ValueCell implements Cell {
 
 Set<Integer> values;
 
-public EmptyCell() {
+public ValueCell() {
   values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(Integer::new).collect(toSet()));
 }
 

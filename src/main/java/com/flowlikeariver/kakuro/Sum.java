@@ -1,6 +1,6 @@
 package com.flowlikeariver.kakuro;
 
-import com.flowlikeariver.kakuro.cell.EmptyCell;
+import com.flowlikeariver.kakuro.cell.ValueCell;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,10 +12,10 @@ import java.util.stream.IntStream;
 public class Sum {
 
 private final int total;
-private final List<EmptyCell> cells = new ArrayList<>();
+private final List<ValueCell> cells = new ArrayList<>();
 List<Set<Integer>> possibles;
 
-public Sum(int total, Collection<EmptyCell> emptyCells) {
+public Sum(int total, Collection<ValueCell> emptyCells) {
   this.total = total;
   cells.addAll(emptyCells);
 }
@@ -47,7 +47,7 @@ private void solvePart(int pos, int target, List<Integer> candidates) {
 }
 
 private int getRemoveCount(int pos) {
-  EmptyCell cell = cells.get(pos);
+  ValueCell cell = cells.get(pos);
   return new HashSet<>(cell.getValues()).stream()
           .mapToInt(value -> possibles.get(pos).contains(value) ? 0 : cell.remove(value))
           .sum();

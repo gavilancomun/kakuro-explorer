@@ -1,6 +1,6 @@
 package com.flowlikeariver.kakuro;
 
-import com.flowlikeariver.kakuro.cell.EmptyCell;
+import com.flowlikeariver.kakuro.cell.ValueCell;
 import com.flowlikeariver.kakuro.cell.Cell;
 import com.flowlikeariver.kakuro.cell.DownAcrossCell;
 import com.flowlikeariver.kakuro.cell.DownCell;
@@ -34,9 +34,9 @@ public RowDef addSolid() {
   return this;
 }
 
-public RowDef addEmpty(int n) {
+public RowDef addValue(int n) {
   cells.addAll(IntStream.rangeClosed(1, n)
-          .mapToObj(i -> new EmptyCell())
+          .mapToObj(i -> new ValueCell())
           .collect(toList()));
   return this;
 }
