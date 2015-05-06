@@ -19,19 +19,24 @@ row_part: across
         | solid
         ;
 
-solid: 'X';
+solid:  SOLID;
 
-empty: '.';
+empty:  '.';
+
+
 
 NEW_LINE:   '\r'? '\n';
 
-fragment DIGIT: [0-9];
+SOLID:      'X'+;
 
-NUMBER: DIGIT DIGIT?;
+fragment 
+DIGIT:      [0-9];
+
+NUMBER:     DIGIT DIGIT?;
 
 WHITE_SPACE:    [ \t]+ -> channel(HIDDEN);
 
 LINE_COMMENT:   '//' .*? '\r'? '\n' -> skip;
 
-COMMENT:    '/*' .*? '*/' -> skip;
+COMMENT:        '/*' .*? '*/' -> skip;
 

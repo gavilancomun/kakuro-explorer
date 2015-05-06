@@ -19,10 +19,10 @@ public void testAPI() {
 
 @Test
 public void testParse() {
-  String k = "X      4\\-   22\\-  X      16\\-  3\\-\n" +
+  String k = "XXXXX  4\\-   22\\-  XXXXX  16\\-  3\\-\n" +
              "-\\3   .      .      16\\6  .      .\n" +
-             "-\\18  .      .      .      .      . \n" +
-             "X      17\\23 .      .      .      14\\-\n" +
+             "-\\18  .      .      .      .      .\n" +
+             "XXXXX  17\\23 .      .      .      14\\-\n" +
              "-\\ 9  .      .      -\\6   .      .\n" +
              "-\\15  .      .      -\\12  .      .\n";
   GridController gc = Interpreter.interpret(new StringReader(k));
