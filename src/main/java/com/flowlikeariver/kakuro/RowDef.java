@@ -5,7 +5,7 @@ import com.flowlikeariver.kakuro.cell.Cell;
 import com.flowlikeariver.kakuro.cell.DownAcrossCell;
 import com.flowlikeariver.kakuro.cell.DownCell;
 import com.flowlikeariver.kakuro.cell.AcrossCell;
-import com.flowlikeariver.kakuro.cell.SolidCell;
+import com.flowlikeariver.kakuro.cell.EmptyCell;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +29,8 @@ public String draw() {
   return cells.stream().map(Cell::draw).collect(joining()) + "\n";
 }
 
-public RowDef addSolid() {
-  cells.add(new SolidCell());
+public RowDef addEmpty() {
+  cells.add(new EmptyCell());
   return this;
 }
 

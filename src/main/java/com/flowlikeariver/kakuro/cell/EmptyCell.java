@@ -1,6 +1,6 @@
 package com.flowlikeariver.kakuro.cell;
 
-public class SolidCell implements Cell {
+public class EmptyCell implements Cell {
 
 @Override
 public String draw() {

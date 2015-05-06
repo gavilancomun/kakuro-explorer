@@ -38,12 +38,12 @@ public void enterDown(KakuroParser.DownContext ctx) {
 }
 
 @Override
-public void enterSolid(KakuroParser.SolidContext ctx) {
-  gc.addSolid();
+public void enterEmpty(KakuroParser.EmptyContext ctx) {
+  gc.addEmpty();
 }
 
 @Override
-public void enterEmpty(KakuroParser.EmptyContext ctx) {
+public void enterValue(KakuroParser.ValueContext ctx) {
   gc.addValue(1);
 }
 

@@ -1,7 +1,7 @@
 package com.flowlikeariver.kakuro;
 
 import com.flowlikeariver.kakuro.cell.Across;
-import com.flowlikeariver.kakuro.cell.SolidCell;
+import com.flowlikeariver.kakuro.cell.EmptyCell;
 import com.flowlikeariver.kakuro.cell.Down;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public String draw() {
           .collect(Collectors.joining());
 }
 
-public void addSolid() {
-  currentRowDef.addSolid();
+public void addEmpty() {
+  currentRowDef.addEmpty();
 }
 
 public void addValue(int n) {
@@ -67,7 +67,7 @@ public void createDownSums() {
       rows.get(r).get(c).filter(cell -> cell instanceof Down)
               .ifPresent(cell -> sums.add(new Sum(((Down) cell).getDownTotal(),
                                       IntStream.range(r + 1, rows.size())
-                                      .mapToObj(pos -> rows.get(pos).get(c).orElse(new SolidCell()))
+                                      .mapToObj(pos -> rows.get(pos).get(c).orElse(new EmptyCell()))
                                       .collect(new WhileEmpty()))));
     });
   });

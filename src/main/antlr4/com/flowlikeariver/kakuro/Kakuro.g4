@@ -2,9 +2,9 @@ grammar Kakuro;
 
 grid:   header row+;
 
-header: solid (down | solid)+ NEW_LINE;
+header: empty (down | empty)+ NEW_LINE;
 
-row:    (across | solid) row_part+ NEW_LINE;
+row:    (across | empty) row_part+ NEW_LINE;
 
 across: '-' '\\' NUMBER;
 
@@ -15,19 +15,19 @@ down_across:  NUMBER '\\' NUMBER;
 row_part: across
         | down
         | down_across
+        | value
         | empty
-        | solid
         ;
 
-solid:  SOLID;
+empty:  EMPTY;
 
-empty:  '.';
+value:  '.';
 
 
 
 NEW_LINE:   '\r'? '\n';
 
-SOLID:      'X'+;
+EMPTY:      'X'+;
 
 fragment 
 DIGIT:      [0-9];
