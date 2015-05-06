@@ -15,21 +15,6 @@ public EmptyCell() {
 }
 
 @Override
-public String draw() {
-  if (1 == values.size()) {
-    return values.stream()
-            .map(i -> "     " + i + "    ")
-            .collect(joining());
-  }
-  else {
-    return " "
-            + IntStream.rangeClosed(1, 9)
-            .mapToObj(i -> isPossible(i) ? String.valueOf(i) : ".")
-            .collect(joining());
-  }
-}
-
-@Override
 public boolean isAcross() {
   return false;
 }
@@ -60,6 +45,21 @@ public int remove(int value) {
 
 public Set<Integer> getValues() {
   return values;
+}
+
+@Override
+public String draw() {
+  if (1 == values.size()) {
+    return values.stream()
+            .map(i -> "     " + i + "    ")
+            .collect(joining());
+  }
+  else {
+    return " "
+            + IntStream.rangeClosed(1, 9)
+            .mapToObj(i -> isPossible(i) ? String.valueOf(i) : ".")
+            .collect(joining());
+  }
 }
 
 }
