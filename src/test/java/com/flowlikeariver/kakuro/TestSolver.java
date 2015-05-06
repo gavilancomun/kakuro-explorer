@@ -1,11 +1,12 @@
 package com.flowlikeariver.kakuro;
 
+import java.io.StringReader;
 import org.junit.Test;
 
 public class TestSolver {
 
 @Test
-public void test1() {
+public void testAPI() {
   GridController grid = new GridController();
   grid.createRow().addSolid().addDown(4).addDown(22).addSolid().addDown(16).addDown(3);
   grid.createRow().addAcross(3).addEmpty(2).addDownAcross(16, 6).addEmpty(2);
@@ -14,5 +15,17 @@ public void test1() {
   grid.createRow().addAcross(9).addEmpty(2).addAcross(6).addEmpty(2);
   grid.createRow().addAcross(15).addEmpty(2).addAcross(12).addEmpty(2);
   grid.solve();
+}
+
+@Test
+public void testParse() {
+  String k = "X      4\\-   22\\-  X      16\\-  3\\-\n" +
+             "-\\3   .      .      16\\6  .      .\n" +
+             "-\\18  .      .      .      .      . \n" +
+             "X      17\\23 .      .      .      14\\-\n" +
+             "-\\ 9  .      .      -\\6   .      .\n" +
+             "-\\15  .      .      -\\12  .      .\n";
+  GridController gc = Interpreter.interpret(new StringReader(k));
+  gc.solve();
 }
 }
