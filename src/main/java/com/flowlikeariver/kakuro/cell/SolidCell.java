@@ -3,8 +3,8 @@ package com.flowlikeariver.kakuro.cell;
 public class SolidCell implements Cell {
 
 @Override
-public void draw() {
-  System.out.print("   =====  ");
+public String draw() {
+  return "   -----  ";
 }
 
 @Override

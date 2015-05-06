@@ -5,6 +5,7 @@ import com.flowlikeariver.kakuro.cell.SolidCell;
 import com.flowlikeariver.kakuro.cell.Down;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class GridController {
@@ -22,9 +23,8 @@ public RowDef createRow() {
   return currentRowDef;
 }
 
-public void draw() {
-  System.out.println();
-  rows.forEach(RowDef::draw);
+public String draw() {
+  return rows.stream().map(RowDef::draw).collect(Collectors.joining());
 }
 
 public void addSolid() {
@@ -82,12 +82,9 @@ public int oneScan() {
 
 public void solve() {
   createSums();
-  draw();
-  int result = oneScan();
-  while (result > 0) {
-    System.out.println("\nresult " + result);
-    draw();
-    result = oneScan();
+  System.out.println(draw());
+  while (oneScan() > 0) {
+    System.out.println(draw());
   }
 }
 

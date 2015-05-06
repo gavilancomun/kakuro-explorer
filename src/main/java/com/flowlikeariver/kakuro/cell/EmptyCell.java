@@ -15,17 +15,17 @@ public EmptyCell() {
 }
 
 @Override
-public void draw() {
+public String draw() {
   if (1 == values.size()) {
-    System.out.print(values.stream()
-            .map(i -> "    [" + i + "]   ")
-            .collect(joining()));
+    return values.stream()
+            .map(i -> "     " + i + "    ")
+            .collect(joining());
   }
   else {
-    System.out.print(" ");
-    System.out.print(IntStream.rangeClosed(1, 9)
+    return " "
+            + IntStream.rangeClosed(1, 9)
             .mapToObj(i -> isPossible(i) ? String.valueOf(i) : ".")
-            .collect(joining()));
+            .collect(joining());
   }
 }
 

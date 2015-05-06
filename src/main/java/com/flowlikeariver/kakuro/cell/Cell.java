@@ -2,7 +2,7 @@ package com.flowlikeariver.kakuro.cell;
 
 public interface Cell {
 
-void draw();
+String draw();
 
 boolean isAcross();
 

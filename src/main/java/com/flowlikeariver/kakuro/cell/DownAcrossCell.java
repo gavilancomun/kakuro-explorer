@@ -13,8 +13,8 @@ public DownAcrossCell(int down, int across) {
 }
 
 @Override
-public void draw() {
-  System.out.printf("   %2d\\%-2d  ", down, across);
+public String draw() {
+  return String.format("   %2d\\%-2d  ", down, across);
 }
 
 @Override

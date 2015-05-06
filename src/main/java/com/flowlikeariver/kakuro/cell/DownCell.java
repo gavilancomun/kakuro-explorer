@@ -9,8 +9,8 @@ public DownCell(int total) {
 }
 
 @Override
-public void draw() {
-  System.out.printf("   %2d\\--  ", total);
+public String draw() {
+  return String.format("   %2d\\--  ", total);
 }
 
 @Override

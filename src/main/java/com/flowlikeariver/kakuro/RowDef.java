@@ -7,14 +7,14 @@ import com.flowlikeariver.kakuro.cell.DownCell;
 import com.flowlikeariver.kakuro.cell.AcrossCell;
 import com.flowlikeariver.kakuro.cell.SolidCell;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class RowDef implements Iterable<Cell> {
+public class RowDef {
 
 List<Cell> cells = new ArrayList<>();
 
@@ -25,9 +25,8 @@ public int size() {
   return cells.size();
 }
 
-public void draw() {
-  cells.forEach(Cell::draw);
-  System.out.println();
+public String draw() {
+  return cells.stream().map(Cell::draw).collect(joining()) + "\n";
 }
 
 public RowDef addSolid() {
@@ -59,11 +58,6 @@ public RowDef addDownAcross(int down, int across) {
 
 public Optional<Cell> get(int i) {
   return (i >= cells.size()) ? Optional.empty() : Optional.ofNullable(cells.get(i));
-}
-
-@Override
-public Iterator<Cell> iterator() {
-  return cells.iterator();
 }
 
 public Stream<Cell> stream() {
