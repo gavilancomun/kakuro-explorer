@@ -32,9 +32,9 @@ private void solvePart(int pos, int target, List<Integer> candidates) {
   if (target >= 1) {
     if (pos == (cells.size() - 1)) {
       if (cells.get(pos).isPossible(target) && allDifferent(target, candidates)) {
-        IntStream.range(0, candidates.size())
-                .forEach((i) -> possibles.get(i).add(candidates.get(i)));
-        possibles.get(candidates.size()).add(target);
+        IntStream.range(0, pos)
+                .forEach(i -> possibles.get(i).add(candidates.get(i)));
+        possibles.get(pos).add(target);
       }
     }
     else {
