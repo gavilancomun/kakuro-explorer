@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -24,32 +23,25 @@ public Sum(int total, Collection<ValueCell> valueCells) {
 }
 
 // All different is part of the definition of a kakuro puzzle
-private boolean allDifferent(int value, List<Integer> candidates) {
-  List<Integer> trial = new ArrayList<>(candidates);
-  trial.add(value);
-  return (new HashSet<>(trial).size() == trial.size());
+private boolean areAllDifferent(List<Integer> candidates) {
+  return (new HashSet<>(candidates).size() == candidates.size());
 }
 
-// All different is part of the definition of a kakuro puzzle
-private boolean allDifferent(List<Integer> candidates) {
-  return (new HashSet<>(candidates).size() == candidates.size());
+private List<Integer> copyAdd(int v, List<Integer> vs) {
+  List<Integer> result = new ArrayList<>(vs);
+  result.add(v);
+  return result;
 }
 
 // Exhaustive search for possible solutions
 private Stream<List<Integer>> permute(int pos, int target, List<Integer> candidates) {
   if (target >= 1) {
     if (pos == (cells.size() - 1)) {
-      List<Integer> p = new ArrayList<>(candidates);
-      p.add(target);
-      return Stream.of(p);
+      return Stream.of(copyAdd(target, candidates));
     }
     else {
       return cells.get(pos).getValues().stream()
-              .flatMap(v -> {
-                List<Integer> trial = new ArrayList<>(candidates);
-                trial.add(v);
-                return permute(pos + 1, target - v, trial);
-              });
+              .flatMap(v -> permute(pos + 1, target - v, copyAdd(v, candidates)));
     }
   }
   else {
@@ -69,7 +61,7 @@ public int solve() {
   int last = cells.size() - 1;
   permute(0, total, new ArrayList<>())
           .filter(p -> cells.get(last).isPossible(p.get(last)))
-          .filter(this::allDifferent)
+          .filter(this::areAllDifferent)
           .forEach(p -> {
             IntStream.rangeClosed(0, last).forEach(i -> possibles.get(i).add(p.get(i)));
           });
