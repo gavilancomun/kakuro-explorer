@@ -29,15 +29,14 @@ private List<Integer> copyAdd(List<Integer> vs, int v) {
   return Stream.concat(vs.stream(), Stream.of(v)).collect(toList());
 }
 
-// Exhaustive search for possible solutions
-private Stream<List<Integer>> permute(int pos, int target, List<Integer> candidates) {
+private Stream<List<Integer>> permute(int pos, int target, List<Integer> soFar) {
   if (target >= 1) {
     if (pos == (cells.size() - 1)) {
-      return Stream.of(copyAdd(candidates, target));
+      return Stream.of(copyAdd(soFar, target));
     }
     else {
       return cells.get(pos).getValues().stream()
-              .flatMap(v -> permute(pos + 1, target - v, copyAdd(candidates, v)));
+              .flatMap(v -> permute(pos + 1, target - v, copyAdd(soFar, v)));
     }
   }
   else {
@@ -45,6 +44,7 @@ private Stream<List<Integer>> permute(int pos, int target, List<Integer> candida
   }
 }
 
+// Exhaustive search for possible solutions
 private Stream<List<Integer>> permuteAll() {
   return permute(0, total, Collections.EMPTY_LIST);
 }
