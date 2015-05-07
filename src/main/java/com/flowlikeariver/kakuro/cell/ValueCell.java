@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class ValueCell implements Cell {
 
-Set<Integer> values;
+private Set<Integer> values;
 
 public ValueCell() {
   values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(Integer::new).collect(toSet()));
@@ -33,20 +33,6 @@ public boolean isPossible(int value) {
   return values.contains(value);
 }
 
-public int remove(int value) {
-  if (values.contains(value)) {
-    values.remove(value);
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
-public Set<Integer> getValues() {
-  return values;
-}
-
 @Override
 public String draw() {
   if (1 == values.size()) {
@@ -62,4 +48,15 @@ public String draw() {
   }
 }
 
+public int size() {
+  return values.size();
+}
+
+public Set<Integer> getValues() {
+  return values;
+}
+
+public void setValues(Set<Integer> values) {
+  this.values = values;
+}
 }

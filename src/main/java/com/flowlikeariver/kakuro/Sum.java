@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 
@@ -15,9 +16,9 @@ private final int total;
 private final List<ValueCell> cells = new ArrayList<>();
 List<Set<Integer>> possibles;
 
-public Sum(int total, Collection<ValueCell> emptyCells) {
+public Sum(int total, Collection<ValueCell> valueCells) {
   this.total = total;
-  cells.addAll(emptyCells);
+  cells.addAll(valueCells);
 }
 
 // All different is part of the definition of a kakuro puzzle
@@ -46,18 +47,18 @@ private void solvePart(int pos, int target, List<Integer> candidates) {
   }
 }
 
-private int getRemoveCount(int pos) {
+private int update(int pos) {
   ValueCell cell = cells.get(pos);
-  return new HashSet<>(cell.getValues()).stream()
-          .mapToInt(value -> possibles.get(pos).contains(value) ? 0 : cell.remove(value))
-          .sum();
+  int previousSize = cell.size();
+  cell.setValues(possibles.get(pos));
+  return previousSize - cell.size();
 }
 
 public int solve() {
-  possibles = cells.stream().map(cell -> new HashSet<Integer>()).collect(toList());
+  possibles = cells.stream().map(cell -> new TreeSet<Integer>()).collect(toList());
   solvePart(0, total, new ArrayList<>());
   return IntStream.range(0, cells.size())
-          .map(this::getRemoveCount)
+          .map(this::update)
           .sum();
 }
 
