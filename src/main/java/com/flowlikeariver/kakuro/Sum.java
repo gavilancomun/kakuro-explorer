@@ -2,10 +2,14 @@ package com.flowlikeariver.kakuro;
 
 import com.flowlikeariver.kakuro.cell.ValueCell;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
