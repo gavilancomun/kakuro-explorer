@@ -79,7 +79,7 @@ public void createSums() {
 }
 
 public int scan() {
-  return sums.stream().mapToInt(Sum::solve).sum();
+  return sums.stream().mapToInt(Sum::solveStep).sum();
 }
 
 public void solve() {

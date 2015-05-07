@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -15,7 +13,6 @@ public class Sum {
 
 private final int total;
 private final List<ValueCell> cells = new ArrayList<>();
-List<Set<Integer>> possibles;
 
 public Sum(int total, Collection<ValueCell> valueCells) {
   this.total = total;
@@ -49,24 +46,15 @@ private Stream<List<Integer>> permute(int pos, int target, List<Integer> candida
   }
 }
 
-private int update(int pos) {
-  ValueCell cell = cells.get(pos);
-  int previousSize = cell.size();
-  cell.setValues(possibles.get(pos));
-  return previousSize - cell.size();
-}
-
-public int solve() {
-  possibles = cells.stream().map(cell -> new TreeSet<Integer>()).collect(toList());
+public int solveStep() {
+  List<Possible> possibles = cells.stream().map(Possible::new).collect(toList());
   int last = cells.size() - 1;
   permute(0, total, new ArrayList<>())
           .filter(p -> cells.get(last).isPossible(p.get(last)))
           .filter(this::areAllDifferent)
-          .forEach(p -> {
-            IntStream.rangeClosed(0, last).forEach(i -> possibles.get(i).add(p.get(i)));
-          });
-  return IntStream.range(0, cells.size())
-          .map(this::update)
+          .forEach(p -> IntStream.rangeClosed(0, last).forEach(i -> possibles.get(i).add(p.get(i))));
+  return possibles.stream()
+          .mapToInt(Possible::update)
           .sum();
 }
 
