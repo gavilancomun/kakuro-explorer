@@ -2,14 +2,11 @@ package com.flowlikeariver.kakuro;
 
 import com.flowlikeariver.kakuro.cell.ValueCell;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,21 +25,19 @@ private boolean areAllDifferent(List<Integer> candidates) {
   return (new HashSet<>(candidates).size() == candidates.size());
 }
 
-private List<Integer> copyAdd(int v, List<Integer> vs) {
-  List<Integer> result = new ArrayList<>(vs);
-  result.add(v);
-  return result;
+private List<Integer> copyAdd(List<Integer> vs, int v) {
+  return Stream.concat(vs.stream(), Stream.of(v)).collect(toList());
 }
 
 // Exhaustive search for possible solutions
 private Stream<List<Integer>> permute(int pos, int target, List<Integer> candidates) {
   if (target >= 1) {
     if (pos == (cells.size() - 1)) {
-      return Stream.of(copyAdd(target, candidates));
+      return Stream.of(copyAdd(candidates, target));
     }
     else {
       return cells.get(pos).getValues().stream()
-              .flatMap(v -> permute(pos + 1, target - v, copyAdd(v, candidates)));
+              .flatMap(v -> permute(pos + 1, target - v, copyAdd(candidates, v)));
     }
   }
   else {
@@ -50,10 +45,14 @@ private Stream<List<Integer>> permute(int pos, int target, List<Integer> candida
   }
 }
 
+private Stream<List<Integer>> permuteAll() {
+  return permute(0, total, Collections.EMPTY_LIST);
+}
+
 public int solveStep() {
   List<Possible> possibles = cells.stream().map(Possible::new).collect(toList());
   int last = cells.size() - 1;
-  permute(0, total, new ArrayList<>())
+  permuteAll()
           .filter(p -> cells.get(last).isPossible(p.get(last)))
           .filter(this::areAllDifferent)
           .forEach(p -> IntStream.rangeClosed(0, last).forEach(i -> possibles.get(i).add(p.get(i))));
