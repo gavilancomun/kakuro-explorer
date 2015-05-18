@@ -32,7 +32,8 @@ public static Optional<CreateModelListener> interpretRule(Reader r, Function<Kak
 }
 
 public static GridController interpret(Reader r) {
-  Optional<CreateModelListener> oml = interpretRule(r, parser -> parser.grid());
-  return oml.isPresent() ? oml.get().getGridController() : new GridController();
+  return interpretRule(r, parser -> parser.grid())
+    .map(ml -> ml.getGridController())
+    .orElse(new GridController());
 }
 }
