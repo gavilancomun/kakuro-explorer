@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class WhileEmpty implements Collector<Cell, List<ValueCell>, List<ValueCell>> {
+public class WhileValueCell implements Collector<Cell, List<ValueCell>, List<ValueCell>> {
 
 AtomicBoolean done = new AtomicBoolean(false);
 

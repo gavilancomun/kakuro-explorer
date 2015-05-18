@@ -56,7 +56,7 @@ public void createAcrossSums() {
               .ifPresent(cell -> sums.add(new Sum(((Across) cell).getAcrossTotal(),
                                       row.stream()
                                       .skip(c + 1)
-                                      .collect(new WhileEmpty()))));
+                                      .collect(new WhileValueCell()))));
     });
   });
 }
@@ -68,7 +68,7 @@ public void createDownSums() {
               .ifPresent(cell -> sums.add(new Sum(((Down) cell).getDownTotal(),
                                       IntStream.range(r + 1, rows.size())
                                       .mapToObj(pos -> rows.get(pos).get(c).orElse(new EmptyCell()))
-                                      .collect(new WhileEmpty()))));
+                                      .collect(new WhileValueCell()))));
     });
   });
 }
