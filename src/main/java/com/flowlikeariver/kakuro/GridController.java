@@ -82,12 +82,13 @@ public int scan() {
   return sums.stream().mapToInt(Sum::solveStep).sum();
 }
 
-public void solve() {
+public String solve() {
   createSums();
   System.out.println(draw());
   while (scan() > 0) {
     System.out.println(draw());
   }
+  return draw();
 }
 
 }

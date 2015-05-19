@@ -7,24 +7,10 @@ import java.util.TreeSet;
 public class Possible {
 
 private final ValueCell cell;
-private Set<Integer> values = new TreeSet<>();
+private final Set<Integer> values = new TreeSet<>();
 
 public Possible(ValueCell cell) {
   this.cell = cell;
-}
-
-/**
- * @return the values
- */
-public Set<Integer> getValues() {
-  return values;
-}
-
-/**
- * @param values the values to set
- */
-public void setValues(Set<Integer> values) {
-  this.values = values;
 }
 
 /**
