@@ -1,9 +1,9 @@
 package com.flowlikeariver.kakuro.cell;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 
 public class ValueCell implements Cell {
@@ -11,7 +11,7 @@ public class ValueCell implements Cell {
 private Set<Integer> values;
 
 public ValueCell() {
-  values = new TreeSet<>(IntStream.rangeClosed(1, 9).mapToObj(Integer::new).collect(toSet()));
+  values = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
 }
 
 @Override
