@@ -14,21 +14,6 @@ public String draw() {
 }
 
 @Override
-public boolean isAcross() {
-  return false;
-}
-
-@Override
-public boolean isDown() {
-  return true;
-}
-
-@Override
-public boolean isEmpty() {
-  return false;
-}
-
-@Override
 public int getDownTotal() {
   return total;
 }

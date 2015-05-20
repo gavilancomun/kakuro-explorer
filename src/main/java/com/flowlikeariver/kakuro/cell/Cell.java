@@ -4,10 +4,4 @@ public interface Cell {
 
 String draw();
 
-boolean isAcross();
-
-boolean isDown();
-
-boolean isEmpty();
-
 }

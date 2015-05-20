@@ -14,21 +14,6 @@ public ValueCell() {
   values = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
 }
 
-@Override
-public boolean isAcross() {
-  return false;
-}
-
-@Override
-public boolean isDown() {
-  return false;
-}
-
-@Override
-public boolean isEmpty() {
-  return true;
-}
-
 public boolean isPossible(int value) {
   return values.contains(value);
 }
