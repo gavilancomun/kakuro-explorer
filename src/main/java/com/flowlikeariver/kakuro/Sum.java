@@ -1,8 +1,6 @@
 package com.flowlikeariver.kakuro;
 
 import com.flowlikeariver.kakuro.cell.ValueCell;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -13,11 +11,11 @@ import java.util.stream.Stream;
 public class Sum {
 
 private final int total;
-private final List<ValueCell> cells = new ArrayList<>();
+private final List<ValueCell> cells;
 
-public Sum(int total, Collection<ValueCell> valueCells) {
+public Sum(int total, List<ValueCell> valueCells) {
   this.total = total;
-  cells.addAll(valueCells);
+  this.cells = valueCells;
 }
 
 // All different is part of the definition of a kakuro puzzle
@@ -53,9 +51,10 @@ public int solveStep() {
   List<Possible> possibles = cells.stream().map(Possible::new).collect(toList());
   int last = cells.size() - 1;
   permuteAll()
-          .filter(p -> cells.get(last).isPossible(p.get(last)))
+          .filter(perm -> cells.get(last).isPossible(perm.get(last)))
           .filter(this::areAllDifferent)
-          .forEach(p -> IntStream.rangeClosed(0, last).forEach(i -> possibles.get(i).add(p.get(i))));
+          .forEach(perm -> IntStream.rangeClosed(0, last)
+                  .forEach(i -> possibles.get(i).add(perm.get(i))));
   return possibles.stream()
           .mapToInt(Possible::update)
           .sum();

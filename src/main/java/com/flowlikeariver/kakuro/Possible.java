@@ -13,21 +13,14 @@ public Possible(ValueCell cell) {
   this.cell = cell;
 }
 
-/**
- * @return the cell
- */
-public ValueCell getCell() {
-  return cell;
-}
-
 public void add(int n) {
   values.add(n);
 }
 
 public int update() {
-  int previousSize = cell.size();
+  int difference = cell.size() - values.size();
   cell.setValues(values);
-  return previousSize - cell.size();
+  return difference;
 }
 
 }
