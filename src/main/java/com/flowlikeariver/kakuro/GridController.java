@@ -50,15 +50,13 @@ public void addDownAcross(int down, int across) {
 }
 
 public void createAcrossSums() {
-  rows.forEach(row -> {
-    IntStream.range(0, rows.get(0).size()).forEach(c -> {
-      row.get(c).filter(cell -> cell instanceof Across)
-              .ifPresent(cell -> sums.add(new Sum(((Across) cell).getAcrossTotal(),
-                                      row.stream()
-                                      .skip(c + 1)
-                                      .collect(new WhileValueCell()))));
-    });
-  });
+  rows.forEach(row -> IntStream.range(0, rows.get(0).size()).forEach(c -> {
+    row.get(c).filter(cell -> cell instanceof Across)
+            .ifPresent(cell -> sums.add(new Sum(((Across) cell).getAcrossTotal(),
+                                    row.stream()
+                                    .skip(c + 1)
+                                    .collect(new WhileValueCell()))));
+  }));
 }
 
 public void createDownSums() {
