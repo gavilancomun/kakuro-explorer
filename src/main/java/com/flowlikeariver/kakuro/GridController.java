@@ -53,10 +53,11 @@ public void createAcrossSums() {
   rows.forEach(row -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       row.get(c).filter(cell -> cell instanceof Across)
-              .ifPresent(cell -> sums.add(new Sum(((Across) cell).getAcrossTotal(),
-                                      row.stream()
-                                      .skip(c + 1)
-                                      .collect(new WhileValueCell()))));
+              .map(cell -> (Across) cell)
+              .ifPresent(cell -> sums.add(new Sum(cell.getAcrossTotal(),
+                      row.stream()
+                      .skip(c + 1)
+                      .collect(new WhileValueCell()))));
     });
   });
 }
@@ -65,10 +66,11 @@ public void createDownSums() {
   IntStream.range(0, rows.size()).forEach(r -> {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       rows.get(r).get(c).filter(cell -> cell instanceof Down)
-              .ifPresent(cell -> sums.add(new Sum(((Down) cell).getDownTotal(),
-                                      IntStream.range(r + 1, rows.size())
-                                      .mapToObj(pos -> rows.get(pos).get(c).orElse(new EmptyCell()))
-                                      .collect(new WhileValueCell()))));
+              .map(cell -> (Down) cell)
+              .ifPresent(cell -> sums.add(new Sum(cell.getDownTotal(),
+                      IntStream.range(r + 1, rows.size())
+                      .mapToObj(pos -> rows.get(pos).get(c).orElse(new EmptyCell()))
+                      .collect(new WhileValueCell()))));
     });
   });
 }
