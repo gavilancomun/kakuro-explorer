@@ -9,13 +9,13 @@ public DownCell(int total) {
 }
 
 @Override
-public String draw() {
-  return String.format("   %2d\\--  ", total);
+public int getDownTotal() {
+  return total;
 }
 
 @Override
-public int getDownTotal() {
-  return total;
+public void accept(Visitor visitor) {
+  visitor.visitDown(this);
 }
 
 }

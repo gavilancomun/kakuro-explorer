@@ -32,8 +32,8 @@ public static Optional<CreateModelListener> interpretRule(Reader r, Function<Kak
 }
 
 public static GridController interpret(Reader r) {
-  return interpretRule(r, parser -> parser.grid())
-    .map(ml -> ml.getGridController())
+  return interpretRule(r, KakuroParser::grid)
+    .map(CreateModelListener::getGridController)
     .orElse(new GridController());
 }
 }

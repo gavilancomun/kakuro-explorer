@@ -25,11 +25,13 @@ public Supplier<List<ValueCell>> supplier() {
 @Override
 public BiConsumer<List<ValueCell>, Cell> accumulator() {
   return (list, item) -> {
-    if (!done.get() && (item instanceof ValueCell)) {
-      list.add((ValueCell) item);
-    }
-    else {
-      done.set(true);
+    if (!done.get()) {
+      if (item instanceof ValueCell) {
+        list.add((ValueCell) item);
+      }
+      else {
+        done.set(true);
+      }
     }
   };
 }

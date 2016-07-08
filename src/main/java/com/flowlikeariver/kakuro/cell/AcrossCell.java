@@ -9,13 +9,13 @@ public AcrossCell(int total) {
 }
 
 @Override
-public String draw() {
-  return String.format("   --\\%-2d  ", total);
+public int getAcrossTotal() {
+  return total;
 }
 
 @Override
-public int getAcrossTotal() {
-  return total;
+public void accept(Visitor visitor) {
+  visitor.visitAcross(this);
 }
 
 }

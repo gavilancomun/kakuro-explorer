@@ -26,10 +26,10 @@ public Supplier<List<Object>> supplier() {
 public BiConsumer<List<Object>, Object> accumulator() {
   return (list, item) -> {
     if (item instanceof Stream) {
-      list.addAll(((Stream<Object>) item).collect(new FlattenCollector<T>()));
+      list.addAll(((Stream<Object>) item).collect(new FlattenCollector<>()));
     }
     else if (item instanceof Collection) {
-      list.addAll(((Collection<Object>) item).stream().collect(new FlattenCollector<T>()));
+      list.addAll(((Collection<Object>) item).stream().collect(new FlattenCollector<>()));
     }
     else {
       list.add(item);

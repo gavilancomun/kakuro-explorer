@@ -13,11 +13,6 @@ public DownAcrossCell(int down, int across) {
 }
 
 @Override
-public String draw() {
-  return String.format("   %2d\\%-2d  ", down, across);
-}
-
-@Override
 public int getAcrossTotal() {
   return across;
 }
@@ -25,6 +20,11 @@ public int getAcrossTotal() {
 @Override
 public int getDownTotal() {
   return down;
+}
+
+@Override
+public void accept(Visitor visitor) {
+  visitor.visitDownAcross(this);
 }
 
 }
