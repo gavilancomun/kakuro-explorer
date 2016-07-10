@@ -1,9 +1,12 @@
 package com.flowlikeariver.kakuro2;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 
@@ -49,21 +52,29 @@ public static boolean allDifferent(List<Integer> nums) {
   return nums.size() == new HashSet<>(nums).size();
 }
 
-//function permute(vs, target, soFar)
-//  if (target >= 1) then
-//    if #soFar == (#vs - 1) then
-//      return {conj(soFar, target)}
-//    else
-//      local step1 = vs[#soFar + 1]
-//      local step2 = step1.values
-//      local step3 = map(function (n)
-//                          return permute(vs, (target - n), conj(soFar, n))
-//                        end, step2)
-//      return flatten1(step3)
-//    end
-//  else
-//    return {}
-//  end
-//end
+public static  <T> List<T> conj(List<T> items, T item) {
+  List<T> result = new ArrayList<>(items);
+  result.add(item);
+  return result;
+}
+
+public static List<List<Integer>> permute(List<ValueCell> vs, int target, List<Integer> soFar) {
+  if (target >= 1) {
+    if (soFar.size() == (vs.size() - 1)) {
+      List<List<Integer>> result = new ArrayList<>();
+      result.add(conj(soFar, target));
+      return result;
+    }
+    else {
+      return vs.get(soFar.size()).values.stream()
+        .map(n -> permute(vs, (target - n), conj(soFar, n)))
+        .flatMap(perm -> perm.stream())
+        .collect(toList());
+    }
+  }
+  else {
+    return Collections.EMPTY_LIST;
+  }
+}
 
 }
