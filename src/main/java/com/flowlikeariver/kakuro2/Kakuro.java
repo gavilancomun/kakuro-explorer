@@ -12,47 +12,47 @@ import java.util.stream.IntStream;
 
 public class Kakuro {
 
-public static Cell v() {
+public static ValueCell v() {
   return new ValueCell(IntStream.range(1, 10).mapToObj(i -> i).collect(toSet()));
 }
 
-public static Cell v(Set<Integer> values) {
+public static ValueCell v(Set<Integer> values) {
   return new ValueCell(values);
 }
 
-public static Cell e() {
+public static EmptyCell e() {
   return new EmptyCell();
 }
 
-public static Cell d(int d) {
+public static DownCell d(int d) {
   return new DownCell(d);
 }
 
-public static Cell a(int a) {
+public static AcrossCell a(int a) {
   return new AcrossCell(a);
 }
 
-public static Cell da(int d, int a) {
+public static DownAcrossCell da(int d, int a) {
   return new DownAcrossCell(d, a);
 }
 
 public static String drawRow(List<Cell> row) {
   return row.stream()
-    .map(v -> v.draw())
-    .collect(joining()) + "\n";
+          .map(v -> v.draw())
+          .collect(joining()) + "\n";
 }
 
 public static String drawGrid(List<List<Cell>> grid) {
   return grid.stream()
-    .map(row -> drawRow(row))
-    .collect(joining());
+          .map(row -> drawRow(row))
+          .collect(joining());
 }
 
 public static boolean allDifferent(List<Integer> nums) {
   return nums.size() == new HashSet<>(nums).size();
 }
 
-public static  <T> List<T> conj(List<T> items, T item) {
+public static <T> List<T> conj(List<T> items, T item) {
   List<T> result = new ArrayList<>(items);
   result.add(item);
   return result;
@@ -67,13 +67,34 @@ public static List<List<Integer>> permute(List<ValueCell> vs, int target, List<I
     }
     else {
       return vs.get(soFar.size()).values.stream()
-        .map(n -> permute(vs, (target - n), conj(soFar, n)))
-        .flatMap(perm -> perm.stream())
-        .collect(toList());
+              .map(n -> permute(vs, (target - n), conj(soFar, n)))
+              .flatMap(perm -> perm.stream())
+              .collect(toList());
     }
   }
   else {
     return Collections.EMPTY_LIST;
+  }
+}
+
+public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
+  return permute(vs, target, new ArrayList<>());
+}
+
+public static boolean isPossible(ValueCell v, int n) {
+  return v.contains(n);
+}
+
+public static <T> List<List<T>> transpose(List<List<T>> m) {
+  if (m.isEmpty()) {
+    return Collections.EMPTY_LIST;
+  }
+  else {
+    return IntStream.range(0, m.get(0).size())
+            .mapToObj(i -> IntStream.range(0, m.size())
+                    .mapToObj(j -> m.get(j).get(i))
+                    .collect(toList()))
+            .collect(toList());
   }
 }
 

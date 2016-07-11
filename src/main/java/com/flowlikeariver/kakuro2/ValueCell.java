@@ -25,4 +25,8 @@ public String draw() {
   }
 }
 
+public boolean contains(int n) {
+  return values.contains(n);
+}
+
 }
