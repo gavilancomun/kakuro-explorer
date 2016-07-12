@@ -1,14 +1,17 @@
 package com.flowlikeariver.kakuro2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Kakuro {
 
@@ -38,14 +41,14 @@ public static DownAcrossCell da(int d, int a) {
 
 public static String drawRow(List<Cell> row) {
   return row.stream()
-          .map(v -> v.draw())
-          .collect(joining()) + "\n";
+    .map(v -> v.draw())
+    .collect(joining()) + "\n";
 }
 
 public static String drawGrid(List<List<Cell>> grid) {
   return grid.stream()
-          .map(row -> drawRow(row))
-          .collect(joining());
+    .map(row -> drawRow(row))
+    .collect(joining());
 }
 
 public static boolean allDifferent(List<Integer> nums) {
@@ -67,9 +70,9 @@ public static List<List<Integer>> permute(List<ValueCell> vs, int target, List<I
     }
     else {
       return vs.get(soFar.size()).values.stream()
-              .map(n -> permute(vs, (target - n), conj(soFar, n)))
-              .flatMap(perm -> perm.stream())
-              .collect(toList());
+        .map(n -> permute(vs, (target - n), conj(soFar, n)))
+        .flatMap(perm -> perm.stream())
+        .collect(toList());
     }
   }
   else {
@@ -91,10 +94,42 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
   }
   else {
     return IntStream.range(0, m.get(0).size())
-            .mapToObj(i -> IntStream.range(0, m.size())
-                    .mapToObj(j -> m.get(j).get(i))
-                    .collect(toList()))
-            .collect(toList());
+      .mapToObj(i -> IntStream.range(0, m.size())
+        .mapToObj(j -> m.get(j).get(i))
+        .collect(toList()))
+      .collect(toList());
+  }
+}
+
+public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
+  List<T> result = new ArrayList();
+  for (T item : coll) {
+    if (!f.test(item)) {
+      break;
+    }
+    result.add(item);
+  }
+  return result;
+}
+
+public static <T> List<T> concatLists(List<T> a, List<T> b) {
+  return Stream.concat(a.stream(), b.stream()).collect(toList());
+}
+
+public static <T> List<T> drop(int n, List<T> coll) {
+  return coll.stream().skip(n).collect(toList());
+}
+
+public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
+  System.out.println("JNP " + coll);
+  if (coll.isEmpty()) {
+    return Collections.EMPTY_LIST;
+  }
+  else {
+    T head = coll.get(0);
+    boolean fx = f.test(head);
+    List<T> group = takeWhile(y -> fx == f.test(y), coll);
+    return concatLists(Arrays.asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
 
