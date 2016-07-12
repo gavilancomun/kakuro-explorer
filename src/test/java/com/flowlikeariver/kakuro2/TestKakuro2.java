@@ -96,4 +96,12 @@ public void testPartAll() {
   assertEquals(5, result.size());
 }
 
+@Test
+public void testSolveStep() {
+  List<ValueCell> result = Kakuro.solveStep(Arrays.asList(v(1, 2), v()), 5);
+  System.out.println("solve step " + result);
+  assertEquals(v(1, 2), result.get(0));
+  assertEquals(v(3, 4), result.get(1));
+}
+
 }

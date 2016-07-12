@@ -2,10 +2,10 @@ package com.flowlikeariver.kakuro2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -16,11 +16,15 @@ import java.util.stream.Stream;
 public class Kakuro {
 
 public static ValueCell v() {
-  return new ValueCell(IntStream.range(1, 10).mapToObj(i -> i).collect(toSet()));
+  return new ValueCell(IntStream.range(1, 10).mapToObj(i -> (Integer) i).collect(toSet()));
 }
 
-public static ValueCell v(Set<Integer> values) {
+public static ValueCell v(Collection<Integer> values) {
   return new ValueCell(values);
+}
+
+public static ValueCell v(Integer... values) {
+  return new ValueCell(Arrays.asList(values));
 }
 
 public static EmptyCell e() {
@@ -147,6 +151,17 @@ public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
 
 public static <T> List<List<T>> partitionN(int n, List<T> coll) {
   return partitionAll(n, n, coll);
+}
+
+public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
+  int finalIndex = cells.size() - 1;
+  List<List<Integer>> perms = permuteAll(cells, total).stream()
+    .filter(v -> isPossible(cells.get(finalIndex), v.get(finalIndex)))
+    .filter(Kakuro::allDifferent)
+    .collect(toList());
+  return transpose(perms).stream()
+    .map(Kakuro::v)
+    .collect(toList());
 }
 
 }

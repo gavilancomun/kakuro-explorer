@@ -1,6 +1,8 @@
 package com.flowlikeariver.kakuro2;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import static java.util.stream.Collectors.joining;
 import java.util.stream.IntStream;
@@ -9,8 +11,8 @@ public class ValueCell implements Cell {
 
 Set<Integer> values = new HashSet<>();
 
-public ValueCell(Set<Integer> values) {
-  this.values = values;
+public ValueCell(Collection<Integer> values) {
+  this.values.addAll(values);
 }
 
 @Override
@@ -27,6 +29,34 @@ public String draw() {
 
 public boolean contains(int n) {
   return values.contains(n);
+}
+
+@Override
+public String toString() {
+  return "valueCell[" + values.stream()
+    .map(n -> String.valueOf(n))
+    .collect(joining(", "))
+    + "]";
+}
+
+@Override
+public int hashCode() {
+  int hash = 5;
+  return hash;
+}
+
+@Override
+public boolean equals(Object obj) {
+  if (this == obj) {
+    return true;
+  }
+  if (obj == null) {
+    return false;
+  }
+  if (getClass() != obj.getClass()) {
+    return false;
+  }
+  return Objects.equals(this.values, ((ValueCell) obj).values);
 }
 
 }
