@@ -195,11 +195,11 @@ public static List<Cell> solveLine(List<Cell> line, Function<List<List<Cell>>, L
     .collect(toList());
 }
 
-public static Object solveRow(List<Cell> row) {
+public static List<Cell> solveRow(List<Cell> row) {
   return solveLine(row, v -> solvePair(x -> ((Across) x).getAcross(), v));
 }
 
-public static Object solveColumn(List<Cell> column) {
+public static List<Cell> solveColumn(List<Cell> column) {
   return solveLine(column, v -> solvePair(x -> ((Down) x).getDown(), v));
 }
 

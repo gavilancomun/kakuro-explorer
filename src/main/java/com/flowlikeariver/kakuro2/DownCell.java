@@ -18,4 +18,9 @@ public String draw() {
     return down;
   }
 
+@Override
+public String toString() {
+  return "DownCell[" + down + "]";
+}
+
 }

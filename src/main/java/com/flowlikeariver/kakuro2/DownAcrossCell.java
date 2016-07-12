@@ -25,4 +25,9 @@ public int getAcross() {
   return across;
 }
 
+@Override
+public String toString() {
+  return "DownAcrossCell[" + down + ", " + across + "]";
+}
+
 }

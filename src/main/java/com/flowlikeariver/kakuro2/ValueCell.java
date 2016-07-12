@@ -33,7 +33,7 @@ public boolean contains(int n) {
 
 @Override
 public String toString() {
-  return "valueCell[" + values.stream()
+  return "ValueCell[" + values.stream()
     .map(n -> String.valueOf(n))
     .collect(joining(", "))
     + "]";

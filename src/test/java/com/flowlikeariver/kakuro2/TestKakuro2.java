@@ -1,7 +1,9 @@
 package com.flowlikeariver.kakuro2;
 
+import static com.flowlikeariver.kakuro2.Kakuro.a;
 import static com.flowlikeariver.kakuro2.Kakuro.allDifferent;
 import static com.flowlikeariver.kakuro2.Kakuro.concatLists;
+import static com.flowlikeariver.kakuro2.Kakuro.da;
 import static com.flowlikeariver.kakuro2.Kakuro.takeWhile;
 import static com.flowlikeariver.kakuro2.Kakuro.transpose;
 import static com.flowlikeariver.kakuro2.Kakuro.v;
@@ -102,6 +104,22 @@ public void testSolveStep() {
   System.out.println("solve step " + result);
   assertEquals(v(1, 2), result.get(0));
   assertEquals(v(3, 4), result.get(1));
+}
+
+@Test
+public void testSolveRow() {
+  List<Cell> result = Kakuro.solveRow(Arrays.asList(a(3), v(1, 2, 3), v(1)));
+  System.out.println("solve row " + result);
+  assertEquals(v(2), result.get(1));
+  assertEquals(v(1), result.get(2));
+}
+
+@Test
+public void testSolveCol() {
+  List<Cell> result = Kakuro.solveColumn(Arrays.asList(da(3, 12), v(1, 2, 3), v(1)));
+  System.out.println("solve col " + result);
+  assertEquals(v(2), result.get(1));
+  assertEquals(v(1), result.get(2));
 }
 
 }
