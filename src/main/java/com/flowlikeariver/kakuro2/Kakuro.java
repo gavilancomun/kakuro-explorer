@@ -120,8 +120,11 @@ public static <T> List<T> drop(int n, List<T> coll) {
   return coll.stream().skip(n).collect(toList());
 }
 
+public static <T> List<T> take(int n, List<T> coll) {
+  return coll.stream().limit(n).collect(toList());
+}
+
 public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
-  System.out.println("JNP " + coll);
   if (coll.isEmpty()) {
     return Collections.EMPTY_LIST;
   }
@@ -131,6 +134,19 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
     List<T> group = takeWhile(y -> fx == f.test(y), coll);
     return concatLists(Arrays.asList(group), partitionBy(f, drop(group.size(), coll)));
   }
+}
+
+public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
+  if (coll.isEmpty()) {
+    return Collections.EMPTY_LIST;
+  }
+  else {
+    return concatLists(Arrays.asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
+  }
+}
+
+public static <T> List<List<T>> partitionN(int n, List<T> coll) {
+  return partitionAll(n, n, coll);
 }
 
 }
