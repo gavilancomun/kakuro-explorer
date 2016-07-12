@@ -1,11 +1,13 @@
 package com.flowlikeariver.kakuro2;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -162,6 +164,43 @@ public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
   return transpose(perms).stream()
     .map(Kakuro::v)
     .collect(toList());
+}
+
+public static List<Cell> solvePair(Function<Cell, Integer> f, List<List<Cell>> p) {
+  List<Cell> notValueCells = p.get(0);
+  List<ValueCell> valueCells = p.get(1).stream().map(cell -> (ValueCell) cell).collect(toList());
+  if (valueCells.isEmpty()) {
+    return notValueCells;
+  }
+  else {
+    return concatLists(notValueCells,
+      solveStep(valueCells, f.apply(notValueCells.get(notValueCells.size() - 1))).stream()
+      .map(cell -> (Cell) cell)
+      .collect(toList()));
+  }
+}
+
+public static List<List<Cell>> gatherValues(List<Cell> line) {
+  return partitionBy(v -> (v instanceof ValueCell), line);
+}
+
+// The middle list is a pair of a list of non-ValueCells and a list of ValueCells
+public static List<List<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
+  return partitionN(2, gatherValues(line));
+}
+
+public static List<Cell> solveLine(List<Cell> line, Function<List<List<Cell>>, List<Cell>> pairSolver) {
+  return pairTargetsWithValues(line).stream()
+    .flatMap(p -> pairSolver.apply(p).stream())
+    .collect(toList());
+}
+
+public static Object solveRow(List<Cell> row) {
+  return solveLine(row, v -> solvePair(x -> ((Across) x).getAcross(), v));
+}
+
+public static Object solveColumn(List<Cell> column) {
+  return solveLine(column, v -> solvePair(x -> ((Down) x).getDown(), v));
 }
 
 }

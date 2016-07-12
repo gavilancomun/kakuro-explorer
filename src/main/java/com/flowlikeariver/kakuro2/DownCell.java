@@ -1,6 +1,6 @@
 package com.flowlikeariver.kakuro2;
 
-public class DownCell implements Cell {
+public class DownCell implements Down, Cell {
 
 public int down;
 
@@ -12,5 +12,10 @@ public DownCell(int down) {
 public String draw() {
   return String.format("   %2d\\--  ", down);
 }
+
+  @Override
+  public int getDown() {
+    return down;
+  }
 
 }
