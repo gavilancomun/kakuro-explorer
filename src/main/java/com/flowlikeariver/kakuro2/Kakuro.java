@@ -1,6 +1,5 @@
 package com.flowlikeariver.kakuro2;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -166,13 +165,13 @@ public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
     .collect(toList());
 }
 
-public static List<Cell> solvePair(Function<Cell, Integer> f, List<List<Cell>> p) {
-  List<Cell> notValueCells = p.get(0);
-  List<ValueCell> valueCells = p.get(1).stream().map(cell -> (ValueCell) cell).collect(toList());
-  if (valueCells.isEmpty()) {
+public static List<Cell> solvePair(Function<Cell, Integer> f, List<List<Cell>> pair) {
+  List<Cell> notValueCells = pair.get(0);
+  if (pair.size() < 2) {
     return notValueCells;
   }
   else {
+    List<ValueCell> valueCells = pair.get(1).stream().map(cell -> (ValueCell) cell).collect(toList());
     return concatLists(notValueCells,
       solveStep(valueCells, f.apply(notValueCells.get(notValueCells.size() - 1))).stream()
       .map(cell -> (Cell) cell)
@@ -180,6 +179,7 @@ public static List<Cell> solvePair(Function<Cell, Integer> f, List<List<Cell>> p
   }
 }
 
+// returns (non-vals, vals)*
 public static List<List<Cell>> gatherValues(List<Cell> line) {
   return partitionBy(v -> (v instanceof ValueCell), line);
 }
@@ -191,7 +191,8 @@ public static List<List<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
 
 public static List<Cell> solveLine(List<Cell> line, Function<List<List<Cell>>, List<Cell>> pairSolver) {
   return pairTargetsWithValues(line).stream()
-    .flatMap(p -> pairSolver.apply(p).stream())
+    .map(pair -> pairSolver.apply(pair))
+    .flatMap(solved -> solved.stream())
     .collect(toList());
 }
 
@@ -201,6 +202,40 @@ public static List<Cell> solveRow(List<Cell> row) {
 
 public static List<Cell> solveColumn(List<Cell> column) {
   return solveLine(column, v -> solvePair(x -> ((Down) x).getDown(), v));
+}
+
+public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
+  List<List<Cell>> rowsDone = grid.stream()
+    .map(Kakuro::solveRow).collect(toList());
+  List<List<Cell>> colsDone = transpose(rowsDone).stream()
+    .map(Kakuro::solveColumn)
+    .collect(toList());
+  return transpose(colsDone);
+}
+
+public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
+  if (g1.size() == g2.size()) {
+    for (int i = 0; i < g1.size(); ++i) {
+      if (!g1.get(i).equals(g2.get(i))) {
+        return false;
+      }
+    };
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+public static List<List<Cell>> solver(List<List<Cell>> grid) {
+  List<List<Cell>> g = solveGrid(grid);
+  if (gridEquals(g, grid)) {
+    return g;
+  }
+  else {
+    System.out.println(drawGrid(g));
+    return solver(g);
+  }
 }
 
 }

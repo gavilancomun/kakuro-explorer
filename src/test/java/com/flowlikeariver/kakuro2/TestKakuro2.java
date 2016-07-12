@@ -3,11 +3,17 @@ package com.flowlikeariver.kakuro2;
 import static com.flowlikeariver.kakuro2.Kakuro.a;
 import static com.flowlikeariver.kakuro2.Kakuro.allDifferent;
 import static com.flowlikeariver.kakuro2.Kakuro.concatLists;
+import static com.flowlikeariver.kakuro2.Kakuro.d;
 import static com.flowlikeariver.kakuro2.Kakuro.da;
+import static com.flowlikeariver.kakuro2.Kakuro.e;
+import static com.flowlikeariver.kakuro2.Kakuro.gatherValues;
+import static com.flowlikeariver.kakuro2.Kakuro.solvePair;
+import static com.flowlikeariver.kakuro2.Kakuro.solver;
 import static com.flowlikeariver.kakuro2.Kakuro.takeWhile;
 import static com.flowlikeariver.kakuro2.Kakuro.transpose;
 import static com.flowlikeariver.kakuro2.Kakuro.v;
 import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
@@ -107,8 +113,46 @@ public void testSolveStep() {
 }
 
 @Test
+public void testGatherValues() {
+  List<Cell> line = Arrays.asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
+  List<List<Cell>> result = gatherValues(line);
+  System.out.println("gather " + result);
+  assertEquals(4, result.size());
+  assertEquals(da(3, 4), result.get(0).get(0));
+  assertEquals(d(4), result.get(2).get(0));
+  assertEquals(e(), result.get(2).get(1));
+  assertEquals(a(4), result.get(2).get(2));
+}
+
+@Test
+public void testPairTargets() {
+  List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
+  List<List<List<Cell>>> result = Kakuro.pairTargetsWithValues(line);
+  System.out.println("pair " + result);
+  assertEquals(2, result.size());
+  assertEquals(da(3, 4), result.get(0).get(0).get(0));
+  assertEquals(d(4), result.get(1).get(0).get(0));
+  assertEquals(e(), result.get(1).get(0).get(1));
+  assertEquals(a(4), result.get(1).get(0).get(2));
+}
+
+@Test
+public void testSolvePair() {
+  List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
+  List<List<List<Cell>>> pairs = Kakuro.pairTargetsWithValues(line);
+  List<List<Cell>> pair = pairs.get(0);
+  List<Cell> result = solvePair(cell -> ((Down) cell).getDown(), pair);
+  System.out.println("solvePair " + result);
+}
+
+@Test
+public void testSolveLine() {
+  
+}
+
+@Test
 public void testSolveRow() {
-  List<Cell> result = Kakuro.solveRow(Arrays.asList(a(3), v(1, 2, 3), v(1)));
+  List<Cell> result = Kakuro.solveRow(asList(a(3), v(1, 2, 3), v(1)));
   System.out.println("solve row " + result);
   assertEquals(v(2), result.get(1));
   assertEquals(v(1), result.get(2));
@@ -116,10 +160,22 @@ public void testSolveRow() {
 
 @Test
 public void testSolveCol() {
-  List<Cell> result = Kakuro.solveColumn(Arrays.asList(da(3, 12), v(1, 2, 3), v(1)));
+  List<Cell> result = Kakuro.solveColumn(asList(da(3, 12), v(1, 2, 3), v(1)));
   System.out.println("solve col " + result);
   assertEquals(v(2), result.get(1));
   assertEquals(v(1), result.get(2));
+}
+
+@Test
+public void testSolver() {
+  List<List<Cell>> grid1 = asList(
+    asList(e(), d(4), d(22), e(), d(16), d(3)),
+    asList(a(3), v(), v(), da(16, 6), v(), v()),
+    asList(a(18), v(), v(), v(), v(), v()),
+    asList(e(), da(17, 23), v(), v(), v(), d(14)),
+    asList(a(9), v(), v(), a(6), v(), v()),
+    asList(a(15), v(), v(), a(12), v(), v()));
+  solver(grid1);
 }
 
 }

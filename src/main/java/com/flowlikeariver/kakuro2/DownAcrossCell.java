@@ -30,4 +30,30 @@ public String toString() {
   return "DownAcrossCell[" + down + ", " + across + "]";
 }
 
+@Override
+public boolean equals(Object obj) {
+  if (this == obj) {
+    return true;
+  }
+  if (obj == null) {
+    return false;
+  }
+  if (getClass() != obj.getClass()) {
+    return false;
+  }
+  final DownAcrossCell other = (DownAcrossCell) obj;
+  if (this.across != other.across) {
+    return false;
+  }
+  return this.down == other.down;
+}
+
+@Override
+public int hashCode() {
+  int hash = 5;
+  hash = 79 * hash + this.across;
+  hash = 79 * hash + this.down;
+  return hash;
+}
+
 }

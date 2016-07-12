@@ -1,7 +1,5 @@
 package com.flowlikeariver.kakuro2;
 
-import static java.util.stream.Collectors.joining;
-
 public class AcrossCell implements Across, Cell {
 
 public int across;
@@ -23,6 +21,28 @@ public int getAcross() {
 @Override
 public String toString() {
   return "AcrossCell[" + across + "]";
+}
+
+@Override
+public int hashCode() {
+  int hash = 7;
+  hash = 47 * hash + this.across;
+  return hash;
+}
+
+@Override
+public boolean equals(Object obj) {
+  if (this == obj) {
+    return true;
+  }
+  if (obj == null) {
+    return false;
+  }
+  if (getClass() != obj.getClass()) {
+    return false;
+  }
+  final AcrossCell other = (AcrossCell) obj;
+  return this.across == other.across;
 }
 
 }
