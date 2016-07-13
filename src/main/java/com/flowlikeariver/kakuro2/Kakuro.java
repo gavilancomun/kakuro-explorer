@@ -195,7 +195,7 @@ public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line
 public static List<Cell> solveLine(List<Cell> line, Function<SimplePair<List<Cell>>, List<Cell>> pairSolver) {
   return pairTargetsWithValues(line).stream()
     .map(pair -> pairSolver.apply(pair))
-    .flatMap(solved -> solved.stream())
+    .flatMap(List::stream)
     .collect(toList());
 }
 

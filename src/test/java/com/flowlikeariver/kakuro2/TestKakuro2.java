@@ -57,8 +57,8 @@ public void testTakeWhile() {
 
 @Test
 public void testConcat() {
-  List<Integer> a = Arrays.asList(1, 2, 3);
-  List<Integer> b = Arrays.asList(4, 5, 6, 1, 2, 3);
+  List<Integer> a = asList(1, 2, 3);
+  List<Integer> b = asList(4, 5, 6, 1, 2, 3);
   List<Integer> result = concatLists(a, b);
   System.out.println(result);
   assertEquals(9, result.size());
@@ -66,7 +66,7 @@ public void testConcat() {
 
 @Test
 public void testDrop() {
-  List<Integer> a = Arrays.asList(1, 2, 3, 4, 5, 6);
+  List<Integer> a = asList(1, 2, 3, 4, 5, 6);
   List<Integer> result = Kakuro.drop(4, a);
   System.out.println(result);
   assertEquals(2, result.size());
@@ -74,7 +74,7 @@ public void testDrop() {
 
 @Test
 public void testTake() {
-  List<Integer> a = Arrays.asList(1, 2, 3, 4, 5, 6);
+  List<Integer> a = asList(1, 2, 3, 4, 5, 6);
   List<Integer> result = Kakuro.take(4, a);
   System.out.println(result);
   assertEquals(4, result.size());
@@ -82,18 +82,10 @@ public void testTake() {
 
 @Test
 public void testPartBy() {
-  List<Integer> data = Arrays.asList(1, 2, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8, 9);
+  List<Integer> data = asList(1, 2, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8, 9);
   List<List<Integer>> result = Kakuro.partitionBy(n -> 0 == (n % 2), data);
   System.out.println(result);
   assertEquals(9, result.size());
-}
-
-@Test
-public void testPartN() {
-  List<Integer> data = Arrays.asList(1, 2, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8, 9);
-  List<List<Integer>> result = Kakuro.partitionN(5, data);
-  System.out.println(result);
-  assertEquals(3, result.size());
 }
 
 @Test
@@ -102,6 +94,14 @@ public void testPartAll() {
   List<List<Integer>> result = Kakuro.partitionAll(5, 3, data);
   System.out.println(result);
   assertEquals(5, result.size());
+}
+
+@Test
+public void testPartN() {
+  List<Integer> data = Arrays.asList(1, 2, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8, 9);
+  List<List<Integer>> result = Kakuro.partitionN(5, data);
+  System.out.println(result);
+  assertEquals(3, result.size());
 }
 
 @Test
