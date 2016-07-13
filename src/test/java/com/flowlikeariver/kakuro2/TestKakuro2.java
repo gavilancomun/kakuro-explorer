@@ -127,20 +127,20 @@ public void testGatherValues() {
 @Test
 public void testPairTargets() {
   List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
-  List<List<List<Cell>>> result = Kakuro.pairTargetsWithValues(line);
+  List<SimplePair<List<Cell>>> result = Kakuro.pairTargetsWithValues(line);
   System.out.println("pair " + result);
   assertEquals(2, result.size());
-  assertEquals(da(3, 4), result.get(0).get(0).get(0));
-  assertEquals(d(4), result.get(1).get(0).get(0));
-  assertEquals(e(), result.get(1).get(0).get(1));
-  assertEquals(a(4), result.get(1).get(0).get(2));
+  assertEquals(da(3, 4), result.get(0).left.get(0));
+  assertEquals(d(4), result.get(1).left.get(0));
+  assertEquals(e(), result.get(1).left.get(1));
+  assertEquals(a(4), result.get(1).left.get(2));
 }
 
 @Test
 public void testSolvePair() {
   List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
-  List<List<List<Cell>>> pairs = Kakuro.pairTargetsWithValues(line);
-  List<List<Cell>> pair = pairs.get(0);
+  List<SimplePair<List<Cell>>> pairs = Kakuro.pairTargetsWithValues(line);
+  SimplePair<List<Cell>> pair = pairs.get(0);
   List<Cell> result = solvePair(cell -> ((Down) cell).getDown(), pair);
   System.out.println("solvePair " + result);
 }

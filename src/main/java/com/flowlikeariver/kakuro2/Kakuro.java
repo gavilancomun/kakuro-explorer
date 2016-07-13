@@ -117,7 +117,7 @@ public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
   return result;
 }
 
-public static <T> List<T> concatLists(List<T> a, List<T> b) {
+public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
   return Stream.concat(a.stream(), b.stream()).collect(toList());
 }
 
@@ -154,10 +154,14 @@ public static <T> List<List<T>> partitionN(int n, List<T> coll) {
   return partitionAll(n, n, coll);
 }
 
+public static <T> T last(List<T> coll) {
+  return coll.get(coll.size() - 1);
+}
+
 public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
   int finalIndex = cells.size() - 1;
   List<List<Integer>> perms = permuteAll(cells, total).stream()
-    .filter(v -> isPossible(cells.get(finalIndex), v.get(finalIndex)))
+    .filter(v -> isPossible(last(cells), v.get(finalIndex)))
     .filter(Kakuro::allDifferent)
     .collect(toList());
   return transpose(perms).stream()
@@ -165,17 +169,17 @@ public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
     .collect(toList());
 }
 
-public static List<Cell> solvePair(Function<Cell, Integer> f, List<List<Cell>> pair) {
-  List<Cell> notValueCells = pair.get(0);
-  if (pair.size() < 2) {
+public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
+  List<Cell> notValueCells = pair.left;
+  if (pair.right.isEmpty()) {
     return notValueCells;
   }
   else {
-    List<ValueCell> valueCells = pair.get(1).stream().map(cell -> (ValueCell) cell).collect(toList());
-    return concatLists(notValueCells,
-      solveStep(valueCells, f.apply(notValueCells.get(notValueCells.size() - 1))).stream()
-      .map(cell -> (Cell) cell)
-      .collect(toList()));
+    List<ValueCell> valueCells = pair.right.stream()
+      .map(cell -> (ValueCell) cell)
+      .collect(toList());
+    List<ValueCell> newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
+    return concatLists(notValueCells, newValueCells);
   }
 }
 
@@ -184,12 +188,13 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
   return partitionBy(v -> (v instanceof ValueCell), line);
 }
 
-// The middle list is a pair of a list of non-ValueCells and a list of ValueCells
-public static List<List<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
-  return partitionN(2, gatherValues(line));
+public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
+  return partitionN(2, gatherValues(line)).stream()
+    .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
+    .collect(toList());
 }
 
-public static List<Cell> solveLine(List<Cell> line, Function<List<List<Cell>>, List<Cell>> pairSolver) {
+public static List<Cell> solveLine(List<Cell> line, Function<SimplePair<List<Cell>>, List<Cell>> pairSolver) {
   return pairTargetsWithValues(line).stream()
     .map(pair -> pairSolver.apply(pair))
     .flatMap(solved -> solved.stream())
