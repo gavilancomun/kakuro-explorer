@@ -228,12 +228,12 @@ public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
 }
 
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
+  System.out.println(drawGrid(grid));
   List<List<Cell>> g = solveGrid(grid);
   if (gridEquals(g, grid)) {
     return g;
   }
   else {
-    System.out.println(drawGrid(g));
     return solver(g);
   }
 }

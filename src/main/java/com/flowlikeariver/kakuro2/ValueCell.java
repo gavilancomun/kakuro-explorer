@@ -21,7 +21,7 @@ public String draw() {
     return "     " + values.stream().findFirst().get() + "    ";
   }
   else {
-    return IntStream.range(1, 10)
+    return " " + IntStream.range(1, 10)
       .mapToObj(n -> values.contains(n) ? String.valueOf(n) : ".")
       .collect(joining());
   }
