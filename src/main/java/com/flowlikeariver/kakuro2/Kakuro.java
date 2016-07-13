@@ -220,12 +220,7 @@ public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
 
 public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
   if (g1.size() == g2.size()) {
-    for (int i = 0; i < g1.size(); ++i) {
-      if (!g1.get(i).equals(g2.get(i))) {
-        return false;
-      }
-    };
-    return true;
+    return IntStream.range(0, g1.size()).allMatch(i -> g1.get(i).equals(g2.get(i)));
   }
   else {
     return false;
