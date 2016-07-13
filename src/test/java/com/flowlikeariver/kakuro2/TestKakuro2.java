@@ -143,11 +143,21 @@ public void testSolvePair() {
   SimplePair<List<Cell>> pair = pairs.get(0);
   List<Cell> result = solvePair(cell -> ((Down) cell).getDown(), pair);
   System.out.println("solvePair " + result);
+  assertEquals(3, result.size());
+  assertEquals(v(1, 2), result.get(1));
+  assertEquals(v(1, 2), result.get(2));
 }
 
 @Test
 public void testSolveLine() {
-  
+  List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(5), v(), v());
+  List<Cell> result = Kakuro.solveLine(line, v -> solvePair(x -> ((Across) x).getAcross(), v));
+  System.out.println("solve line " + result);
+  assertEquals(8, result.size());
+  assertEquals(v(1, 3), result.get(1));
+  assertEquals(v(1, 3), result.get(2));
+  assertEquals(v(1, 2, 3, 4), result.get(6));
+  assertEquals(v(1, 2, 3, 4), result.get(7));
 }
 
 @Test

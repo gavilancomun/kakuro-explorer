@@ -2,6 +2,7 @@ package com.flowlikeariver.kakuro2;
 
 public class EmptyCell implements Cell {
 
+@Override
 public String draw() {
   return "   -----  ";
 }
@@ -14,10 +15,7 @@ public boolean equals(Object obj) {
   if (obj == null) {
     return false;
   }
-  if (getClass() != obj.getClass()) {
-    return false;
-  }
-  return true;
+  return getClass() == obj.getClass();
 }
 
 @Override

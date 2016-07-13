@@ -35,18 +35,18 @@ public boolean equals(Object obj) {
   return Objects.equals(this.left, other.left) && Objects.equals(this.right, other.right);
 }
 
-  /**
-   * @return the left
-   */
-  public T getLeft() {
-    return left;
-  }
+/**
+ * @return the left
+ */
+public T getLeft() {
+  return left;
+}
 
-  /**
-   * @return the right
-   */
-  public U getRight() {
-    return right;
-  }
+/**
+ * @return the right
+ */
+public U getRight() {
+  return right;
+}
 
 }

@@ -41,11 +41,8 @@ public boolean equals(Object obj) {
   if (getClass() != obj.getClass()) {
     return false;
   }
-  final DownAcrossCell other = (DownAcrossCell) obj;
-  if (this.across != other.across) {
-    return false;
-  }
-  return this.down == other.down;
+  DownAcrossCell other = (DownAcrossCell) obj;
+  return (this.across == other.across) && (this.down == other.down);
 }
 
 @Override
