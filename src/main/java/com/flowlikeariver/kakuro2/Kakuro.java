@@ -97,8 +97,8 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
   }
   else {
     return IntStream.range(0, m.get(0).size())
-      .mapToObj(i -> IntStream.range(0, m.size())
-        .mapToObj(j -> m.get(j).get(i))
+      .mapToObj(i -> m.stream()
+        .map(col -> col.get(i))
         .collect(toList()))
       .collect(toList());
   }

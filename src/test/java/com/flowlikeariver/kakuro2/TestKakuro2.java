@@ -24,7 +24,7 @@ public class TestKakuro2 {
 
 @Test
 public void testPermute() {
-  List<ValueCell> vs = IntStream.range(0, 3).mapToObj(i -> v()).collect(toList());
+  List<ValueCell> vs = asList(v(), v(), v());
   List<List<Integer>> results = Kakuro.permuteAll(vs, 6);
   System.out.println(results);
   assertEquals(10, results.size());
