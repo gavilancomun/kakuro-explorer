@@ -5,6 +5,7 @@ import static com.flowlikeariver.kakuro2.Kakuro.allDifferent;
 import static com.flowlikeariver.kakuro2.Kakuro.concatLists;
 import static com.flowlikeariver.kakuro2.Kakuro.d;
 import static com.flowlikeariver.kakuro2.Kakuro.da;
+import static com.flowlikeariver.kakuro2.Kakuro.drawRow;
 import static com.flowlikeariver.kakuro2.Kakuro.e;
 import static com.flowlikeariver.kakuro2.Kakuro.gatherValues;
 import static com.flowlikeariver.kakuro2.Kakuro.solvePair;
@@ -21,6 +22,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class TestKakuro2 {
+
+@Test
+public void testDrawRow() {
+    List<Cell> line = asList(da(3, 4), v(), v(1, 2), d(4), e(), a(5), v(4), v(1));
+    String result = drawRow(line);
+    System.out.println(result);
+    assertEquals("    3\\ 4   123456789 12.......    4\\--     -----     --\\ 5       4         1    \n", result);
+}
 
 @Test
 public void testPermute() {
