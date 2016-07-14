@@ -194,7 +194,12 @@ public void testSolver() {
     asList(e(), da(17, 23), v(), v(), v(), d(14)),
     asList(a(9), v(), v(), a(6), v(), v()),
     asList(a(15), v(), v(), a(12), v(), v()));
-  solver(grid1);
+  List<List<Cell>> result = solver(grid1);
+  assertEquals("   --\\ 3       1         2       16\\ 6       4         2    \n", drawRow(result.get(1)));
+  assertEquals("   --\\18       3         5         7         2         1    \n", drawRow(result.get(2)));
+  assertEquals("   -----     17\\23       8         9         6       14\\--  \n", drawRow(result.get(3)));
+  assertEquals("   --\\ 9       8         1       --\\ 6       1         5    \n", drawRow(result.get(4)));
+  assertEquals("   --\\15       9         6       --\\12       3         9    \n", drawRow(result.get(5)));
 }
 
 }
