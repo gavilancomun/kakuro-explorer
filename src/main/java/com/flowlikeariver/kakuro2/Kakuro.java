@@ -1,7 +1,6 @@
 package com.flowlikeariver.kakuro2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,13 +45,13 @@ public static DownAcrossCell da(int d, int a) {
 
 public static String drawRow(List<Cell> row) {
   return row.stream()
-    .map(v -> v.draw())
+    .map(Cell::draw)
     .collect(joining()) + "\n";
 }
 
 public static String drawGrid(List<List<Cell>> grid) {
   return grid.stream()
-    .map(row -> drawRow(row))
+    .map(Kakuro::drawRow)
     .collect(joining());
 }
 
@@ -105,10 +104,10 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
 }
 
 public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
-  List<T> result = new ArrayList();
+  List<T> result = new ArrayList<>();
   for (T item : coll) {
     if (!f.test(item)) {
-      break;
+      return result;
     }
     result.add(item);
   }
@@ -135,7 +134,7 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
     T head = coll.get(0);
     boolean fx = f.test(head);
     List<T> group = takeWhile(y -> fx == f.test(y), coll);
-    return concatLists(Arrays.asList(group), partitionBy(f, drop(group.size(), coll)));
+    return concatLists(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
 
@@ -144,7 +143,7 @@ public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
     return Collections.EMPTY_LIST;
   }
   else {
-    return concatLists(Arrays.asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
+    return concatLists(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
   }
 }
 

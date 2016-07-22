@@ -34,7 +34,7 @@ public boolean contains(int n) {
 @Override
 public String toString() {
   return "ValueCell[" + values.stream()
-    .map(n -> String.valueOf(n))
+    .map(String::valueOf)
     .collect(joining(", "))
     + "]";
 }
