@@ -61,10 +61,15 @@ public int varStrs(String... data) {
   return data.length;
 }
 
+public <T> List<T> list(T... args) {
+  return asList(args);
+}
+
+@Ignore
 @Test
 public void testVarargs() {
   assertEquals(4, varStrs("a", "a", "a", "a"));
-  assertEquals(4, varStrs(asList("a", "a", "a", "a").toArray(new String[]{})));
+  assertEquals(4, varStrs(list("a", "a", "a", "a").toArray(new String[]{})));
 }
 
 }

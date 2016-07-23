@@ -55,7 +55,7 @@ public static String drawGrid(List<List<Cell>> grid) {
     .collect(joining());
 }
 
-public static boolean allDifferent(List<Integer> nums) {
+public static <T> boolean allDifferent(Collection<T> nums) {
   return nums.size() == new HashSet<>(nums).size();
 }
 
