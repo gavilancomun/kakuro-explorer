@@ -20,11 +20,11 @@ public static ValueCell v(Collection<Integer> values) {
 }
 
 public static ValueCell v() {
-  return v(asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+  return v(1, 2, 3, 4, 5, 6, 7, 8, 9);
 }
 
 public static ValueCell v(Integer... values) {
-  return new ValueCell(asList(values));
+  return v(asList(values));
 }
 
 public static EmptyCell e() {

@@ -3,8 +3,10 @@ package com.flowlikeariver.kakuro;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import static org.junit.Assert.assertEquals;
@@ -36,9 +38,9 @@ public void testLinked() {
 @Test
 public void testFonts() {
   Arrays.stream(java.awt.GraphicsEnvironment
-          .getLocalGraphicsEnvironment()
-          .getAvailableFontFamilyNames())
-          .forEach(System.out::println);
+    .getLocalGraphicsEnvironment()
+    .getAvailableFontFamilyNames())
+    .forEach(System.out::println);
   System.out.println("---");
   System.out.println(RenderingHints.KEY_TEXT_ANTIALIASING);
   System.out.println(RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -53,6 +55,16 @@ public void testFonts() {
       System.out.println(k + " = " + desktopHints.get(k));
     });
   }
+}
+
+public int varStrs(String... data) {
+  return data.length;
+}
+
+@Test
+public void testVarargs() {
+  assertEquals(4, varStrs("a", "a", "a", "a"));
+  assertEquals(4, varStrs(asList("a", "a", "a", "a").toArray(new String[]{})));
 }
 
 }
