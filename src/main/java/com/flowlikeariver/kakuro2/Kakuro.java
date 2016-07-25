@@ -191,19 +191,19 @@ public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line
     .collect(toList());
 }
 
-public static List<Cell> solveLine(List<Cell> line, Function<SimplePair<List<Cell>>, List<Cell>> pairSolver) {
+public static List<Cell> solveLine(List<Cell> line, Function<Cell, Integer> f) {
   return pairTargetsWithValues(line).stream()
-    .map(pair -> pairSolver.apply(pair))
+    .map(pair -> solvePair(f, pair))
     .flatMap(List::stream)
     .collect(toList());
 }
 
 public static List<Cell> solveRow(List<Cell> row) {
-  return solveLine(row, v -> solvePair(x -> ((Across) x).getAcross(), v));
+  return solveLine(row, x -> ((Across) x).getAcross());
 }
 
 public static List<Cell> solveColumn(List<Cell> column) {
-  return solveLine(column, v -> solvePair(x -> ((Down) x).getDown(), v));
+  return solveLine(column, x -> ((Down) x).getDown());
 }
 
 public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {

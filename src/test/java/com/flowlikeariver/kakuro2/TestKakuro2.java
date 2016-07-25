@@ -160,7 +160,7 @@ public void testSolvePair() {
 @Test
 public void testSolveLine() {
   List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(5), v(), v());
-  List<Cell> result = Kakuro.solveLine(line, v -> solvePair(x -> ((Across) x).getAcross(), v));
+  List<Cell> result = Kakuro.solveLine(line, x -> ((Across) x).getAcross());
   System.out.println("solve line " + result);
   assertEquals(8, result.size());
   assertEquals(v(1, 3), result.get(1));
