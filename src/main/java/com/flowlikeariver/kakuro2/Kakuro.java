@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import static java.util.stream.Collectors.joining;
 
 public class Kakuro {
 
@@ -95,8 +94,7 @@ public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
   List<Set<Integer>> values = vs.stream()
           .map(v -> v.values)
           .collect(toList());
-  List<List<Integer>> product = product(values);
-  return product.stream()
+  return product(values).stream()
           .filter(x -> target == x.stream().mapToInt(i -> i).sum())
           .collect(toList());
 }
