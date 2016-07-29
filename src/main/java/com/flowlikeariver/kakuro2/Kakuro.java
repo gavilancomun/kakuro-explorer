@@ -245,4 +245,8 @@ public static List<List<Cell>> solver(List<List<Cell>> grid) {
   }
 }
 
+public static <T> Set<T> asSet(T... items) {
+  return new HashSet<>(asList(items));
+}
+
 }
