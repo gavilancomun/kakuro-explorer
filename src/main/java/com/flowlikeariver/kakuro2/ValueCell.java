@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public class ValueCell implements Cell {
 
-Set<Integer> values = new HashSet<>();
+public Set<Integer> values = new HashSet<>();
 
 public ValueCell(Collection<Integer> values) {
   this.values.addAll(values);
@@ -58,5 +58,12 @@ public boolean equals(Object obj) {
   }
   return Objects.equals(this.values, ((ValueCell) obj).values);
 }
+
+  /**
+   * @return the values
+   */
+  public Set<Integer> getValues() {
+    return values;
+  }
 
 }

@@ -92,7 +92,7 @@ public static <T> List<List<T>> product(List<Set<T>> colls) {
 
 public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
   List<Set<Integer>> values = vs.stream()
-          .map(v -> v.values)
+          .map(ValueCell::getValues)
           .collect(toList());
   return product(values).stream()
           .filter(x -> target == x.stream().mapToInt(i -> i).sum())
