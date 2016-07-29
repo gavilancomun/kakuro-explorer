@@ -49,4 +49,9 @@ public U getRight() {
   return right;
 }
 
+@Override
+public String toString() {
+  return getClass().getName().replaceAll(".*\\.", "") + "[left=" + left.toString() + ", right=" + right.toString() + "]";
+}
+
 }
