@@ -45,14 +45,14 @@ public static DownAcrossCell da(int d, int a) {
 
 public static String drawRow(List<Cell> row) {
   return row.stream()
-    .map(Cell::draw)
-    .collect(joining()) + "\n";
+          .map(Cell::draw)
+          .collect(joining()) + "\n";
 }
 
 public static String drawGrid(List<List<Cell>> grid) {
   return grid.stream()
-    .map(Kakuro::drawRow)
-    .collect(joining());
+          .map(Kakuro::drawRow)
+          .collect(joining());
 }
 
 public static <T> boolean allDifferent(Collection<T> nums) {
@@ -72,9 +72,9 @@ public static List<List<Integer>> permute(List<ValueCell> vs, int target, List<I
     }
     else {
       return vs.get(soFar.size()).values.stream()
-        .map(n -> permute(vs, (target - n), conj(soFar, n)))
-        .flatMap(List::stream)
-        .collect(toList());
+              .map(n -> permute(vs, (target - n), conj(soFar, n)))
+              .flatMap(List::stream)
+              .collect(toList());
     }
   }
   else {
@@ -96,10 +96,10 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
   }
   else {
     return IntStream.range(0, m.get(0).size())
-      .mapToObj(i -> m.stream()
-        .map(col -> col.get(i))
-        .collect(toList()))
-      .collect(toList());
+            .mapToObj(i -> m.stream()
+                    .map(col -> col.get(i))
+                    .collect(toList()))
+            .collect(toList());
   }
 }
 
@@ -158,12 +158,12 @@ public static <T> T last(List<T> coll) {
 public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
   int finalIndex = cells.size() - 1;
   List<List<Integer>> perms = permuteAll(cells, total).stream()
-    .filter(v -> isPossible(last(cells), v.get(finalIndex)))
-    .filter(Kakuro::allDifferent)
-    .collect(toList());
+          .filter(v -> isPossible(last(cells), v.get(finalIndex)))
+          .filter(Kakuro::allDifferent)
+          .collect(toList());
   return transpose(perms).stream()
-    .map(Kakuro::v)
-    .collect(toList());
+          .map(Kakuro::v)
+          .collect(toList());
 }
 
 public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
@@ -173,8 +173,8 @@ public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Ce
   }
   else {
     List<ValueCell> valueCells = pair.right.stream()
-      .map(cell -> (ValueCell) cell)
-      .collect(toList());
+            .map(cell -> (ValueCell) cell)
+            .collect(toList());
     List<ValueCell> newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
     return concatLists(notValueCells, newValueCells);
   }
@@ -187,15 +187,15 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
 
 public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
   return partitionN(2, gatherValues(line)).stream()
-    .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
-    .collect(toList());
+          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
+          .collect(toList());
 }
 
 public static List<Cell> solveLine(List<Cell> line, Function<Cell, Integer> f) {
   return pairTargetsWithValues(line).stream()
-    .map(pair -> solvePair(f, pair))
-    .flatMap(List::stream)
-    .collect(toList());
+          .map(pair -> solvePair(f, pair))
+          .flatMap(List::stream)
+          .collect(toList());
 }
 
 public static List<Cell> solveRow(List<Cell> row) {
@@ -208,10 +208,11 @@ public static List<Cell> solveColumn(List<Cell> column) {
 
 public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
   List<List<Cell>> rowsDone = grid.stream()
-    .map(Kakuro::solveRow).collect(toList());
+          .map(Kakuro::solveRow)
+          .collect(toList());
   List<List<Cell>> colsDone = transpose(rowsDone).stream()
-    .map(Kakuro::solveColumn)
-    .collect(toList());
+          .map(Kakuro::solveColumn)
+          .collect(toList());
   return transpose(colsDone);
 }
 

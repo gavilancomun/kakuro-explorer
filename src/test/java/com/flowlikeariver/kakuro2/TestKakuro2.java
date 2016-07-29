@@ -70,7 +70,7 @@ public void testPermute() {
   System.out.println(results);
   assertEquals(10, results.size());
   List<List<Integer>> diff = results.stream()
-          .filter(p -> allDifferent(p))
+          .filter(Kakuro::allDifferent)
           .collect(toList());
   assertEquals(6, diff.size());
 }
