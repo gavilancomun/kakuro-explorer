@@ -1,17 +1,20 @@
 package com.flowlikeariver.kakuro2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import static java.util.stream.Collectors.joining;
 
 public class Kakuro {
 
@@ -65,25 +68,39 @@ public static <T> List<T> conj(List<T> items, T item) {
   return result;
 }
 
-public static List<List<Integer>> permute(List<ValueCell> vs, int target, List<Integer> soFar) {
-  if (target >= 1) {
-    if (soFar.size() == (vs.size() - 1)) {
-      return asList(conj(soFar, target));
-    }
-    else {
-      return vs.get(soFar.size()).values.stream()
-              .map(n -> permute(vs, (target - n), conj(soFar, n)))
+public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
+  return Stream.concat(a.stream(), b.stream()).collect(toList());
+}
+
+public static <T> List<List<T>> product(List<Set<T>> colls) {
+  switch (colls.size()) {
+    case 0:
+      return Collections.EMPTY_LIST;
+    case 1:
+      return colls.get(0).stream()
+              .map(Arrays::asList)
+              .collect(toList());
+    default:
+      Collection<T> head = colls.get(0);
+      List<Set<T>> tail = colls.stream().skip(1).collect(toList());
+      List<List<T>> tailProd = product(tail);
+      return head.stream()
+              .map(x -> tailProd.stream()
+                      .map(ys -> concatLists(asList(x), ys))
+                      .collect(toList()))
               .flatMap(List::stream)
               .collect(toList());
-    }
-  }
-  else {
-    return Collections.EMPTY_LIST;
   }
 }
 
 public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
-  return permute(vs, target, new ArrayList<>());
+  List<Set<Integer>> values = vs.stream()
+          .map(v -> v.values)
+          .collect(toList());
+  List<List<Integer>> product = product(values);
+  return product.stream()
+          .filter(x -> target == x.stream().mapToInt(i -> i).sum())
+          .collect(toList());
 }
 
 public static boolean isPossible(ValueCell v, int n) {
@@ -112,10 +129,6 @@ public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
     result.add(item);
   }
   return result;
-}
-
-public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
-  return Stream.concat(a.stream(), b.stream()).collect(toList());
 }
 
 public static <T> List<T> drop(int n, List<T> coll) {

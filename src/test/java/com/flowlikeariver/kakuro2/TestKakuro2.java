@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static com.flowlikeariver.kakuro2.Kakuro.v;
 
 public class TestKakuro2 {
 
