@@ -24,6 +24,38 @@ import org.junit.Test;
 public class TestKakuro2 {
 
 @Test
+public void testDrawEmpty() {
+  String result = e().draw();
+  assertEquals("   -----  ", result);
+}
+
+@Test
+public void testDrawAcross() {
+  String result = a(5).draw();
+  assertEquals("   --\\ 5  ", result);
+}
+
+@Test
+public void testDrawDown() {
+  String result = d(4).draw();
+  assertEquals("    4\\--  ", result);
+}
+
+@Test
+public void testDrawDownAcross() {
+  String result = da(3, 4).draw();
+  assertEquals("    3\\ 4  ", result);
+}
+
+@Test
+public void testDrawValues() {
+  String result = v().draw();
+  assertEquals(" 123456789", result);
+  String result12 = v(1, 2).draw();
+  assertEquals(" 12.......", result12);
+}
+
+@Test
 public void testDrawRow() {
   List<Cell> line = asList(da(3, 4), v(), v(1, 2), d(4), e(), a(5), v(4), v(1));
   String result = drawRow(line);
