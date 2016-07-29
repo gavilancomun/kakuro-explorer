@@ -85,10 +85,8 @@ public static <T> List<List<T>> product(List<Set<T>> colls) {
       List<Set<T>> tail = colls.stream().skip(1).collect(toList());
       List<List<T>> tailProd = product(tail);
       return head.stream()
-              .map(x -> tailProd.stream()
-                      .map(ys -> concatLists(asList(x), ys))
-                      .collect(toList()))
-              .flatMap(List::stream)
+              .flatMap(x -> tailProd.stream()
+                      .map(ys -> concatLists(asList(x), ys)))
               .collect(toList());
   }
 }
