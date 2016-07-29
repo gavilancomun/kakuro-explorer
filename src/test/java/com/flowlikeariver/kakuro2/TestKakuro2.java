@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import static com.flowlikeariver.kakuro2.Kakuro.v;
 import java.util.Set;
-import static org.hamcrest.CoreMatchers.is;
 
 public class TestKakuro2 {
 
