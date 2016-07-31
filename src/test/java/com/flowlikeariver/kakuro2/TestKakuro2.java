@@ -13,15 +13,15 @@ import static com.flowlikeariver.kakuro2.Kakuro.solvePair;
 import static com.flowlikeariver.kakuro2.Kakuro.solver;
 import static com.flowlikeariver.kakuro2.Kakuro.takeWhile;
 import static com.flowlikeariver.kakuro2.Kakuro.transpose;
+import static com.flowlikeariver.kakuro2.Kakuro.v;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.Set;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static com.flowlikeariver.kakuro2.Kakuro.v;
-import java.util.Set;
 
 public class TestKakuro2 {
 
