@@ -1,12 +1,14 @@
 package com.flowlikeariver.kakuro2;
 
 import static com.flowlikeariver.kakuro2.Kakuro.a;
+import static com.flowlikeariver.kakuro2.Kakuro.asSet;
 import static com.flowlikeariver.kakuro2.Kakuro.concatLists;
 import static com.flowlikeariver.kakuro2.Kakuro.d;
 import static com.flowlikeariver.kakuro2.Kakuro.da;
 import static com.flowlikeariver.kakuro2.Kakuro.drawRow;
 import static com.flowlikeariver.kakuro2.Kakuro.e;
 import static com.flowlikeariver.kakuro2.Kakuro.gatherValues;
+import static com.flowlikeariver.kakuro2.Kakuro.product;
 import static com.flowlikeariver.kakuro2.Kakuro.solvePair;
 import static com.flowlikeariver.kakuro2.Kakuro.solver;
 import static com.flowlikeariver.kakuro2.Kakuro.takeWhile;
@@ -15,6 +17,7 @@ import static com.flowlikeariver.kakuro2.Kakuro.v;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.Set;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import org.junit.Assert;
@@ -63,23 +66,36 @@ public void testDrawRow() {
 }
 
 @Test
+public void testProduct() {
+  List<Set<Integer>> data = asList(asSet(1, 2), asSet(10), asSet(100, 200, 300));
+  List<List<Integer>> expected = asList(
+    asList(1, 10, 100),
+    asList(1, 10, 200),
+    asList(1, 10, 300),
+    asList(2, 10, 100),
+    asList(2, 10, 200),
+    asList(2, 10, 300));
+  assertEquals(expected, product(data));
+}
+
+@Test
 public void testPermute() {
   List<ValueCell> vs = asList(v(), v(), v());
   List<List<Integer>> results = Kakuro.permuteAll(vs, 6);
   assertEquals(10, results.size());
   List<List<Integer>> diff = results.stream()
-          .filter(Kakuro::allDifferent)
-          .collect(toList());
+    .filter(Kakuro::allDifferent)
+    .collect(toList());
   assertEquals(6, diff.size());
 }
 
 @Test
 public void testTranspose() {
   List<List<Integer>> ints = IntStream.range(0, 3)
-          .mapToObj(i -> IntStream.range(0, 4)
-                  .boxed()
-                  .collect(toList()))
-          .collect(toList());
+    .mapToObj(i -> IntStream.range(0, 4)
+      .boxed()
+      .collect(toList()))
+    .collect(toList());
   List<List<Integer>> tr = transpose(ints);
   assertEquals(ints.size(), tr.get(0).size());
   assertEquals(ints.get(0).size(), tr.size());
@@ -215,12 +231,12 @@ public void testSolveCol() {
 @Test
 public void testSolver() {
   List<List<Cell>> grid1 = asList(
-          asList(e(), d(4), d(22), e(), d(16), d(3)),
-          asList(a(3), v(), v(), da(16, 6), v(), v()),
-          asList(a(18), v(), v(), v(), v(), v()),
-          asList(e(), da(17, 23), v(), v(), v(), d(14)),
-          asList(a(9), v(), v(), a(6), v(), v()),
-          asList(a(15), v(), v(), a(12), v(), v()));
+    asList(e(), d(4), d(22), e(), d(16), d(3)),
+    asList(a(3), v(), v(), da(16, 6), v(), v()),
+    asList(a(18), v(), v(), v(), v(), v()),
+    asList(e(), da(17, 23), v(), v(), v(), d(14)),
+    asList(a(9), v(), v(), a(6), v(), v()),
+    asList(a(15), v(), v(), a(12), v(), v()));
   List<List<Cell>> result = solver(grid1);
   assertEquals("   --\\ 3       1         2       16\\ 6       4         2    \n", drawRow(result.get(1)));
   assertEquals("   --\\18       3         5         7         2         1    \n", drawRow(result.get(2)));

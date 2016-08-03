@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
+import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -70,6 +72,14 @@ public <T> List<T> list(T... args) {
 public void testVarargs() {
   assertEquals(4, varStrs("a", "a", "a", "a"));
   assertEquals(4, varStrs(list("a", "a", "a", "a").toArray(new String[]{})));
+}
+
+@Ignore
+@Test(expected = IllegalStateException.class)
+public void testStream() {
+  IntStream range = IntStream.range(0, 10);
+  OptionalInt findFirst = range.findFirst();
+  range.forEach(System.out::println);
 }
 
 }
