@@ -47,7 +47,7 @@ private static Stream<List<Integer>> permuteAll(List<ValueCell> cells, int targe
   return permute(cells, target, Collections.EMPTY_LIST);
 }
 
-public static int solveStep(List<ValueCell> cells, int target) {
+private static int solveStep(List<ValueCell> cells, int target) {
   List<Possible> possibles = cells.stream().map(Possible::new).collect(toList());
   int last = cells.size() - 1;
   permuteAll(cells, target)
