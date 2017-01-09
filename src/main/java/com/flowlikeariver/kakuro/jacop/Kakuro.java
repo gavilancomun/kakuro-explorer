@@ -1,7 +1,6 @@
 package com.flowlikeariver.kakuro.jacop;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
@@ -81,50 +80,8 @@ public static String drawGrid(List<List<Cell>> grid) {
           .collect(joining());
 }
 
-public static <T> boolean allDifferent(Collection<T> nums) {
-  return nums.size() == new HashSet<>(nums).size();
-}
-
-public static <T> List<T> conj(List<T> items, T item) {
-  List<T> result = new ArrayList<>(items);
-  result.add(item);
-  return result;
-}
-
 public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
   return Stream.concat(a.stream(), b.stream()).collect(toList());
-}
-
-public static <T> List<List<T>> product(List<Set<T>> colls) {
-  switch (colls.size()) {
-    case 0:
-      return Collections.EMPTY_LIST;
-    case 1:
-      return colls.get(0).stream()
-              .map(Arrays::asList)
-              .collect(toList());
-    default:
-      Collection<T> head = colls.get(0);
-      List<Set<T>> tail = colls.stream().skip(1).collect(toList());
-      List<List<T>> tailProd = product(tail);
-      return head.stream()
-              .flatMap(x -> tailProd.stream()
-              .map(ys -> concatLists(asList(x), ys)))
-              .collect(toList());
-  }
-}
-
-public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
-  List<Set<Integer>> values = vs.stream()
-          .map(ValueCell::getValues)
-          .collect(toList());
-  return product(values).stream()
-          .filter(x -> target == x.stream().mapToInt(i -> i).sum())
-          .collect(toList());
-}
-
-public static boolean isPossible(ValueCell v, int n) {
-  return v.contains(n);
 }
 
 public static <T> List<List<T>> transpose(List<List<T>> m) {
@@ -190,9 +147,9 @@ public static <T> T last(List<T> coll) {
 
 public static void constrainStep(List<ValueCell> cells, int total) {
   ArrayList<IntVar> logicVars = new ArrayList<>();
-  cells.stream().map(c -> c.logicVar).forEach(logicVars::add);
-  Constraint ctr = new Alldifferent(logicVars);
-  store.impose(ctr);
+  cells.forEach(c -> logicVars.add(c.logicVar));
+  Constraint allDiff = new Alldifferent(logicVars);
+  store.impose(allDiff);
   IntVar sum = new IntVar(store, total, total);
   Constraint sumConstr = new SumInt(store, logicVars, "==", sum);
   store.impose(sumConstr);

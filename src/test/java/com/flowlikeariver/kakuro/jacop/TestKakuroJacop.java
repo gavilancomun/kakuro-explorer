@@ -1,14 +1,12 @@
 package com.flowlikeariver.kakuro.jacop;
 
 import static com.flowlikeariver.kakuro.jacop.Kakuro.a;
-import static com.flowlikeariver.kakuro.jacop.Kakuro.asSet;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.concatLists;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.d;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.da;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.drawRow;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.e;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.gatherValues;
-import static com.flowlikeariver.kakuro.jacop.Kakuro.product;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.solver;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.takeWhile;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.transpose;
@@ -16,10 +14,8 @@ import static com.flowlikeariver.kakuro.jacop.Kakuro.v;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.List;
-import java.util.Set;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -65,30 +61,6 @@ public void testDrawRow() {
 }
 
 @Test
-public void testProduct() {
-  List<Set<Integer>> data = asList(asSet(1, 2), asSet(10), asSet(100, 200, 300));
-  List<List<Integer>> expected = asList(
-    asList(1, 10, 100),
-    asList(1, 10, 200),
-    asList(1, 10, 300),
-    asList(2, 10, 100),
-    asList(2, 10, 200),
-    asList(2, 10, 300));
-  assertEquals(expected, product(data));
-}
-
-@Test
-public void testPermute() {
-  List<ValueCell> vs = asList(v(), v(), v());
-  List<List<Integer>> results = Kakuro.permuteAll(vs, 6);
-  assertEquals(10, results.size());
-  List<List<Integer>> diff = results.stream()
-    .filter(Kakuro::allDifferent)
-    .collect(toList());
-  assertEquals(6, diff.size());
-}
-
-@Test
 public void testTranspose() {
   List<List<Integer>> ints = IntStream.range(0, 3)
     .mapToObj(i -> IntStream.range(0, 4)
@@ -104,13 +76,6 @@ public void testTranspose() {
 public void testValueEquality() {
   assertEquals(v(), v());
   assertEquals(v(1, 2), v(1, 2));
-}
-
-@Test
-public void testIsPoss() {
-  ValueCell vc = v(1, 2, 3);
-  Assert.assertTrue(Kakuro.isPossible(vc, 2));
-  Assert.assertFalse(Kakuro.isPossible(vc, 4));
 }
 
 @Test
