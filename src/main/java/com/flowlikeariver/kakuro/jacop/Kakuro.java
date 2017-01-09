@@ -14,11 +14,21 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jacop.constraints.Alldifferent;
+import org.jacop.constraints.Constraint;
+import org.jacop.constraints.SumInt;
+import org.jacop.core.IntVar;
 import org.jacop.core.Store;
+import org.jacop.search.DepthFirstSearch;
+import org.jacop.search.IndomainMin;
+import org.jacop.search.InputOrderSelect;
+import org.jacop.search.Search;
+import org.jacop.search.SelectChoicePoint;
 
 public class Kakuro {
 
 static Store store;
+static List<IntVar> vars = new ArrayList<>();
 
 static {
   initStore();
@@ -26,10 +36,13 @@ static {
 
 public static void initStore() {
   store = new Store();
+  vars.clear();
 }
 
 public static ValueCell v(Collection<Integer> values) {
-  return new ValueCell(store, values);
+  ValueCell valueCell = new ValueCell(store, values);
+  vars.add(valueCell.logicVar);
+  return valueCell;
 }
 
 public static ValueCell v() {
@@ -175,28 +188,23 @@ public static <T> T last(List<T> coll) {
   return coll.get(coll.size() - 1);
 }
 
-public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
-  int finalIndex = cells.size() - 1;
-  List<List<Integer>> perms = permuteAll(cells, total).stream()
-          .filter(v -> isPossible(last(cells), v.get(finalIndex)))
-          .filter(Kakuro::allDifferent)
-          .collect(toList());
-  return transpose(perms).stream()
-          .map(Kakuro::v)
-          .collect(toList());
+public static void constrainStep(List<ValueCell> cells, int total) {
+  ArrayList<IntVar> results = new ArrayList<>();
+  cells.stream().map(c -> c.logicVar).forEach(results::add);
+  Constraint ctr = new Alldifferent(results);
+  store.impose(ctr);
+  IntVar sum = new IntVar(store, total, total);
+  Constraint sumConstr = new SumInt(store, results, "==", sum);
+  store.impose(sumConstr);
 }
 
-public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
+public static void constrainPair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
   List<Cell> notValueCells = pair.left;
-  if (pair.right.isEmpty()) {
-    return notValueCells;
-  }
-  else {
+  if (!pair.right.isEmpty()) {
     List<ValueCell> valueCells = pair.right.stream()
             .map(cell -> (ValueCell) cell)
             .collect(toList());
-    List<ValueCell> newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
-    return concatLists(notValueCells, newValueCells);
+    constrainStep(valueCells, f.apply(last(notValueCells)));
   }
 }
 
@@ -211,29 +219,21 @@ public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line
           .collect(toList());
 }
 
-public static List<Cell> solveLine(List<Cell> line, Function<Cell, Integer> f) {
-  return pairTargetsWithValues(line).stream()
-          .map(pair -> solvePair(f, pair))
-          .flatMap(List::stream)
-          .collect(toList());
+public static void constrainLine(List<Cell> line, Function<Cell, Integer> f) {
+  pairTargetsWithValues(line).forEach(pair -> constrainPair(f, pair));
 }
 
-public static List<Cell> solveRow(List<Cell> row) {
-  return solveLine(row, x -> ((Across) x).getAcross());
+public static void constrainRow(List<Cell> row) {
+  constrainLine(row, x -> ((Across) x).getAcross());
 }
 
-public static List<Cell> solveColumn(List<Cell> column) {
-  return solveLine(column, x -> ((Down) x).getDown());
+public static void constrainColumn(List<Cell> column) {
+  constrainLine(column, x -> ((Down) x).getDown());
 }
 
-public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
-  List<List<Cell>> rowsDone = grid.stream()
-          .map(Kakuro::solveRow)
-          .collect(toList());
-  List<List<Cell>> colsDone = transpose(rowsDone).stream()
-          .map(Kakuro::solveColumn)
-          .collect(toList());
-  return transpose(colsDone);
+public static void constrainGrid(List<List<Cell>> grid) {
+  grid.forEach(Kakuro::constrainRow);
+  transpose(grid).forEach(Kakuro::constrainColumn);
 }
 
 public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
@@ -247,13 +247,15 @@ public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
 
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
   System.out.println(drawGrid(grid));
-  List<List<Cell>> g = solveGrid(grid);
-  if (gridEquals(g, grid)) {
-    return g;
+  constrainGrid(grid);
+  boolean ok = store.consistency();
+  if (ok) {
+    Search<IntVar> search = new DepthFirstSearch<>();
+    SelectChoicePoint<IntVar> select = new InputOrderSelect<>(store, vars.toArray(new IntVar[1]), new IndomainMin<>());
+    boolean result = search.labeling(store, select);
+    System.out.println(drawGrid(grid));
   }
-  else {
-    return solver(g);
-  }
+  return grid;
 }
 
 public static <T> Set<T> asSet(T... items) {

@@ -59,9 +59,6 @@ public boolean equals(Object obj) {
   return Objects.equals(this.values, ((ValueCell) obj).values);
 }
 
-/**
- * @return the values
- */
 public Set<Integer> getValues() {
   return values;
 }

@@ -9,7 +9,6 @@ import static com.flowlikeariver.kakuro.jacop.Kakuro.drawRow;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.e;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.gatherValues;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.product;
-import static com.flowlikeariver.kakuro.jacop.Kakuro.solvePair;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.solver;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.takeWhile;
 import static com.flowlikeariver.kakuro.jacop.Kakuro.transpose;
@@ -164,13 +163,6 @@ public void testPartN() {
 }
 
 @Test
-public void testSolveStep() {
-  List<ValueCell> result = Kakuro.solveStep(Arrays.asList(v(1, 2), v()), 5);
-  assertEquals(v(1, 2), result.get(0));
-  assertEquals(v(3, 4), result.get(1));
-}
-
-@Test
 public void testGatherValues() {
   List<Cell> line = Arrays.asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
   List<List<Cell>> result = gatherValues(line);
@@ -190,42 +182,6 @@ public void testPairTargets() {
   assertEquals(d(4), result.get(1).left.get(0));
   assertEquals(e(), result.get(1).left.get(1));
   assertEquals(a(4), result.get(1).left.get(2));
-}
-
-@Test
-public void testSolvePair() {
-  List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
-  List<SimplePair<List<Cell>>> pairs = Kakuro.pairTargetsWithValues(line);
-  SimplePair<List<Cell>> pair = pairs.get(0);
-  List<Cell> result = solvePair(cell -> ((Down) cell).getDown(), pair);
-  assertEquals(3, result.size());
-  assertEquals(v(1, 2), result.get(1));
-  assertEquals(v(1, 2), result.get(2));
-}
-
-@Test
-public void testSolveLine() {
-  List<Cell> line = asList(da(3, 4), v(), v(), d(4), e(), a(5), v(), v());
-  List<Cell> result = Kakuro.solveLine(line, x -> ((Across) x).getAcross());
-  assertEquals(8, result.size());
-  assertEquals(v(1, 3), result.get(1));
-  assertEquals(v(1, 3), result.get(2));
-  assertEquals(v(1, 2, 3, 4), result.get(6));
-  assertEquals(v(1, 2, 3, 4), result.get(7));
-}
-
-@Test
-public void testSolveRow() {
-  List<Cell> result = Kakuro.solveRow(asList(a(3), v(1, 2, 3), v(1)));
-  assertEquals(v(2), result.get(1));
-  assertEquals(v(1), result.get(2));
-}
-
-@Test
-public void testSolveCol() {
-  List<Cell> result = Kakuro.solveColumn(asList(da(3, 12), v(1, 2, 3), v(1)));
-  assertEquals(v(2), result.get(1));
-  assertEquals(v(1), result.get(2));
 }
 
 @Test
