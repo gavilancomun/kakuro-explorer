@@ -189,12 +189,12 @@ public static <T> T last(List<T> coll) {
 }
 
 public static void constrainStep(List<ValueCell> cells, int total) {
-  ArrayList<IntVar> results = new ArrayList<>();
-  cells.stream().map(c -> c.logicVar).forEach(results::add);
-  Constraint ctr = new Alldifferent(results);
+  ArrayList<IntVar> logicVars = new ArrayList<>();
+  cells.stream().map(c -> c.logicVar).forEach(logicVars::add);
+  Constraint ctr = new Alldifferent(logicVars);
   store.impose(ctr);
   IntVar sum = new IntVar(store, total, total);
-  Constraint sumConstr = new SumInt(store, results, "==", sum);
+  Constraint sumConstr = new SumInt(store, logicVars, "==", sum);
   store.impose(sumConstr);
 }
 
