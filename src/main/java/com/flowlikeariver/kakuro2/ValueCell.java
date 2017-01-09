@@ -22,8 +22,8 @@ public String draw() {
   }
   else {
     return " " + IntStream.range(1, 10)
-      .mapToObj(n -> values.contains(n) ? String.valueOf(n) : ".")
-      .collect(joining());
+            .mapToObj(n -> values.contains(n) ? String.valueOf(n) : ".")
+            .collect(joining());
   }
 }
 
@@ -34,9 +34,9 @@ public boolean contains(int n) {
 @Override
 public String toString() {
   return "ValueCell[" + values.stream()
-    .map(String::valueOf)
-    .collect(joining(", "))
-    + "]";
+          .map(String::valueOf)
+          .collect(joining(", "))
+          + "]";
 }
 
 @Override
@@ -59,11 +59,11 @@ public boolean equals(Object obj) {
   return Objects.equals(this.values, ((ValueCell) obj).values);
 }
 
-  /**
-   * @return the values
-   */
-  public Set<Integer> getValues() {
-    return values;
-  }
+/**
+ * @return the values
+ */
+public Set<Integer> getValues() {
+  return values;
+}
 
 }

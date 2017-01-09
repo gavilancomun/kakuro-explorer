@@ -1,3 +1,5 @@
+package com.flowlikeariver.kakuro.jacop;
+
 
 import java.util.ArrayList;
 import org.jacop.constraints.Or;
