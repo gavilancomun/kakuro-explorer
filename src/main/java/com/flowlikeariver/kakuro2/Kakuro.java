@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
@@ -175,6 +176,17 @@ public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
           .collect(toList());
 }
 
+// returns (non-vals, vals)*
+public static List<List<Cell>> gatherValues(List<Cell> line) {
+  return partitionBy(v -> (v instanceof ValueCell), line);
+}
+
+public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
+  return partitionN(2, gatherValues(line)).stream()
+          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
+          .collect(toList());
+}
+
 public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
   List<Cell> notValueCells = pair.left;
   if (pair.right.isEmpty()) {
@@ -187,17 +199,6 @@ public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Ce
     List<ValueCell> newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
     return concatLists(notValueCells, newValueCells);
   }
-}
-
-// returns (non-vals, vals)*
-public static List<List<Cell>> gatherValues(List<Cell> line) {
-  return partitionBy(v -> (v instanceof ValueCell), line);
-}
-
-public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
-  return partitionN(2, gatherValues(line)).stream()
-          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
-          .collect(toList());
 }
 
 public static List<Cell> solveLine(List<Cell> line, Function<Cell, Integer> f) {
@@ -246,7 +247,7 @@ public static List<List<Cell>> solver(List<List<Cell>> grid) {
 }
 
 public static <T> Set<T> asSet(T... items) {
-  return new HashSet<>(asList(items));
+  return new TreeSet<>(asList(items));
 }
 
 }
