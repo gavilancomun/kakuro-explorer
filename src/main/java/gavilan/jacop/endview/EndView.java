@@ -144,7 +144,7 @@ public static void main(String[] args) {
   );
   new EndView().solve(gridPic);
   List<String> gridPic2 = asList(
-          "  AD A  ",
+          "  AD D  ",
           "D...... ",
           " ...... ",
           " ......C",
