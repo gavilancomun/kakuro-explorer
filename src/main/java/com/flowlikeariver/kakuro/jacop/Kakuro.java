@@ -39,13 +39,15 @@ public static void initStore() {
 }
 
 public static ValueCell v(Collection<Integer> values) {
-  ValueCell valueCell = new ValueCell(store, values);
+  ValueCell valueCell = new ValueCell(new IntVar(store), values);
   vars.add(valueCell.logicVar);
   return valueCell;
 }
 
 public static ValueCell v() {
-  return v(1, 2, 3, 4, 5, 6, 7, 8, 9);
+  ValueCell valueCell = new ValueCell(new IntVar(store, 1, 9));
+  vars.add(valueCell.logicVar);
+  return valueCell;
 }
 
 public static ValueCell v(Integer... values) {
