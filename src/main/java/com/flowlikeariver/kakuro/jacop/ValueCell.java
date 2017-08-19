@@ -14,7 +14,7 @@ public class ValueCell implements Cell {
 public IntVar logicVar;
 
 public ValueCell(IntVar intVar, Collection<Integer> values) {
-  logicVar = intVar;
+  this(intVar);
   values.stream()
           .sorted()
           .forEach(i -> logicVar.addDom(i, i));
@@ -24,7 +24,7 @@ public ValueCell(IntVar intVar) {
   logicVar = intVar;
 }
 
-IntStream elements() {
+public IntStream elements() {
   return Arrays.stream(logicVar.dom().toIntArray()); 
 }
 

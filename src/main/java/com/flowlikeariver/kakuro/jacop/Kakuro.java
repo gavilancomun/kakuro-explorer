@@ -44,14 +44,14 @@ public static ValueCell v(Collection<Integer> values) {
   return valueCell;
 }
 
+public static ValueCell v(Integer... values) {
+  return v(asList(values));
+}
+
 public static ValueCell v() {
   ValueCell valueCell = new ValueCell(new IntVar(store, 1, 9));
   vars.add(valueCell.logicVar);
   return valueCell;
-}
-
-public static ValueCell v(Integer... values) {
-  return v(asList(values));
 }
 
 public static EmptyCell e() {
@@ -157,13 +157,13 @@ public static void constrainStep(List<ValueCell> cells, int total) {
   store.impose(sumConstr);
 }
 
-public static void constrainPair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
+public static void constrainPair(Function<Cell, Integer> getTotal, SimplePair<List<Cell>> pair) {
   List<Cell> notValueCells = pair.left;
   if (!pair.right.isEmpty()) {
     List<ValueCell> valueCells = pair.right.stream()
             .map(cell -> (ValueCell) cell)
             .collect(toList());
-    constrainStep(valueCells, f.apply(last(notValueCells)));
+    constrainStep(valueCells, getTotal.apply(last(notValueCells)));
   }
 }
 
@@ -174,7 +174,7 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
 
 public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
   return partitionN(2, gatherValues(line)).stream()
-          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
+          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.emptyList() : part.get(1)))
           .collect(toList());
 }
 
@@ -193,15 +193,6 @@ public static void constrainColumn(List<Cell> column) {
 public static void constrainGrid(List<List<Cell>> grid) {
   grid.forEach(Kakuro::constrainRow);
   transpose(grid).forEach(Kakuro::constrainColumn);
-}
-
-public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
-  if (g1.size() == g2.size()) {
-    return IntStream.range(0, g1.size()).allMatch(i -> g1.get(i).equals(g2.get(i)));
-  }
-  else {
-    return false;
-  }
 }
 
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
