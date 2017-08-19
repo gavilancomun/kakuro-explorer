@@ -154,6 +154,17 @@ public static void main(String[] args) {
           " C CC   "
   );
   new EndView().solve(gridPic2);
+  List<String> gridPic3 = asList(
+          "  C     ",
+          " ......C",
+          " ......A",
+          "B...... ",
+          " ......A",
+          " ......A",
+          " ...... ",
+          " B   A  "
+  );
+  new EndView().solve(gridPic3);
 }
 
 }
