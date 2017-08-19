@@ -7,9 +7,14 @@ import static java.util.Collections.reverse;
 import java.util.List;
 import org.jacop.constraints.Alldifferent;
 import org.jacop.constraints.And;
+import org.jacop.constraints.In;
 import org.jacop.constraints.Or;
+import org.jacop.constraints.PrimitiveConstraint;
+import org.jacop.constraints.XeqC;
 import org.jacop.constraints.XeqY;
+import org.jacop.core.IntDomain;
 import org.jacop.core.IntVar;
+import org.jacop.core.IntervalDomain;
 import org.jacop.core.Store;
 import org.jacop.search.DepthFirstSearch;
 import org.jacop.search.IndomainMin;
@@ -20,7 +25,6 @@ import org.jacop.search.SelectChoicePoint;
 public class EndView {
 
 Store store = new Store();
-IntVar blank = new IntVar(store, 1, 1);
 
 ArrayList<IntVar> getRow(IntVar[][] grid, int n) {
   return new ArrayList(Arrays.asList(grid[n]));
@@ -34,12 +38,12 @@ ArrayList<IntVar> getColumn(IntVar[][] grid, int n) {
   return results;
 }
 
-String display(int n) {
-  if (1 == n) {
+String display(int rowCount, int n) {
+  if (n <= (rowCount - 4)) {
     return "X";
   }
   else {
-    return "" + (char) ('A' + (n - 2));
+    return "" + (char) ('A' + (n - (rowCount - 3)));
   }
 }
 
@@ -48,7 +52,7 @@ public void drawGrid(IntVar[][] grid) {
   for (int i = 0; i < rowCount; ++i) {
     for (int j = 0; j < rowCount; ++j) {
       Arrays.stream(grid[i][j].dom().toIntArray())
-              .mapToObj(this::display)
+              .mapToObj(n -> display(rowCount, n))
               .forEach(System.out::print);
     }
     System.out.println();
@@ -57,29 +61,40 @@ public void drawGrid(IntVar[][] grid) {
 
 private void constrain(int constraint, ArrayList<IntVar> vars) {
   if (constraint > 0) {
+    int kind = vars.size();
+    IntDomain blank = new IntervalDomain(1, vars.size() - 4);
     IntVar target = new IntVar(store, constraint, constraint);
-    store.impose(new Or(new XeqY(target, vars.get(0)),
-            new And(new XeqY(blank, vars.get(0)),
-                    new XeqY(target, vars.get(1)))
-    ));
+    if (5 == kind) {
+      store.impose(new Or(
+              new XeqC(vars.get(0), constraint),
+              new And(new In(vars.get(0), blank),
+                      new XeqC(vars.get(1), constraint))
+      ));
+    }
+    else if (6 == kind) {
+      store.impose(new Or(
+              new PrimitiveConstraint[]{
+                new XeqY(target, vars.get(0)),
+                new And(new In(vars.get(0), blank),
+                        new XeqC(vars.get(1), constraint)),
+                new And(
+                        new PrimitiveConstraint[]{
+                          new In(vars.get(0), blank),
+                          new In(vars.get(1), blank),
+                          new XeqC(vars.get(2), constraint)
+                        })
+              }));
+    }
   }
+
 }
 
-int toDom(char c) {
-  return c - 'A' + 2;
+int toDom(int rowCount, char c) {
+  return c - 'A' + rowCount - 3;
 }
 
-public void solve() {
+public void solve(List<String> gridPic) {
   List<IntVar> vars = new ArrayList<>();
-  List<String> gridPic = asList(
-          "  DCA  ",
-          " ..... ",
-          "B.....D",
-          " ..... ",
-          " .....D",
-          " .....A",
-          "  A    "
-  );
   int rowCount = gridPic.size() - 2;
   IntVar[][] grid = new IntVar[rowCount][rowCount];
   for (int i = 0; i < rowCount; ++i) {
@@ -96,14 +111,14 @@ public void solve() {
     ArrayList<IntVar> column = getColumn(grid, i);
     store.impose(new Alldifferent(row));
     store.impose(new Alldifferent(column));
-    int topConstraint = toDom(topRow.charAt(i + 1));
+    int topConstraint = toDom(rowCount, topRow.charAt(i + 1));
     constrain(topConstraint, column);
     reverse(column);
-    int bottomConstraint = toDom(bottomRow.charAt(i + 1));
+    int bottomConstraint = toDom(rowCount, bottomRow.charAt(i + 1));
     constrain(bottomConstraint, column);
-    int leftConstraint = toDom(gridPic.get(i + 1).charAt(0));
+    int leftConstraint = toDom(rowCount, gridPic.get(i + 1).charAt(0));
     constrain(leftConstraint, row);
-    int rightContraint = toDom(gridPic.get(i + 1).charAt(gridPic.get(i + 1).length() - 1));
+    int rightContraint = toDom(rowCount, gridPic.get(i + 1).charAt(gridPic.get(i + 1).length() - 1));
     reverse(row);
     constrain(rightContraint, row);
   }
@@ -118,7 +133,27 @@ public void solve() {
 }
 
 public static void main(String[] args) {
-  new EndView().solve();
+  List<String> gridPic = asList(
+          "  DCA  ",
+          " ..... ",
+          "B.....D",
+          " ..... ",
+          " .....D",
+          " .....A",
+          "  A    "
+  );
+  new EndView().solve(gridPic);
+  List<String> gridPic2 = asList(
+          "  AD A  ",
+          "D...... ",
+          " ...... ",
+          " ......C",
+          " ...... ",
+          " ......B",
+          " ...... ",
+          " C CC   "
+  );
+  new EndView().solve(gridPic2);
 }
 
 }
