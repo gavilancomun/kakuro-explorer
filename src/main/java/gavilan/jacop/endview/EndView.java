@@ -1,7 +1,6 @@
 package gavilan.jacop.endview;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import static java.util.Arrays.asList;
 import static java.util.Collections.reverse;
 import java.util.List;
@@ -26,64 +25,36 @@ public class EndView {
 
 Store store = new Store();
 
-ArrayList<IntVar> getRow(IntVar[][] grid, int n) {
-  return new ArrayList(Arrays.asList(grid[n]));
+public static Or or(PrimitiveConstraint... pcs) {
+  return new Or(pcs);
 }
 
-ArrayList<IntVar> getColumn(IntVar[][] grid, int n) {
-  ArrayList<IntVar> results = new ArrayList<>();
-  for (int i = 0; i < grid.length; ++i) {
-    results.add(grid[i][n]);
-  }
-  return results;
+public static And and(PrimitiveConstraint... pcs) {
+  return new And(pcs);
 }
 
-String display(int rowCount, int n) {
-  if (n <= (rowCount - 4)) {
-    return "X";
-  }
-  else {
-    return "" + (char) ('A' + (n - (rowCount - 3)));
-  }
-}
-
-public void drawGrid(IntVar[][] grid) {
-  int rowCount = grid.length;
-  for (int i = 0; i < rowCount; ++i) {
-    for (int j = 0; j < rowCount; ++j) {
-      Arrays.stream(grid[i][j].dom().toIntArray())
-              .mapToObj(n -> display(rowCount, n))
-              .forEach(System.out::print);
-    }
-    System.out.println();
-  }
-}
-
-private void constrain(int constraint, ArrayList<IntVar> vars) {
+private void constrain(int constraint, List<IntVar> vars) {
   if (constraint > 0) {
     int kind = vars.size();
     IntDomain blank = new IntervalDomain(1, vars.size() - 4);
     IntVar target = new IntVar(store, constraint, constraint);
     if (5 == kind) {
-      store.impose(new Or(
+      store.impose(or(
               new XeqC(vars.get(0), constraint),
-              new And(new In(vars.get(0), blank),
+              and(new In(vars.get(0), blank),
                       new XeqC(vars.get(1), constraint))
       ));
     }
     else if (6 == kind) {
-      store.impose(new Or(
-              new PrimitiveConstraint[]{
-                new XeqY(target, vars.get(0)),
-                new And(new In(vars.get(0), blank),
-                        new XeqC(vars.get(1), constraint)),
-                new And(
-                        new PrimitiveConstraint[]{
-                          new In(vars.get(0), blank),
-                          new In(vars.get(1), blank),
-                          new XeqC(vars.get(2), constraint)
-                        })
-              }));
+      store.impose(or(
+              new XeqY(target, vars.get(0)),
+              and(new In(vars.get(0), blank),
+                      new XeqC(vars.get(1), constraint)),
+              and(new In(vars.get(0), blank),
+                      new In(vars.get(1), blank),
+                      new XeqC(vars.get(2), constraint)
+              )
+      ));
     }
   }
 
@@ -93,22 +64,13 @@ int toDom(int rowCount, char c) {
   return c - 'A' + rowCount - 3;
 }
 
-public void solve(List<String> gridPic) {
-  List<IntVar> vars = new ArrayList<>();
+private void parseConstraints(Grid grid, List<String> gridPic) {
   int rowCount = gridPic.size() - 2;
-  IntVar[][] grid = new IntVar[rowCount][rowCount];
-  for (int i = 0; i < rowCount; ++i) {
-    for (int j = 0; j < rowCount; ++j) {
-      IntVar v = new IntVar(store, 1, rowCount);
-      vars.add(v);
-      grid[i][j] = v;
-    }
-  }
   String topRow = gridPic.get(0);
   String bottomRow = gridPic.get(gridPic.size() - 1);
   for (int i = 0; i < rowCount; ++i) {
-    ArrayList<IntVar> row = getRow(grid, i);
-    ArrayList<IntVar> column = getColumn(grid, i);
+    ArrayList<IntVar> row = grid.getRow(i);
+    ArrayList<IntVar> column = grid.getColumn(i);
     store.impose(new Alldifferent(row));
     store.impose(new Alldifferent(column));
     int topConstraint = toDom(rowCount, topRow.charAt(i + 1));
@@ -122,12 +84,19 @@ public void solve(List<String> gridPic) {
     reverse(row);
     constrain(rightContraint, row);
   }
+}
+
+public void solve(List<String> gridPic) {
+  int rowCount = gridPic.size() - 2;
+  Grid grid = new Grid(rowCount);
+  List<IntVar> vars = grid.init(store);
+  parseConstraints(grid, gridPic);
   boolean ok = store.consistency();
   if (ok) {
     Search<IntVar> search = new DepthFirstSearch<>();
     SelectChoicePoint<IntVar> select = new InputOrderSelect<>(store, vars.toArray(new IntVar[1]), new IndomainMin<>());
     boolean result = search.labeling(store, select);
-    drawGrid(grid);
+    grid.drawGrid();
   }
 
 }
