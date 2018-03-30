@@ -1,8 +1,6 @@
 package gavilan.choco.kakuro;
 
-import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -20,26 +18,20 @@ public class Kakuro {
 static Model model;
 
 static {
-  initStore();
+  init();
 }
 
-public static void initStore() {
+public static void init() {
   model = new Model();
 }
 
-public static ValueCell v(Collection<Integer> values) {
-  IntVar v = model.intVar(values.stream().mapToInt(i -> i).toArray());
-  ValueCell valueCell = new ValueCell(v);
-  return valueCell;
-}
-
-public static ValueCell v(Integer... values) {
-  return v(asList(values));
+public static ValueCell v(int... values) {
+  IntVar v = model.intVar(values);
+  return new ValueCell(v);
 }
 
 public static ValueCell v() {
-  ValueCell valueCell = new ValueCell(model.intVar(IntStream.rangeClosed(1, 9).toArray()));
-  return valueCell;
+  return v(IntStream.rangeClosed(1, 9).toArray());
 }
 
 public static EmptyCell e() {
@@ -70,7 +62,7 @@ public static String drawGrid(List<List<Cell>> grid) {
           .collect(joining());
 }
 
-public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
+public static <T> List<T> concat(List<? extends T> a, List<? extends T> b) {
   return Stream.concat(a.stream(), b.stream()).collect(toList());
 }
 
@@ -86,14 +78,7 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
 }
 
 public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
-  List<T> result = new ArrayList<>();
-  for (T item : coll) {
-    if (!f.test(item)) {
-      return result;
-    }
-    result.add(item);
-  }
-  return result;
+  return coll.stream().takeWhile(f).collect(toList());
 }
 
 public static <T> List<T> drop(int n, List<T> coll) {
@@ -112,7 +97,7 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
     T head = coll.get(0);
     boolean fx = f.test(head);
     List<T> group = takeWhile(y -> fx == f.test(y), coll);
-    return concatLists(asList(group), partitionBy(f, drop(group.size(), coll)));
+    return concat(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
 
@@ -121,7 +106,7 @@ public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
     return Collections.emptyList();
   }
   else {
-    return concatLists(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
+    return concat(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
   }
 }
 
@@ -129,27 +114,16 @@ public static <T> List<List<T>> partitionN(int n, List<T> coll) {
   return partitionAll(n, n, coll);
 }
 
-public static Cell last(List<Cell> coll) {
+public static <T> T last(List<T> coll) {
   return coll.get(coll.size() - 1);
 }
 
 public static void constrainStep(List<ValueCell> cells, int total) {
-  IntVar[] logicVars = new IntVar[cells.size()];
-  for (int i = 0; i < cells.size(); ++i) {
-    logicVars[i] = cells.get(i).logicVar;
-  }
+  IntVar[] logicVars = cells.stream()
+          .map(c -> c.logicVar)
+          .toArray(IntVar[]::new);
   model.allDifferent(logicVars, "DEFAULT").post();
   model.sum(logicVars, "=", total).post();
-}
-
-public static void constrainPair(Function<Cell, Integer> getTotal, SimplePair<List<Cell>> pair) {
-  List<Cell> notValueCells = pair.left;
-  if (!pair.right.isEmpty()) {
-    List<ValueCell> valueCells = pair.right.stream()
-            .map(cell -> (ValueCell) cell)
-            .collect(toList());
-    constrainStep(valueCells, getTotal.apply(last(notValueCells)));
-  }
 }
 
 // returns (non-values, values)*
@@ -157,22 +131,19 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
   return partitionBy(v -> (v instanceof ValueCell), line);
 }
 
-public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
+public static void constrainLine(List<Cell> line, Function<Cell, Integer> f) {
   List<List<Cell>> gathered = gatherValues(line);
-  List<SimplePair<List<Cell>>> results = new ArrayList<>();
   for (int i = 0; i < gathered.size(); i += 2) {
     if (i + 1 < gathered.size()) {
-      results.add(new SimplePair<>(gathered.get(i), gathered.get(i + 1)));
-    }
-    else {
-      results.add(new SimplePair<>(gathered.get(i), Collections.emptyList()));
+      List<Cell> notValueCells = gathered.get(i);
+      if (!gathered.get(i + 1).isEmpty()) {
+        List<ValueCell> valueCells = gathered.get(i + 1).stream()
+                .map(cell -> (ValueCell) cell)
+                .collect(toList());
+        constrainStep(valueCells, f.apply(last(notValueCells)));
+      }
     }
   }
-  return results;
-}
-
-public static void constrainLine(List<Cell> line, Function<Cell, Integer> f) {
-  pairTargetsWithValues(line).forEach(pair -> constrainPair(f, pair));
 }
 
 public static void constrainRow(List<Cell> row) {
