@@ -1,13 +1,6 @@
 package gavilan.kakuro2;
 
-import gavilan.kakuro2.Kakuro;
-import gavilan.kakuro2.Across;
-import gavilan.kakuro2.SimplePair;
-import gavilan.kakuro2.Cell;
-import gavilan.kakuro2.Down;
-import gavilan.kakuro2.ValueCell;
 import static gavilan.kakuro2.Kakuro.a;
-import static gavilan.kakuro2.Kakuro.asSet;
 import static gavilan.kakuro2.Kakuro.concatLists;
 import static gavilan.kakuro2.Kakuro.d;
 import static gavilan.kakuro2.Kakuro.da;
@@ -28,6 +21,7 @@ import static gavilan.kakuro2.Kakuro.v;
 import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import org.junit.Assert;
@@ -75,6 +69,10 @@ public void testDrawRow() {
   List<Cell> line = asList(da(3, 4), v(), v(1, 2), d(4), e(), a(5), v(4), v(1));
   String result = drawRow(line);
   assertEquals("    3\\ 4   123456789 12.......    4\\--     -----     --\\ 5       4         1    \n", result);
+}
+
+public static <T> Set<T> asSet(T... items) {
+  return new TreeSet<>(asList(items));
 }
 
 @Test

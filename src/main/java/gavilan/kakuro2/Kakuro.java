@@ -75,7 +75,7 @@ public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) 
 public static <T> List<List<T>> product(List<Set<T>> colls) {
   switch (colls.size()) {
     case 0:
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     case 1:
       return colls.get(0).stream()
               .map(Arrays::asList)
@@ -106,7 +106,7 @@ public static boolean isPossible(ValueCell v, int n) {
 
 public static <T> List<List<T>> transpose(List<List<T>> m) {
   if (m.isEmpty()) {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
   else {
     return IntStream.range(0, m.get(0).size())
@@ -138,7 +138,7 @@ public static <T> List<T> take(int n, List<T> coll) {
 
 public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
   if (coll.isEmpty()) {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
   else {
     T head = coll.get(0);
@@ -150,7 +150,7 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
 
 public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
   if (coll.isEmpty()) {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
   else {
     return concatLists(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
@@ -183,7 +183,7 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
 
 public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
   return partitionN(2, gatherValues(line)).stream()
-          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.EMPTY_LIST : part.get(1)))
+          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.emptyList() : part.get(1)))
           .collect(toList());
 }
 
@@ -244,10 +244,6 @@ public static List<List<Cell>> solver(List<List<Cell>> grid) {
   else {
     return solver(g);
   }
-}
-
-public static <T> Set<T> asSet(T... items) {
-  return new TreeSet<>(asList(items));
 }
 
 }

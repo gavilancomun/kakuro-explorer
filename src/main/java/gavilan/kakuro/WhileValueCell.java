@@ -51,7 +51,7 @@ public Function<List<ValueCell>, List<ValueCell>> finisher() {
 
 @Override
 public Set<Characteristics> characteristics() {
-  return Collections.EMPTY_SET;
+  return Collections.emptySet();
 }
 
 }

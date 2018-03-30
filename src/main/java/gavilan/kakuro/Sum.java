@@ -44,7 +44,7 @@ private static Stream<List<Integer>> permute(List<ValueCell> cells, int target, 
 
 // Exhaustive search for possible solutions
 private static Stream<List<Integer>> permuteAll(List<ValueCell> cells, int target) {
-  return permute(cells, target, Collections.EMPTY_LIST);
+  return permute(cells, target, Collections.emptyList());
 }
 
 private static int solveStep(List<ValueCell> cells, int target) {

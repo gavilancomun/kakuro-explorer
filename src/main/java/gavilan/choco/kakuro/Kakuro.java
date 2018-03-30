@@ -1,32 +1,23 @@
-package gavilan.jacop.kakuro;
+package gavilan.choco.kakuro;
 
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.jacop.constraints.Alldifferent;
-import org.jacop.constraints.Constraint;
-import org.jacop.constraints.SumInt;
-import org.jacop.core.IntVar;
-import org.jacop.core.Store;
-import org.jacop.search.DepthFirstSearch;
-import org.jacop.search.IndomainMin;
-import org.jacop.search.InputOrderSelect;
-import org.jacop.search.Search;
-import org.jacop.search.SelectChoicePoint;
+import org.chocosolver.solver.Model;
+import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.variables.IntVar;
 
 public class Kakuro {
 
-static Store store;
+static Model model;
 static List<IntVar> vars = new ArrayList<>();
 
 static {
@@ -34,13 +25,14 @@ static {
 }
 
 public static void initStore() {
-  store = new Store();
+  model = new Model();
   vars.clear();
 }
 
 public static ValueCell v(Collection<Integer> values) {
-  ValueCell valueCell = new ValueCell(new IntVar(store), values);
-  vars.add(valueCell.logicVar);
+  IntVar v = model.intVar(values.stream().mapToInt(i -> i).toArray());
+  ValueCell valueCell = new ValueCell(v);
+  vars.add(v);
   return valueCell;
 }
 
@@ -49,7 +41,7 @@ public static ValueCell v(Integer... values) {
 }
 
 public static ValueCell v() {
-  ValueCell valueCell = new ValueCell(new IntVar(store, 1, 9));
+  ValueCell valueCell = new ValueCell(model.intVar(IntStream.rangeClosed(1, 9).toArray()));
   vars.add(valueCell.logicVar);
   return valueCell;
 }
@@ -82,11 +74,11 @@ public static String drawGrid(List<List<Cell>> grid) {
           .collect(joining());
 }
 
-public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
+public static <T> List<T> concatLists(List<T> a, List<T> b) {
   return Stream.concat(a.stream(), b.stream()).collect(toList());
 }
 
-public static <T> List<List<T>> transpose(List<List<T>> m) {
+public static List<List<Cell>> transpose(List<List<Cell>> m) {
   if (m.isEmpty()) {
     return Collections.emptyList();
   }
@@ -97,9 +89,9 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
   }
 }
 
-public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
-  List<T> result = new ArrayList<>();
-  for (T item : coll) {
+public static List<Cell> takeWhile(Predicate<Cell> f, List<Cell> coll) {
+  List<Cell> result = new ArrayList<>();
+  for (Cell item : coll) {
     if (!f.test(item)) {
       return result;
     }
@@ -116,14 +108,14 @@ public static <T> List<T> take(int n, List<T> coll) {
   return coll.stream().limit(n).collect(toList());
 }
 
-public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
+public static List<List<Cell>> partitionBy(Predicate<Cell> f, List<Cell> coll) {
   if (coll.isEmpty()) {
     return Collections.emptyList();
   }
   else {
-    T head = coll.get(0);
+    Cell head = coll.get(0);
     boolean fx = f.test(head);
-    List<T> group = takeWhile(y -> fx == f.test(y), coll);
+    List<Cell> group = takeWhile(y -> fx == f.test(y), coll);
     return concatLists(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
@@ -133,7 +125,16 @@ public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
     return Collections.emptyList();
   }
   else {
-    return concatLists(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
+    List<T> tailN = new ArrayList<>();
+    coll.stream()
+            .skip(step)
+            .forEach(c -> tailN.add(c));
+    List<T> takeN = take(n, coll);
+    List<List<T>> partitioned = partitionAll(n, step, tailN);
+    List<List<T>> result = new ArrayList<>();
+    result.add(takeN);
+    result.addAll(partitioned);
+    return result;
   }
 }
 
@@ -146,14 +147,11 @@ public static <T> T last(List<T> coll) {
 }
 
 public static void constrainStep(List<ValueCell> cells, int total) {
-  // jacop API uses ArrayList, not List
-  ArrayList<IntVar> logicVars = new ArrayList<>();
-  cells.forEach(c -> logicVars.add(c.logicVar));
-  Constraint allDiff = new Alldifferent(logicVars);
-  store.impose(allDiff);
-  IntVar sum = new IntVar(store, total, total);
-  Constraint sumConstr = new SumInt(store, logicVars, "==", sum);
-  store.impose(sumConstr);
+  IntVar[] logicVars = cells.stream()
+          .map(c -> c.logicVar)
+          .toArray(() -> new IntVar[cells.size()]);
+  model.allDifferent(logicVars, "DEFAULT").post();
+  model.sum(logicVars, "=", total).post();
 }
 
 public static void constrainPair(Function<Cell, Integer> getTotal, SimplePair<List<Cell>> pair) {
@@ -197,11 +195,9 @@ public static void constrainGrid(List<List<Cell>> grid) {
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
   System.out.println(drawGrid(grid));
   constrainGrid(grid);
-  boolean ok = store.consistency();
+  Solver solver = model.getSolver();
+  boolean ok = solver.solve();
   if (ok) {
-    Search<IntVar> search = new DepthFirstSearch<>();
-    SelectChoicePoint<IntVar> select = new InputOrderSelect<>(store, vars.toArray(new IntVar[1]), new IndomainMin<>());
-    boolean result = search.labeling(store, select);
     System.out.println(drawGrid(grid));
   }
   return grid;
