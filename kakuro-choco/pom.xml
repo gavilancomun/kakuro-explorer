@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.flowlikeariver</groupId>
-  <artifactId>kakuro-explorer</artifactId>
+  <artifactId>kakuro-choco</artifactId>
   <version>1.0.0</version>
 
   <packaging>jar</packaging>
 
-  <name>kakuro-explorer</name>
+  <name>kakuro-choco</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,12 +20,6 @@
       <groupId>org.antlr</groupId>
       <artifactId>antlr4-runtime</artifactId>
       <version>4.5</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.jacop</groupId>
-      <artifactId>jacop</artifactId>
-      <version>4.5.1</version>
     </dependency>
     
     <dependency>
