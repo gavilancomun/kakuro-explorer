@@ -70,11 +70,11 @@ public static String drawGrid(List<List<Cell>> grid) {
           .collect(joining());
 }
 
-public static <T> List<T> concatLists(List<T> a, List<T> b) {
+public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) {
   return Stream.concat(a.stream(), b.stream()).collect(toList());
 }
 
-public static List<List<Cell>> transpose(List<List<Cell>> m) {
+public static <T> List<List<T>> transpose(List<List<T>> m) {
   if (m.isEmpty()) {
     return Collections.emptyList();
   }
@@ -85,9 +85,9 @@ public static List<List<Cell>> transpose(List<List<Cell>> m) {
   }
 }
 
-public static List<Cell> takeWhile(Predicate<Cell> f, List<Cell> coll) {
-  List<Cell> result = new ArrayList<>();
-  for (Cell item : coll) {
+public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
+  List<T> result = new ArrayList<>();
+  for (T item : coll) {
     if (!f.test(item)) {
       return result;
     }
@@ -104,37 +104,28 @@ public static <T> List<T> take(int n, List<T> coll) {
   return coll.stream().limit(n).collect(toList());
 }
 
-public static List<List<Cell>> partitionBy(Predicate<Cell> f, List<Cell> coll) {
+public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
   if (coll.isEmpty()) {
     return Collections.emptyList();
   }
   else {
-    Cell head = coll.get(0);
+    T head = coll.get(0);
     boolean fx = f.test(head);
-    List<Cell> group = takeWhile(y -> fx == f.test(y), coll);
+    List<T> group = takeWhile(y -> fx == f.test(y), coll);
     return concatLists(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
 
-public static List<List<Cell>> partitionAll(int n, int step, List<Cell> coll) {
+public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
   if (coll.isEmpty()) {
     return Collections.emptyList();
   }
   else {
-    List<Cell> tailN = new ArrayList<>();
-    coll.stream()
-            .skip(step)
-            .forEach(c -> tailN.add(c));
-    List<Cell> takeN = take(n, coll);
-    List<List<Cell>> partitioned = partitionAll(n, step, tailN);
-    List<List<Cell>> result = new ArrayList<>();
-    result.add(takeN);
-    result.addAll(partitioned);
-    return result;
+    return concatLists(asList(take(n, coll)), partitionAll(n, step, drop(step, coll)));
   }
 }
 
-public static List<List<Cell>> partitionN(int n, List<Cell> coll) {
+public static <T> List<List<T>> partitionN(int n, List<T> coll) {
   return partitionAll(n, n, coll);
 }
 
