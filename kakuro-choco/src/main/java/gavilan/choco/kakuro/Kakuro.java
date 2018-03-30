@@ -18,7 +18,6 @@ import org.chocosolver.solver.variables.IntVar;
 public class Kakuro {
 
 static Model model;
-static List<IntVar> vars = new ArrayList<>();
 
 static {
   initStore();
@@ -26,13 +25,11 @@ static {
 
 public static void initStore() {
   model = new Model();
-  vars.clear();
 }
 
 public static ValueCell v(Collection<Integer> values) {
   IntVar v = model.intVar(values.stream().mapToInt(i -> i).toArray());
   ValueCell valueCell = new ValueCell(v);
-  vars.add(v);
   return valueCell;
 }
 
@@ -42,7 +39,6 @@ public static ValueCell v(Integer... values) {
 
 public static ValueCell v() {
   ValueCell valueCell = new ValueCell(model.intVar(IntStream.rangeClosed(1, 9).toArray()));
-  vars.add(valueCell.logicVar);
   return valueCell;
 }
 
@@ -120,36 +116,37 @@ public static List<List<Cell>> partitionBy(Predicate<Cell> f, List<Cell> coll) {
   }
 }
 
-public static <T> List<List<T>> partitionAll(int n, int step, List<T> coll) {
+public static List<List<Cell>> partitionAll(int n, int step, List<Cell> coll) {
   if (coll.isEmpty()) {
     return Collections.emptyList();
   }
   else {
-    List<T> tailN = new ArrayList<>();
+    List<Cell> tailN = new ArrayList<>();
     coll.stream()
             .skip(step)
             .forEach(c -> tailN.add(c));
-    List<T> takeN = take(n, coll);
-    List<List<T>> partitioned = partitionAll(n, step, tailN);
-    List<List<T>> result = new ArrayList<>();
+    List<Cell> takeN = take(n, coll);
+    List<List<Cell>> partitioned = partitionAll(n, step, tailN);
+    List<List<Cell>> result = new ArrayList<>();
     result.add(takeN);
     result.addAll(partitioned);
     return result;
   }
 }
 
-public static <T> List<List<T>> partitionN(int n, List<T> coll) {
+public static List<List<Cell>> partitionN(int n, List<Cell> coll) {
   return partitionAll(n, n, coll);
 }
 
-public static <T> T last(List<T> coll) {
+public static Cell last(List<Cell> coll) {
   return coll.get(coll.size() - 1);
 }
 
 public static void constrainStep(List<ValueCell> cells, int total) {
-  IntVar[] logicVars = cells.stream()
-          .map(c -> c.logicVar)
-          .toArray(() -> new IntVar[cells.size()]);
+  IntVar[] logicVars = new IntVar[cells.size()];
+  for (int i = 0; i < cells.size(); ++i) {
+    logicVars[i] = cells.get(i).logicVar;
+  }
   model.allDifferent(logicVars, "DEFAULT").post();
   model.sum(logicVars, "=", total).post();
 }
@@ -164,15 +161,23 @@ public static void constrainPair(Function<Cell, Integer> getTotal, SimplePair<Li
   }
 }
 
-// returns (non-vals, vals)*
+// returns (non-values, values)*
 public static List<List<Cell>> gatherValues(List<Cell> line) {
   return partitionBy(v -> (v instanceof ValueCell), line);
 }
 
 public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line) {
-  return partitionN(2, gatherValues(line)).stream()
-          .map(part -> new SimplePair<List<Cell>>(part.get(0), (1 == part.size()) ? Collections.emptyList() : part.get(1)))
-          .collect(toList());
+  List<List<Cell>> gathered = gatherValues(line);
+  List<SimplePair<List<Cell>>> results = new ArrayList<>();
+  for (int i = 0; i < gathered.size(); i += 2) {
+    if (i + 1 < gathered.size()) {
+      results.add(new SimplePair<>(gathered.get(i), gathered.get(i + 1)));
+    }
+    else {
+      results.add(new SimplePair<>(gathered.get(i), Collections.emptyList()));
+    }
+  }
+  return results;
 }
 
 public static void constrainLine(List<Cell> line, Function<Cell, Integer> f) {

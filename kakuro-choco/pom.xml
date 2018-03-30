@@ -16,11 +16,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr4-runtime</artifactId>
-      <version>4.5</version>
-    </dependency>
     
     <dependency>
       <groupId>org.choco-solver</groupId>
@@ -39,52 +34,20 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.antlr</groupId>
-        <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.5.3</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>antlr4</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.4</version>
-        <configuration>
-          <plugins>
-            <plugin>
-              <groupId>com.mebigfatguy.fb-contrib</groupId>
-              <artifactId>fb-contrib</artifactId>
-              <version>6.8.2</version>
-            </plugin>
-            <plugin>
-              <groupId>com.h3xstream.findsecbugs</groupId>
-              <artifactId>findsecbugs-plugin</artifactId>
-              <version>1.5.0</version>
-            </plugin>
-          </plugins>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.2</version>
+        <version>3.7.0</version>
         <configuration>
           <source>1.10</source>
           <target>1.10</target>
           <debug>true</debug>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <compilerArgs>
             <arg>-Xlint:all</arg>
+            <arg>-Xdiags:verbose</arg>
           </compilerArgs>
         </configuration>
       </plugin>
