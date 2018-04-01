@@ -55,20 +55,42 @@ private void parseConstraints(Grid grid, List<String> gridPic) {
     IntVar[] column = grid.getColumn(i);
     model.allDifferent(row, "DEFAULT").post();
     model.allDifferent(column, "DEFAULT").post();
-    String[] parts = gridPic.get(pos).split("");
-    for (int partPos = 1; partPos < parts.length; partPos += 2) {
-      String sign = parts[partPos];
+    String[] rowParts = gridPic.get(pos).split("");
+    for (int partPos = 1; partPos < rowParts.length; partPos += 2) {
+      String sign = rowParts[partPos];
       int leftPos = partPos / 2;
+      IntVar left = row[leftPos];
+      IntVar right = row[leftPos + 1];
       System.out.println("row " + i + " leftPos " + leftPos + " sign " + sign);
       switch (sign) {
       case "+":
-        model.arithm(row[leftPos + 1], "-", row[leftPos], "=", 1).post();
+        model.arithm(right, "-", left, "=", 1).post();
         break;
       case "-":
-        model.arithm(row[leftPos], "-", row[leftPos + 1], "=", 1).post();
+        model.arithm(left, "-", right, "=", 1).post();
         break;
       default:
-        model.distance(row[leftPos], row[leftPos + 1], "!=", 1).post();
+        model.distance(left, right, "!=", 1).post();
+      }
+    }
+    if (pos + 1 < gridPic.size()) {
+      String[] columnParts = gridPic.get(pos + 1).split("");
+      for (int partPos = 0; partPos < columnParts.length; partPos += 2) {
+        String sign = columnParts[partPos];
+        int leftPos = partPos / 2;
+        IntVar left = row[leftPos];
+        IntVar right = grid.getRow(i + 1)[leftPos];
+        System.out.println("row " + i + " top " + leftPos + " sign " + sign);
+        switch (sign) {
+        case "+":
+          model.arithm(right, "-", left, "=", 1).post();
+          break;
+        case "-":
+          model.arithm(left, "-", right, "=", 1).post();
+          break;
+        default:
+          model.distance(left, right, "!=", 1).post();
+        }
       }
     }
   }
