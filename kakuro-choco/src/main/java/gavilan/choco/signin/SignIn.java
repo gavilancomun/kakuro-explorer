@@ -61,7 +61,7 @@ private void parseConstraints(Grid grid, List<String> gridPic) {
       int leftPos = partPos / 2;
       IntVar left = row[leftPos];
       IntVar right = row[leftPos + 1];
-      System.out.println("row " + i + " leftPos " + leftPos + " sign " + sign);
+//      System.out.println("row " + i + " leftPos " + leftPos + " sign " + sign);
       switch (sign) {
       case "+":
         model.arithm(right, "-", left, "=", 1).post();
@@ -80,7 +80,7 @@ private void parseConstraints(Grid grid, List<String> gridPic) {
         int leftPos = partPos / 2;
         IntVar left = row[leftPos];
         IntVar right = grid.getRow(i + 1)[leftPos];
-        System.out.println("row " + i + " top " + leftPos + " sign " + sign);
+//        System.out.println("row " + i + " top " + leftPos + " sign " + sign);
         switch (sign) {
         case "+":
           model.arithm(right, "-", left, "=", 1).post();
