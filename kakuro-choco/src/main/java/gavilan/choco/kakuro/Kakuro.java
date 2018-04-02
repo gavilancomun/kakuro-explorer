@@ -122,7 +122,7 @@ public static void constrainStep(List<ValueCell> cells, int total) {
   IntVar[] logicVars = cells.stream()
           .map(c -> c.logicVar)
           .toArray(IntVar[]::new);
-  model.allDifferent(logicVars, "DEFAULT").post();
+  model.allDifferent(logicVars).post();
   model.sum(logicVars, "=", total).post();
 }
 

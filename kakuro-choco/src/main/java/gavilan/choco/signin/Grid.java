@@ -3,20 +3,20 @@ package gavilan.choco.signin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
-import org.chocosolver.util.iterators.DisposableValueIterator;
 
 public class Grid {
 
 public IntVar[][] grid;
 private final int rowCount;
+private final Model model;
 
-public Grid(int rowCount) {
+public Grid(Model model, int rowCount) {
   this.rowCount = rowCount;
   this.grid = new IntVar[rowCount][rowCount];
+  this.model = model;
 }
 
 public List<IntVar> init(Model model) {
@@ -45,22 +45,15 @@ private String display(int n) {
   return "" + n;
 }
 
-private List<Integer> elements(IntVar iv) {
-  List<Integer> results = new ArrayList<>();
-  DisposableValueIterator vit = iv.getValueIterator(true);
-  while (vit.hasNext()) {
-    int v = vit.next();
-    results.add(v);
-  }
-  vit.dispose();
-  return results;
+private int[] elements(IntVar iv) {
+  return model.getDomainUnion(iv);
 }
 
 public void drawGrid() {
   for (int i = 0; i < rowCount; ++i) {
     for (int j = 0; j < rowCount; ++j) {
-      elements(grid[i][j]).stream()
-              .map(this::display)
+      Arrays.stream(elements(grid[i][j]))
+              .mapToObj(this::display)
               .forEach(System.out::print);
     }
     System.out.println();

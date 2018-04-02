@@ -1,6 +1,5 @@
 package gavilan.choco.endview;
 
-import java.util.ArrayList;
 import static java.util.Collections.reverse;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -16,33 +15,48 @@ private Constraint equal(IntVar var1, int var2) {
   return model.arithm(var1, "=", var2);
 }
 
+private Constraint and(Constraint... cs) {
+  return model.and(cs);
+}
+
+private Constraint or(Constraint... cs) {
+  return model.or(cs);
+}
+
 private Constraint in(IntVar var1, int[] var2) {
   return model.member(var1, var2);
 }
 
-private void constrain(int target, List<IntVar> vars) {
+private void constrain(int target, IntVar[] vars) {
   if (target > 0) {
-    int kind = vars.size();
-    int[] blank = IntStream.rangeClosed(1, vars.size() - 4).toArray();
+    int kind = vars.length;
+    int[] blank = IntStream.rangeClosed(1, vars.length - 4).toArray();
     if (5 == kind) {
-      model.or(
-              equal(vars.get(0), target),
-              model.and(in(vars.get(0), blank),
-                      equal(vars.get(1), target))
+      or(
+              equal(vars[0], target),
+              and(
+                      in(vars[0], blank),
+                      equal(vars[1], target))
       ).post();
     }
     else if (6 == kind) {
-      model.or(
-              equal(vars.get(0), target),
-              model.and(in(vars.get(0), blank),
-                      equal(vars.get(1), target)),
-              model.and(in(vars.get(0), blank),
-                      in(vars.get(1), blank),
-                      equal(vars.get(2), target)
+      or(
+              equal(vars[0], target),
+              and(
+                      in(vars[0], blank),
+                      equal(vars[1], target)),
+              and(
+                      in(vars[0], blank),
+                      in(vars[1], blank),
+                      equal(vars[2], target)
               )
       ).post();
     }
   }
+}
+
+private void constrain(int target, List<IntVar> vars) {
+  constrain(target, vars.toArray(new IntVar[0]));
 }
 
 int toDom(int rowCount, char c) {
@@ -55,10 +69,10 @@ private void parseConstraints(Grid grid, List<String> gridPic) {
   String topRow = gridPic.get(0);
   String bottomRow = gridPic.get(gridPic.size() - 1);
   for (int i = 0; i < rowCount; ++i) {
-    ArrayList<IntVar> row = grid.getRow(i);
-    ArrayList<IntVar> column = grid.getColumn(i);
-    model.allDifferent(row.toArray(intVars), "DEFAULT").post();
-    model.allDifferent(column.toArray(intVars), "DEFAULT").post();
+    List<IntVar> row = grid.getRow(i);
+    List<IntVar> column = grid.getColumn(i);
+    model.allDifferent(row.toArray(intVars)).post();
+    model.allDifferent(column.toArray(intVars)).post();
     int topConstraint = toDom(rowCount, topRow.charAt(i + 1));
     constrain(topConstraint, column);
     reverse(column);
@@ -81,6 +95,9 @@ public void solve(List<String> gridPic) {
   if (ok) {
     System.out.println("");
     grid.drawGrid();
+  }
+  else {
+    System.err.println("No solution found for " + gridPic);
   }
 }
 

@@ -31,11 +31,11 @@ public List<IntVar> init(Model model) {
   return vars;
 }
 
-public ArrayList<IntVar> getRow(int n) {
+public List<IntVar> getRow(int n) {
   return new ArrayList<>(Arrays.asList(grid[n]));
 }
 
-public ArrayList<IntVar> getColumn(int n) {
+public List<IntVar> getColumn(int n) {
   return new ArrayList<>(IntStream.range(0, grid.length)
           .mapToObj(i -> grid[i][n])
           .collect(toList()));
