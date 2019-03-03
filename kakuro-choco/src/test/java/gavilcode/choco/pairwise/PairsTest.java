@@ -2,6 +2,9 @@ package gavilcode.choco.pairwise;
 
 import static java.util.Arrays.asList;
 import java.util.Random;
+import java.util.stream.IntStream;
+import org.chocosolver.solver.Model;
+import org.chocosolver.solver.variables.IntVar;
 import org.junit.Test;
 
 public class PairsTest {
@@ -153,5 +156,25 @@ public void Solve4Pairs() {
     Debug.WriteLine(String.join(", ", row));
   }
 }
-}
 
+@Test
+public void testCombinations() {
+  var paramLengths = new Integer[]{2, 2, 3};
+  var numberOfParams = paramLengths.length;
+
+  var model = new Model();
+  var x = model.intVar(IntStream.rangeClosed(0, numberOfParams - 1).toArray());
+  var y = model.intVar(IntStream.rangeClosed(0, numberOfParams - 1).toArray());
+  model.arithm(x, "<", y).post();
+  var solver = model.getSolver();
+  int count = 0;
+  while (solver.solve()) {
+    ++count;
+    System.out.println(count + ": " + x.intVar() + ", " + y.intVar());
+  }
+  var params = new IntVar[numberOfParams];
+  for (var len : paramLengths) {
+    
+  }
+}
+}
