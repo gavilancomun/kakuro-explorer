@@ -31,7 +31,7 @@ public boolean equals(Object obj) {
   if (getClass() != obj.getClass()) {
     return false;
   }
-  final Pair<?, ?> other = (Pair<?, ?>) obj;
+  final var other = (Pair<?, ?>) obj;
   return Objects.equals(this.left, other.left) && Objects.equals(this.right, other.right);
 }
 

@@ -8,7 +8,6 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.IntStream;
 import org.chocosolver.solver.variables.IntVar;
-import org.chocosolver.util.iterators.DisposableValueIterator;
 
 public class ValueCell implements Cell {
 
@@ -19,8 +18,8 @@ public ValueCell(IntVar intVar) {
 }
 
 private List<Integer> elements() {
-  List<Integer> results = new ArrayList<>();
-  DisposableValueIterator vit = logicVar.getValueIterator(true);
+  var results = new ArrayList<Integer>();
+  var vit = logicVar.getValueIterator(true);
   while (vit.hasNext()) {
     int v = vit.next();
     results.add(v);

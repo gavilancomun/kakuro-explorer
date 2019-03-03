@@ -27,10 +27,14 @@ private Constraint in(IntVar var1, int[] var2) {
   return model.member(var1, var2);
 }
 
+private int[] range(IntVar[] vars) {
+  return IntStream.rangeClosed(1, vars.length - 4).toArray();
+}
+
 private void constrain(int target, IntVar[] vars) {
   if (target > 0) {
     int kind = vars.length;
-    int[] blank = IntStream.rangeClosed(1, vars.length - 4).toArray();
+    var blank = range(vars);
     if (5 == kind) {
       or(
               equal(vars[0], target),
@@ -64,13 +68,13 @@ int toDom(int rowCount, char c) {
 }
 
 private void parseConstraints(Grid grid, List<String> gridPic) {
-  IntVar[] intVars = new IntVar[0];
+  var intVars = new IntVar[0];
   int rowCount = gridPic.size() - 2;
-  String topRow = gridPic.get(0);
-  String bottomRow = gridPic.get(gridPic.size() - 1);
+  var topRow = gridPic.get(0);
+  var bottomRow = gridPic.get(gridPic.size() - 1);
   for (int i = 0; i < rowCount; ++i) {
-    List<IntVar> row = grid.getRow(i);
-    List<IntVar> column = grid.getColumn(i);
+    var row = grid.getRow(i);
+    var column = grid.getColumn(i);
     model.allDifferent(row.toArray(intVars)).post();
     model.allDifferent(column.toArray(intVars)).post();
     int topConstraint = toDom(rowCount, topRow.charAt(i + 1));
@@ -88,10 +92,10 @@ private void parseConstraints(Grid grid, List<String> gridPic) {
 
 public void solve(List<String> gridPic) {
   int rowCount = gridPic.size() - 2;
-  Grid grid = new Grid(rowCount);
+  var grid = new Grid(rowCount);
   grid.init(model);
   parseConstraints(grid, gridPic);
-  boolean ok = model.getSolver().solve();
+  var ok = model.getSolver().solve();
   if (ok) {
     System.out.println("");
     grid.drawGrid();

@@ -41,7 +41,7 @@ public boolean equals(Object obj) {
   if (getClass() != obj.getClass()) {
     return false;
   }
-  final DownCell other = (DownCell) obj;
+  final var other = (DownCell) obj;
   return this.down == other.down;
 }
 

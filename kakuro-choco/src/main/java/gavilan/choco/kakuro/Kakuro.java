@@ -10,7 +10,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
 public class Kakuro {
@@ -26,7 +25,7 @@ public static void init() {
 }
 
 public static ValueCell v(int... values) {
-  IntVar v = model.intVar(values);
+  var v = model.intVar(values);
   return new ValueCell(v);
 }
 
@@ -94,9 +93,9 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
     return Collections.emptyList();
   }
   else {
-    T head = coll.get(0);
-    boolean fx = f.test(head);
-    List<T> group = takeWhile(y -> fx == f.test(y), coll);
+    var head = coll.get(0);
+    var fx = f.test(head);
+    var group = takeWhile(y -> fx == f.test(y), coll);
     return concat(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
@@ -119,7 +118,7 @@ public static <T> T last(List<T> coll) {
 }
 
 public static void constrainStep(List<ValueCell> cells, int total) {
-  IntVar[] logicVars = cells.stream()
+  var logicVars = cells.stream()
           .map(c -> c.logicVar)
           .toArray(IntVar[]::new);
   model.allDifferent(logicVars).post();
@@ -132,12 +131,12 @@ public static List<List<Cell>> gatherValues(List<Cell> line) {
 }
 
 public static void constrainLine(List<Cell> line, Function<Cell, Integer> f) {
-  List<List<Cell>> gathered = gatherValues(line);
+  var gathered = gatherValues(line);
   for (int i = 0; i < gathered.size(); i += 2) {
     if (i + 1 < gathered.size()) {
-      List<Cell> notValueCells = gathered.get(i);
+      var notValueCells = gathered.get(i);
       if (!gathered.get(i + 1).isEmpty()) {
-        List<ValueCell> valueCells = gathered.get(i + 1).stream()
+        var valueCells = gathered.get(i + 1).stream()
                 .map(cell -> (ValueCell) cell)
                 .collect(toList());
         constrainStep(valueCells, f.apply(last(notValueCells)));
@@ -162,8 +161,8 @@ public static void constrainGrid(List<List<Cell>> grid) {
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
   System.out.println(drawGrid(grid));
   constrainGrid(grid);
-  Solver solver = model.getSolver();
-  boolean ok = solver.solve();
+  var solver = model.getSolver();
+  var ok = solver.solve();
   if (ok) {
     System.out.println(drawGrid(grid));
   }

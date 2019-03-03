@@ -19,11 +19,15 @@ public Grid(Model model, int rowCount) {
   this.model = model;
 }
 
+private int[] range() {
+  return IntStream.rangeClosed(1, rowCount).toArray();
+}
+
 public List<IntVar> init(Model model) {
-  List<IntVar> vars = new ArrayList<>();
+  var vars = new ArrayList<IntVar>();
   for (int i = 0; i < rowCount; ++i) {
     for (int j = 0; j < rowCount; ++j) {
-      IntVar v = model.intVar(IntStream.rangeClosed(1, rowCount).toArray());
+      var v = model.intVar(range());
       vars.add(v);
       grid[i][j] = v;
     }

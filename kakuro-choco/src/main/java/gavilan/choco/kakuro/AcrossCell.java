@@ -41,7 +41,7 @@ public boolean equals(Object obj) {
   if (getClass() != obj.getClass()) {
     return false;
   }
-  final AcrossCell other = (AcrossCell) obj;
+  final var other = (AcrossCell) obj;
   return this.across == other.across;
 }
 

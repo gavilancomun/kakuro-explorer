@@ -8,7 +8,6 @@ import static gavilan.choco.kakuro.Kakuro.e;
 import static gavilan.choco.kakuro.Kakuro.solver;
 import static gavilan.choco.kakuro.Kakuro.v;
 import static java.util.Arrays.asList;
-import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -48,21 +47,21 @@ public void testDrawValues() {
 
 @Test
 public void testDrawRow() {
-  List<Cell> line = asList(da(3, 4), v(), v(1, 2), d(4), e(), a(5), v(4), v(1));
+  var line = asList(da(3, 4), v(), v(1, 2), d(4), e(), a(5), v(4), v(1));
   String result = drawRow(line);
   assertEquals("    3\\ 4   123456789 12.......    4\\--     -----     --\\ 5       4         1    \n", result);
 }
 
 @Test
 public void testSolver() {
-  List<List<Cell>> grid1 = asList(
+  var grid1 = asList(
     asList(e(), d(4), d(22), e(), d(16), d(3)),
     asList(a(3), v(), v(), da(16, 6), v(), v()),
     asList(a(18), v(), v(), v(), v(), v()),
     asList(e(), da(17, 23), v(), v(), v(), d(14)),
     asList(a(9), v(), v(), a(6), v(), v()),
     asList(a(15), v(), v(), a(12), v(), v()));
-  List<List<Cell>> result = solver(grid1);
+  var result = solver(grid1);
   assertEquals("   --\\ 3       1         2       16\\ 6       4         2    \n", drawRow(result.get(1)));
   assertEquals("   --\\18       3         5         7         2         1    \n", drawRow(result.get(2)));
   assertEquals("   -----     17\\23       8         9         6       14\\--  \n", drawRow(result.get(3)));

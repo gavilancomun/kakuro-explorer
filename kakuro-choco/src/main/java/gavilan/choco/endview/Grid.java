@@ -7,7 +7,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
-import org.chocosolver.util.iterators.DisposableValueIterator;
 
 public class Grid {
 
@@ -20,16 +19,20 @@ public Grid(int rowCount) {
 }
 
 public List<IntVar> init(Model model) {
-  List<IntVar> vars = new ArrayList<>();
+  var vars = new ArrayList<IntVar>();
   for (int i = 0; i < rowCount; ++i) {
     for (int j = 0; j < rowCount; ++j) {
-      IntVar v = model.intVar(IntStream.rangeClosed(1, rowCount).toArray());
+      var v = model.intVar(range());
       vars.add(v);
       grid[i][j] = v;
     }
   }
   return vars;
 }
+
+  private int[] range() {
+    return IntStream.rangeClosed(1, rowCount).toArray();
+  }
 
 public List<IntVar> getRow(int n) {
   return new ArrayList<>(Arrays.asList(grid[n]));
@@ -51,8 +54,8 @@ private String display(int n) {
 }
 
 private List<Integer> elements(IntVar iv) {
-  List<Integer> results = new ArrayList<>();
-  DisposableValueIterator vit = iv.getValueIterator(true);
+  var results = new ArrayList<Integer>();
+  var vit = iv.getValueIterator(true);
   while (vit.hasNext()) {
     int v = vit.next();
     results.add(v);
