@@ -71,6 +71,7 @@ public void RandomRowsCounts() {
 
 @Test
 public void Solve2Pairs() {
+  Debug.WriteLine("Solve2Pairs");
   var prop1 = asList("0a", "0b");
   var prop2 = asList("1a", "1b", "1c", "1d");
   var prop3 = asList("2a", "2b", "2c");
@@ -87,6 +88,7 @@ public void Solve2Pairs() {
 
 @Test
 public void Solve3Pairs() {
+  Debug.WriteLine("Solve3Pairs");
   var prop1 = asList("0a", "0b");
   var prop2 = asList("1a", "1b");
   var prop3 = asList("2a", "2b", "2c", "2d", "2e");
@@ -136,6 +138,7 @@ public void ClassicAlgorithmPaperExample() {
 
 @Test
 public void Solve4Pairs() {
+  Debug.WriteLine("Solve4Pairs");
   var prop1 = asList("0a", "0b");
   var prop2 = asList("1a", "1b");
   var prop3 = asList("2a", "2b", "2c", "2d", "2e");

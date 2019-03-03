@@ -209,7 +209,7 @@ public List<List<String>> Solve() {
               var done = false;
               for (var r : tPrime) {
                 if (("-".equals(r.get(pk.Property1Id))) && (r.get(pk.Property2Id).equals(pk.Property2Value))) {
-                  r.add(pk.Property1Id, pk.Property1Value);
+                  r.set(pk.Property1Id, pk.Property1Value);
                   done = true;
                 }
               }
@@ -218,8 +218,8 @@ public List<List<String>> Solve() {
                 for (int j = 1; j <= i + 1; ++j) {
                   newTest.add("-");
                 }
-                newTest.add(pk.Property1Id, pk.Property1Value);
-                newTest.add(pk.Property2Id, pk.Property2Value);
+                newTest.set(pk.Property1Id, pk.Property1Value);
+                newTest.set(pk.Property2Id, pk.Property2Value);
                 tPrime.add(newTest);
               }
             }
