@@ -1,8 +1,9 @@
 package gavilcode.choco.pairwise;
 
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 import org.junit.Test;
@@ -163,18 +164,71 @@ public void testCombinations() {
   var numberOfParams = paramLengths.length;
 
   var model = new Model();
-  var x = model.intVar(IntStream.rangeClosed(0, numberOfParams - 1).toArray());
-  var y = model.intVar(IntStream.rangeClosed(0, numberOfParams - 1).toArray());
-  model.arithm(x, "<", y).post();
+  var vs = model.intVarArray("vs", 2, 0, numberOfParams - 1);
+  model.arithm(vs[0], "<", vs[1]).post();
   var solver = model.getSolver();
   int count = 0;
   while (solver.solve()) {
     ++count;
-    System.out.println(count + ": " + x.intVar() + ", " + y.intVar());
+    System.out.println(count + ": " + vs[0].intVar() + ", " + vs[1].intVar());
   }
+  var model2 = new Model();
   var params = new IntVar[numberOfParams];
+  int pos = 0;
   for (var len : paramLengths) {
-    
+    params[pos] = model2.intVar(0, len - 1);
+    ++pos;
   }
+  var solver2 = model2.getSolver();
+  count = 0;
+  while (solver2.solve()) {
+    ++count;
+    System.out.print(count + ":");
+    for (var v : params) {
+      System.out.print(" " + v.intVar());
+    }
+    System.out.println();
+  }
+}
+
+// all pairs of two properties
+private static void AllPairs(Model model, Integer[] paramLengths, IntVar[][] p, int i, int j) {
+  var numberOfRows = p[0].length;
+  for (int x = 0; x < paramLengths[i]; ++x) {
+    for (int y = 0; y < paramLengths[j]; ++y) {
+      var index = model.intVar("index" + x + y, 0, numberOfRows);
+      model.element(model.intVar(x), p[i], index, 0).post();
+      model.element(model.intVar(y), p[j], index, 0).post();
+    }
+  }
+}
+
+@Test
+public void testElements() {
+  var paramLengths = new Integer[]{2, 2, 3};
+  var numberOfParams = paramLengths.length;
+  for (int numberOfRows = 2; numberOfRows < 10; ++numberOfRows) {
+    var model = new Model();
+    var p = new IntVar[numberOfParams][];
+    for (int i = 0; i < numberOfParams; ++i) {
+      var param = model.intVarArray("p" + i, numberOfRows, 0, paramLengths[i] - 1);
+      p[i] = param;
+    }
+    for (int px = 0; px < numberOfParams - 1; ++px) {
+      for (int py = px + 1; py < numberOfParams; ++py) {
+        AllPairs(model, paramLengths, p, px, py);
+      }
+    }
+    var solver = model.getSolver();
+
+    solver.showStatistics();
+    var solution = solver.findSolution();
+    if (solution != null) {
+      System.out.println(solution.toString());
+      solution = solver.findSolution();
+      break;
+    }
+  }
+
 }
 }
