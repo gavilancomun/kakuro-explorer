@@ -1,5 +1,6 @@
 package gavilcode.choco.pairwise;
 
+import com.oracle.tools.packager.Platform;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.List;
@@ -191,36 +192,14 @@ public void testCombinations() {
   }
 }
 
-// all pairs of two properties
-private static void AllPairs(Model model, Integer[] paramLengths, IntVar[][] p, int i, int j) {
-  var numberOfRows = p[0].length;
-  for (int x = 0; x < paramLengths[i]; ++x) {
-    for (int y = 0; y < paramLengths[j]; ++y) {
-      var index = model.intVar("index" + x + y, 0, numberOfRows);
-      model.element(model.intVar(x), p[i], index, 0).post();
-      model.element(model.intVar(y), p[j], index, 0).post();
-    }
-  }
-}
-
 @Test
 public void testElements() {
-  var paramLengths = new Integer[]{2, 2, 3};
-  var numberOfParams = paramLengths.length;
-  for (int numberOfRows = 2; numberOfRows < 10; ++numberOfRows) {
+  var paramLengths = new Integer[]{2, 2, 3, 5};
+  var min = Utils.getMinimum(paramLengths);
+  for (int numberOfRows = min; numberOfRows < min * 2; ++numberOfRows) {
     var model = new Model();
-    var p = new IntVar[numberOfParams][];
-    for (int i = 0; i < numberOfParams; ++i) {
-      var param = model.intVarArray("p" + i, numberOfRows, 0, paramLengths[i] - 1);
-      p[i] = param;
-    }
-    for (int px = 0; px < numberOfParams - 1; ++px) {
-      for (int py = px + 1; py < numberOfParams; ++py) {
-        AllPairs(model, paramLengths, p, px, py);
-      }
-    }
+    Utils.pairs(model, paramLengths, numberOfRows);
     var solver = model.getSolver();
-
     solver.showStatistics();
     var solution = solver.findSolution();
     if (solution != null) {
