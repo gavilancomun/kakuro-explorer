@@ -194,7 +194,7 @@ public void testCombinations() {
 
 @Test
 public void testElements() {
-  var paramLengths = new Integer[]{2, 2, 3, 5};
+  var paramLengths = new Integer[]{2, 2, 3, 5, 6, 7};
   var min = Utils.getMinimum(paramLengths);
   for (int numberOfRows = min; numberOfRows < min * 2; ++numberOfRows) {
     var model = new Model();
