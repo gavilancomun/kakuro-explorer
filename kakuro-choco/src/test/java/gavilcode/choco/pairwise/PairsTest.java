@@ -194,15 +194,22 @@ public void testCombinations() {
 
 @Test
 public void testElements() {
-  var paramLengths = new Integer[]{2, 2, 3, 5, 7, 7};
+  var paramLengths = new Integer[]{2, 2, 3, 5, 7, 7, 7};
   var min = Utils.getMinimum(paramLengths);
   for (int numberOfRows = min; numberOfRows < min * 2; ++numberOfRows) {
+    System.out.println("required pairs " + Utils.countPairs(paramLengths));
+    System.out.println("pairs in rows " + Utils.countPairsInRow(paramLengths) * numberOfRows);
     var model = new Model();
     var params = Utils.pairs(model, paramLengths, numberOfRows);
     var solver = model.getSolver();
     solver.showStatistics();
     solver.showDashboard();
+    solver.limitTime(10 * 60 * 1000);
     var solution = solver.findSolution();
+    if (solver.isStopCriterionMet()) {
+      System.out.println("stop criterion met");
+      break;
+    }
     if (solution != null) {
       // System.out.println(solution.toString());
       for (int i = 0; i < numberOfRows; ++i) {

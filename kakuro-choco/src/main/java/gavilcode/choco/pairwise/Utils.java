@@ -54,6 +54,21 @@ public static void ConstrainPairs(Model model, Integer[] paramLengths, IntVar[][
   }
 }
 
+public static int countPairs(Integer[] paramLengths) {
+  int result = 0;
+  int numberOfParams = paramLengths.length;
+  for (int px = 0; px < numberOfParams - 1; ++px) {
+    for (int py = px + 1; py < numberOfParams; ++py) {
+      result += paramLengths[px] * paramLengths[py];
+    }
+  }
+  return result;
+}
+
+public static int countPairsInRow(Integer[] paramLengths) {
+  return (paramLengths.length * (paramLengths.length - 1) / 2);
+}
+
 public static int getMinimum(Integer[] lengths) {
   var values = new ArrayList<Integer>(asList(lengths));
   var m1 = values.stream().mapToInt(x -> x).max();
