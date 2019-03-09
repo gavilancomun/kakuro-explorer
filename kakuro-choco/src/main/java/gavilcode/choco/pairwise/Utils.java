@@ -67,15 +67,15 @@ public static int getMinimum(Integer[] lengths) {
   return m1.orElse(1) * m2.orElse(1);
 }
 
-public static void pairs(Model model, Integer[] paramLengths, int numberOfRows) {
+public static IntVar[][] pairs(Model model, Integer[] paramLengths, int numberOfRows) {
   int max1pos = 0;
   int max1 = 0;
   int max2pos = 0;
   for (int i = 0; i < paramLengths.length; ++i) {
-    if (paramLengths[i] > max1) {
+    if (paramLengths[i] >= max1) {
       max2pos = max1pos;
       max1pos = i;
-      max1 = i;
+      max1 = paramLengths[i];
     }
   }
   System.out.println("maxs " + max1pos + " " + max2pos);
@@ -89,10 +89,11 @@ public static void pairs(Model model, Integer[] paramLengths, int numberOfRows) 
   for (int i = 0; i < paramLengths[max2pos]; ++i) {
     for (int j = 0; j < paramLengths[max1pos]; ++j) {
       model.element(model.intVar(i), p[max2pos], model.intVar(pos), 0).post();
-      model.element(model.intVar(j), p[max1pos], model.intVar(pos), 0).post();    
+      model.element(model.intVar(j), p[max1pos], model.intVar(pos), 0).post();
       ++pos;
     }
   }
   ConstrainPairs(model, paramLengths, p);
+  return p;
 }
 }

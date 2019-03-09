@@ -194,17 +194,23 @@ public void testCombinations() {
 
 @Test
 public void testElements() {
-  var paramLengths = new Integer[]{2, 2, 3, 5, 6, 7};
+  var paramLengths = new Integer[]{2, 2, 3, 5, 7, 7};
   var min = Utils.getMinimum(paramLengths);
   for (int numberOfRows = min; numberOfRows < min * 2; ++numberOfRows) {
     var model = new Model();
-    Utils.pairs(model, paramLengths, numberOfRows);
+    var params = Utils.pairs(model, paramLengths, numberOfRows);
     var solver = model.getSolver();
     solver.showStatistics();
+    solver.showDashboard();
     var solution = solver.findSolution();
     if (solution != null) {
-      System.out.println(solution.toString());
-      solution = solver.findSolution();
+      // System.out.println(solution.toString());
+      for (int i = 0; i < numberOfRows; ++i) {
+        for (int j = 0; j < paramLengths.length; ++j) {
+          System.out.print(" " + params[j][i].getValue());
+        }
+        System.out.println();
+      }
       break;
     }
   }
