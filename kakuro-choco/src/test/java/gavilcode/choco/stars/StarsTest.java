@@ -38,6 +38,6 @@ public void starsTest() {
   var gb = new GridBuilder();
   var grid = gb.gridFromString(stars1);
   stars1.forEach(System.out::println);
-  gb.draw();
+  gb.solve();
 }
 }

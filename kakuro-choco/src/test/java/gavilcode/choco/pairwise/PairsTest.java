@@ -1,9 +1,6 @@
 package gavilcode.choco.pairwise;
 
-import com.oracle.tools.packager.Platform;
-import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import java.util.List;
 import java.util.Random;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;

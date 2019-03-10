@@ -2,6 +2,8 @@ package gavilcode.choco.stars;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.chocosolver.solver.Model;
+import org.chocosolver.solver.variables.IntVar;
 
 public class GridBuilder {
 
@@ -40,7 +42,7 @@ public Cell[][] gridFromString(List<String> gridStrings) {
     var underRow = headerless.get(pos + 1).substring(1);
     for (int col = 0; col < numberOfColumns; ++col) {
       var cellUnderString = underRow.substring(col * 4, col * 4 + 4);
-      System.out.println(rowNumber + " " + col + " " + cellUnderString);
+//      System.out.println(rowNumber + " " + col + " " + cellUnderString);
       var cell = cells[rowNumber][col];
       if (cellUnderString.substring(0, 3).equals("   ")) {
         cell.bottom = cells[rowNumber + 1][col];
@@ -55,8 +57,16 @@ public void draw() {
   for (int row = 0; row < cells.length; ++row) {
     System.out.print("|");
     for (int col = 0; col < cells[0].length; ++col) {
-      System.out.print("   ");
-      if (cells[row][col].right == null) {
+      var cell = cells[row][col];
+      System.out.print(" ");
+      if (cell.intVar == null) {
+        System.out.print(" ");
+      }
+      else {
+        System.out.print(cell.intVar.getValue() == 1 ? "*" : " ");
+      }
+      System.out.print(" ");
+      if (cell.right == null) {
         System.out.print("|");
       }
       else {
@@ -74,6 +84,95 @@ public void draw() {
       }
     }
     System.out.println();
+  }
+}
+
+void constrain(Model model, IntVar[] vars, String operator, String relOp, int target) {
+  var accumulation = vars[0];
+  for (int i = 1; i < vars.length; ++i) {
+    var newSum = model.intVar(0, vars.length + 1);
+    model.arithm(accumulation, operator, vars[i], "=", newSum).post();
+    accumulation = newSum;
+  }
+  model.arithm(accumulation, relOp, target).post();
+}
+
+void constrain(Model model, IntVar[] vars, String operator, int target) {
+  constrain(model, vars, operator, "=", target);
+}
+
+void constrainRows(Model model) {
+  for (int row = 0; row < cells.length; ++row) {
+    var vars = new IntVar[cells[row].length];
+    for (int col = 0; col < cells[0].length; ++col) {
+      vars[col] = cells[row][col].intVar;
+    }
+    constrain(model, vars, "+", 2);
+  }
+}
+
+void constrainColumns(Model model) {
+  for (int col = 0; col < cells[0].length; ++col) {
+    var vars = new IntVar[cells.length];
+    for (int row = 0; row < cells.length; ++row) {
+      vars[row] = cells[row][col].intVar;
+    }
+    constrain(model, vars, "+", 2);
+  }
+}
+
+void constrainGroups() {
+
+}
+
+void constrainNeighboursCell(Model model, int row, int col) {
+//  System.out.println(" n " + row + " " + col);
+  var cell = cells[row][col];
+  for (int dx = -1; dx < 2; ++dx) {
+    for (int dy = -1; dy < 2; ++dy) {
+      var x = row + dx;
+      var y = col + dy;
+      if ((x >= 0) && (x < cells.length)
+              && (y >= 0) && (y < cells[0].length)) {
+        if ((x != row) || (y != col)) {
+          model.arithm(cell.intVar, "+", cells[x][y].intVar, "<", 2).post();
+        }
+//        System.out.print(" [" + x + ", " + y + "]");
+      }
+    }
+  }
+//  System.out.println();
+}
+
+void constrainNeighbours(Model model) {
+  for (int row = 0; row < cells.length; ++row) {
+    for (int col = 0; col < cells[0].length; ++col) {
+      constrainNeighboursCell(model, row, col);
+    }
+  }
+}
+
+public void solve() {
+  var model = new Model();
+  for (int row = 0; row < cells.length; ++row) {
+    for (int col = 0; col < cells[0].length; ++col) {
+      cells[row][col].intVar = model.intVar(0, 1); // 0 empty, 1 star
+    }
+  }
+  constrainRows(model);
+  constrainColumns(model);
+  constrainGroups();
+  constrainNeighbours(model);
+  var solver = model.getSolver();
+  solver.showStatistics();
+  solver.showDashboard();
+  solver.limitTime(10 * 60 * 1000);
+  var solution = solver.findSolution();
+  if (solver.isStopCriterionMet()) {
+    System.out.println("stop criterion met");
+  }
+  if (solution != null) {
+    draw();
   }
 }
 }
