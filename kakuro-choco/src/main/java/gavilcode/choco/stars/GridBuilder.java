@@ -1,9 +1,12 @@
 package gavilcode.choco.stars;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
+import static org.chocosolver.util.tools.ArrayUtils.toArray;
 
 public class GridBuilder {
 
@@ -121,8 +124,40 @@ void constrainColumns(Model model) {
   }
 }
 
-void constrainGroups() {
+void growGroup(Cell cell, Set<Cell> group) {
+  if ((cell == null) || (cell.group != null)) {
+    return;
+  }
+  group.add(cell);
+  cell.group = group;
+  if (cell.left != null) {
+    growGroup(cell.left, group);
+  }
+  if (cell.right != null) {
+    growGroup(cell.right, group);
+  }
+  if (cell.top != null) {
+    growGroup(cell.top, group);
+  }
+  if (cell.bottom != null) {
+    growGroup(cell.bottom, group);
+  }
+}
 
+void constrainGroups(Model model) {
+  var groups = new ArrayList<Set<Cell>>();
+  for (int row = 0; row < cells.length; ++row) {
+    for (int col = 0; col < cells[0].length; ++col) {
+      var cell = cells[row][col];
+      if (cell.group == null) {
+        var group = new HashSet<Cell>();
+        groups.add(group);
+        growGroup(cell, group);
+      }
+    }
+  }
+  System.out.println("groups " + groups.size());
+  groups.forEach(g -> constrain(model, g.stream().map(c -> c.intVar).toArray(IntVar[]::new), "+", 2));
 }
 
 void constrainNeighboursCell(Model model, int row, int col) {
@@ -161,7 +196,7 @@ public void solve() {
   }
   constrainRows(model);
   constrainColumns(model);
-  constrainGroups();
+  constrainGroups(model);
   constrainNeighbours(model);
   var solver = model.getSolver();
   solver.showStatistics();
