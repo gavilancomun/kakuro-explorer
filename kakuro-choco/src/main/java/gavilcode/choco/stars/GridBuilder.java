@@ -163,8 +163,8 @@ void constrainGroups(Model model) {
 void constrainNeighboursCell(Model model, int row, int col) {
 //  System.out.println(" n " + row + " " + col);
   var cell = cells[row][col];
-  for (int dx = -1; dx < 2; ++dx) {
-    for (int dy = -1; dy < 2; ++dy) {
+  for (int dx = -1; dx < 1; ++dx) {
+    for (int dy = -1; dy < 1; ++dy) {
       var x = row + dx;
       var y = col + dy;
       if ((x >= 0) && (x < cells.length)
