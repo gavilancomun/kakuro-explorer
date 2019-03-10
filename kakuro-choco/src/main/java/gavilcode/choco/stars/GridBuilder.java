@@ -169,7 +169,7 @@ void constrainNeighboursCell(Model model, int row, int col) {
       var y = col + dy;
       if ((x >= 0) && (x < cells.length)
               && (y >= 0) && (y < cells[0].length)) {
-        if ((x != row) || (y != col)) {
+        if ((dx != 0) || (dy != 0)) {
           model.arithm(cell.intVar, "+", cells[x][y].intVar, "<", 2).post();
         }
 //        System.out.print(" [" + x + ", " + y + "]");
