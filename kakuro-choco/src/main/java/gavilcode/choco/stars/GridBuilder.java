@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import static java.util.Objects.isNull;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
@@ -73,29 +73,19 @@ public void draw() {
     print("|");
     for (var cell : row) {
       print(" ");
-      if (cell.intVar == null) {
+      if (isNull(cell.intVar)) {
         print(" ");
       }
       else {
         print(cell.intVar.getValue() == 1 ? "*" : " ");
       }
       print(" ");
-      if (cell.right == null) {
-        print("|");
-      }
-      else {
-        print(" ");
-      }
+      print(isNull(cell.right) ? "|" : " ");
     }
     println();
     print("|");
     for (var cell : row) {
-      if (cell.bottom == null) {
-        print("---");
-      }
-      else {
-        print("   ");
-      }
+      print(isNull(cell.bottom) ? "---" : "   ");
       print(".");
     }
     println();
@@ -136,9 +126,9 @@ void constrainColumns(Model model) {
   }
 }
 
-void growGroup(Set<Cell> group, Cell... cells) {
+void growGroup(Collection<Cell> group, Cell... cells) {
   for (var cell : cells) {
-    if ((cell != null) && !cell.inGroup) {
+    if (!isNull(cell) && !cell.inGroup) {
       cell.inGroup = true;
       group.add(cell);
       growGroup(group, cell.left, cell.right, cell.top, cell.bottom);
@@ -151,7 +141,7 @@ IntVar[] getIntVars(Collection<Cell> coll) {
 }
 
 void constrainGroups(Model model) {
-  var groups = new ArrayList<Set<Cell>>();
+  var groups = new ArrayList<Collection<Cell>>();
   for (var row : cells) {
     for (var cell : row) {
       if (!cell.inGroup) {
