@@ -1,10 +1,12 @@
 package gavilcode.choco.stars;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import static java.util.Objects.isNull;
+import java.util.stream.Stream;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
@@ -92,7 +94,7 @@ public void draw() {
   }
 }
 
-void constrain(Model model, IntVar[] vars, String operator, String relOp, int target) {
+void arithm(Model model, IntVar[] vars, String operator, String relOp, int target) {
   var accumulation = vars[0];
   for (int i = 1; i < vars.length; ++i) {
     var newSum = model.intVar(0, vars.length + 1);
@@ -102,17 +104,14 @@ void constrain(Model model, IntVar[] vars, String operator, String relOp, int ta
   model.arithm(accumulation, relOp, target).post();
 }
 
-void constrain(Model model, IntVar[] vars, String operator, int target) {
-  constrain(model, vars, operator, "=", target);
+void arithm(Model model, IntVar[] vars, String operator, int target) {
+    arithm(model, vars, operator, "=", target);
 }
 
 void constrainRows(Model model) {
-  for (int row = 0; row < cells.length; ++row) {
-    var vars = new IntVar[cells[row].length];
-    for (int col = 0; col < cells[0].length; ++col) {
-      vars[col] = cells[row][col].intVar;
-    }
-    constrain(model, vars, "+", 2);
+  for (var row : cells) {
+    var vars = getIntVars(row);
+    arithm(model, vars, "+", 2);
   }
 }
 
@@ -122,7 +121,7 @@ void constrainColumns(Model model) {
     for (int row = 0; row < cells.length; ++row) {
       vars[row] = cells[row][col].intVar;
     }
-    constrain(model, vars, "+", 2);
+    arithm(model, vars, "+", 2);
   }
 }
 
@@ -136,8 +135,16 @@ void growGroup(Collection<Cell> group, Cell... cells) {
   }
 }
 
+IntVar[] getIntVars(Stream<Cell> cells) {
+  return cells.map(c -> c.intVar).toArray(IntVar[]::new);
+}
+
+IntVar[] getIntVars(Cell[] coll) {
+  return getIntVars(Arrays.stream(coll));
+}
+
 IntVar[] getIntVars(Collection<Cell> coll) {
-  return coll.stream().map(c -> c.intVar).toArray(IntVar[]::new);
+  return getIntVars(coll.stream());
 }
 
 void constrainGroups(Model model) {
@@ -151,33 +158,32 @@ void constrainGroups(Model model) {
       }
     }
   }
-  println("groups " + groups.size());
-  groups.forEach(g -> constrain(model, getIntVars(g), "+", 2));
+  groups.forEach(g -> arithm(model, getIntVars(g), "+", 2));
 }
 
-void constrainNeighboursCell(Model model, int row, int col) {
-//  println(" n " + row + " " + col);
-  var cell = cells[row][col];
-  for (int dx = -1; dx < 1; ++dx) {
-    for (int dy = -1; dy < 1; ++dy) {
-      var x = row + dx;
-      var y = col + dy;
-      if ((x >= 0) && (x < cells.length)
-              && (y >= 0) && (y < cells[0].length)) {
-        if ((dx != 0) || (dy != 0)) {
-          model.arithm(cell.intVar, "+", cells[x][y].intVar, "<", 2).post();
-        }
-//        print(" [" + x + ", " + y + "]");
-      }
-    }
+private void constrainNeighbour(Model model, Cell cell, int x, int y) {
+  if ((x >= 0) && (x < cells.length)
+          && (y >= 0) && (y < cells[x].length)) {
+    var neighbour = cells[x][y];
+    model.arithm(cell.intVar, "+", neighbour.intVar, "<", 2).post();
   }
-//  println();
 }
+// Only need to do:
+//
+// XX.
+// Xo.
+// ...
+//
+// for every cell to cover the whole grid
+//
 
 void constrainNeighbours(Model model) {
   for (int row = 0; row < cells.length; ++row) {
     for (int col = 0; col < cells[0].length; ++col) {
-      constrainNeighboursCell(model, row, col);
+        var cell = cells[row][col];
+        constrainNeighbour(model, cell, row - 1, col - 1);
+        constrainNeighbour(model, cell, row - 1, col);
+        constrainNeighbour(model, cell, row, col - 1);
     }
   }
 }
