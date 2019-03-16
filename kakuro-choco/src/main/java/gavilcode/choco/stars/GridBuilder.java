@@ -71,6 +71,11 @@ void println() {
 }
 
 public void draw() {
+  print("-");
+  for (var cell : cells[0]) {
+    print("----");
+  }
+  println();
   for (var row : cells) {
     print("|");
     for (var cell : row) {
@@ -105,7 +110,7 @@ void arithm(Model model, IntVar[] vars, String operator, String relOp, int targe
 }
 
 void arithm(Model model, IntVar[] vars, String operator, int target) {
-    arithm(model, vars, operator, "=", target);
+  arithm(model, vars, operator, "=", target);
 }
 
 void constrainRows(Model model) {
@@ -180,10 +185,10 @@ private void constrainNeighbour(Model model, Cell cell, int x, int y) {
 void constrainNeighbours(Model model) {
   for (int row = 0; row < cells.length; ++row) {
     for (int col = 0; col < cells[0].length; ++col) {
-        var cell = cells[row][col];
-        constrainNeighbour(model, cell, row - 1, col - 1);
-        constrainNeighbour(model, cell, row - 1, col);
-        constrainNeighbour(model, cell, row, col - 1);
+      var cell = cells[row][col];
+      constrainNeighbour(model, cell, row - 1, col - 1);
+      constrainNeighbour(model, cell, row - 1, col);
+      constrainNeighbour(model, cell, row, col - 1);
     }
   }
 }

@@ -48,8 +48,7 @@ public String toString() {
 }
 
 @Override
-public int compareTo(PairKey obj) {
-  var other = (PairKey) obj;
+public int compareTo(PairKey other) {
   if (Objects.equals(Property1Id, other.Property1Id)) {
     if (Objects.equals(Property2Id, other.Property2Id)) {
       if (Property1Value.equals(other.Property1Value)) {
