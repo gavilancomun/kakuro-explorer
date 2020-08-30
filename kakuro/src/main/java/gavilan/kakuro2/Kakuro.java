@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.joining;
@@ -63,7 +62,7 @@ public static <T> boolean allDifferent(Collection<T> nums) {
 }
 
 public static <T> List<T> conj(List<T> items, T item) {
-  List<T> result = new ArrayList<>(items);
+  var result = new ArrayList<T>(items);
   result.add(item);
   return result;
 }
@@ -81,18 +80,20 @@ public static <T> List<List<T>> product(List<Set<T>> colls) {
               .map(Arrays::asList)
               .collect(toList());
     default:
-      Collection<T> head = colls.get(0);
-      List<Set<T>> tail = colls.stream().skip(1).collect(toList());
-      List<List<T>> tailProd = product(tail);
+      var head = colls.get(0);
+      var tail = colls.stream().skip(1).collect(toList());
+      var tailProd = product(tail);
       return head.stream()
               .flatMap(x -> tailProd.stream()
                       .map(ys -> concatLists(asList(x), ys)))
               .collect(toList());
+
+
   }
 }
 
 public static List<List<Integer>> permuteAll(List<ValueCell> vs, int target) {
-  List<Set<Integer>> values = vs.stream()
+  var values = vs.stream()
           .map(ValueCell::getValues)
           .collect(toList());
   return product(values).stream()
@@ -118,7 +119,7 @@ public static <T> List<List<T>> transpose(List<List<T>> m) {
 }
 
 public static <T> List<T> takeWhile(Predicate<T> f, List<T> coll) {
-  List<T> result = new ArrayList<>();
+  var result = new ArrayList<T>();
   for (T item : coll) {
     if (!f.test(item)) {
       return result;
@@ -141,9 +142,9 @@ public static <T> List<List<T>> partitionBy(Predicate<T> f, List<T> coll) {
     return Collections.emptyList();
   }
   else {
-    T head = coll.get(0);
+    var head = coll.get(0);
     boolean fx = f.test(head);
-    List<T> group = takeWhile(y -> fx == f.test(y), coll);
+    var group = takeWhile(y -> fx == f.test(y), coll);
     return concatLists(asList(group), partitionBy(f, drop(group.size(), coll)));
   }
 }
@@ -167,7 +168,7 @@ public static <T> T last(List<T> coll) {
 
 public static List<ValueCell> solveStep(List<ValueCell> cells, int total) {
   int finalIndex = cells.size() - 1;
-  List<List<Integer>> perms = permuteAll(cells, total).stream()
+  var perms = permuteAll(cells, total).stream()
           .filter(v -> isPossible(last(cells), v.get(finalIndex)))
           .filter(Kakuro::allDifferent)
           .collect(toList());
@@ -188,15 +189,15 @@ public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line
 }
 
 public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
-  List<Cell> notValueCells = pair.left;
+  var notValueCells = pair.left;
   if (pair.right.isEmpty()) {
     return notValueCells;
   }
   else {
-    List<ValueCell> valueCells = pair.right.stream()
+    var valueCells = pair.right.stream()
             .map(cell -> (ValueCell) cell)
             .collect(toList());
-    List<ValueCell> newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
+    var newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));
     return concatLists(notValueCells, newValueCells);
   }
 }
@@ -217,10 +218,10 @@ public static List<Cell> solveColumn(List<Cell> column) {
 }
 
 public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
-  List<List<Cell>> rowsDone = grid.stream()
+  var rowsDone = grid.stream()
           .map(Kakuro::solveRow)
           .collect(toList());
-  List<List<Cell>> colsDone = transpose(rowsDone).stream()
+  var colsDone = transpose(rowsDone).stream()
           .map(Kakuro::solveColumn)
           .collect(toList());
   return transpose(colsDone);
@@ -237,7 +238,7 @@ public static boolean gridEquals(List<List<Cell>> g1, List<List<Cell>> g2) {
 
 public static List<List<Cell>> solver(List<List<Cell>> grid) {
   System.out.println(drawGrid(grid));
-  List<List<Cell>> g = solveGrid(grid);
+  var g = solveGrid(grid);
   if (gridEquals(g, grid)) {
     return g;
   }

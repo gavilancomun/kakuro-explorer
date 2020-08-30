@@ -71,7 +71,7 @@ public void testDrawRow() {
   assertEquals("    3\\ 4   123456789 12.......    4\\--     -----     --\\ 5       4         1    \n", result);
 }
 
-public static <T> Set<T> asSet(T... items) {
+public static Set<Integer> asSet(Integer... items) {
   return new TreeSet<>(asList(items));
 }
 
