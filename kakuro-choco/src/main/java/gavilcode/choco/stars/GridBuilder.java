@@ -25,7 +25,7 @@ private void initCells(int numberOfRows, int numberOfColumns) {
 
 public Cell[][] gridFromString(List<String> gridStrings) {
   var headerless = new ArrayList<String>(gridStrings);
-  var removeHeader = headerless.remove(0);
+  headerless.remove(0);
   var numberOfRows = headerless.size() / 2;
   var numberOfColumns = (headerless.get(0).length() - 1) / 4;
   println("r " + numberOfRows + " c " + numberOfColumns);
@@ -35,9 +35,7 @@ public Cell[][] gridFromString(List<String> gridStrings) {
     var cellRow = headerless.get(pos);
     cellRow = cellRow.substring(1); // remove left wall
     for (int col = 0; col < numberOfColumns; ++col) {
-//      println(rowNumber + " " + col + " [" + cellRow + "]");
       var cellString = cellRow.substring(col * 4, col * 4 + 4);
-//      println("[" + cellString + "]");
       var cell = cells[rowNumber][col];
       if (cellString.substring(3, 4).equals(" ")) {
         cell.right = cells[rowNumber][col + 1];
@@ -47,7 +45,6 @@ public Cell[][] gridFromString(List<String> gridStrings) {
     var underRow = headerless.get(pos + 1).substring(1);
     for (int col = 0; col < numberOfColumns; ++col) {
       var cellUnderString = underRow.substring(col * 4, col * 4 + 4);
-//      println(rowNumber + " " + col + " " + cellUnderString);
       var cell = cells[rowNumber][col];
       if (cellUnderString.substring(0, 3).equals("   ")) {
         cell.bottom = cells[rowNumber + 1][col];
