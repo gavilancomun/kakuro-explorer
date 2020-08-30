@@ -1,17 +1,6 @@
 package gavilan.kakuro.cell;
 
-public class DownCell implements Cell, Down {
-
-int total;
-
-public DownCell(int total) {
-  this.total = total;
-}
-
-@Override
-public int getDownTotal() {
-  return total;
-}
+public record DownCell(int down) implements Cell, Down {
 
 @Override
 public void accept(Visitor visitor) {

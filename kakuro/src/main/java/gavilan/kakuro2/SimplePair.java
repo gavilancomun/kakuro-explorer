@@ -1,9 +1,6 @@
 package gavilan.kakuro2;
 
-public class SimplePair<T> extends Pair<T, T> {
+public record SimplePair<T>(T left, T right) {
 
-public SimplePair(T left, T right) {
-  super(left, right);
-}
 
 }

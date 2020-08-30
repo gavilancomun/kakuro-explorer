@@ -73,13 +73,15 @@ public static <T> List<T> concatLists(List<? extends T> a, List<? extends T> b) 
 
 public static <T> List<List<T>> product(List<Set<T>> colls) {
   switch (colls.size()) {
-    case 0:
+    case 0 -> {
       return Collections.emptyList();
-    case 1:
+    }
+    case 1 -> {
       return colls.get(0).stream()
               .map(Arrays::asList)
               .collect(toList());
-    default:
+    }
+    default -> {
       var head = colls.get(0);
       var tail = colls.stream().skip(1).collect(toList());
       var tailProd = product(tail);
@@ -87,6 +89,7 @@ public static <T> List<List<T>> product(List<Set<T>> colls) {
               .flatMap(x -> tailProd.stream()
                       .map(ys -> concatLists(asList(x), ys)))
               .collect(toList());
+    }
 
 
   }
@@ -189,12 +192,12 @@ public static List<SimplePair<List<Cell>>> pairTargetsWithValues(List<Cell> line
 }
 
 public static List<Cell> solvePair(Function<Cell, Integer> f, SimplePair<List<Cell>> pair) {
-  var notValueCells = pair.left;
-  if (pair.right.isEmpty()) {
+  var notValueCells = pair.left();
+  if (pair.right().isEmpty()) {
     return notValueCells;
   }
   else {
-    var valueCells = pair.right.stream()
+    var valueCells = pair.right().stream()
             .map(cell -> (ValueCell) cell)
             .collect(toList());
     var newValueCells = solveStep(valueCells, f.apply(last(notValueCells)));

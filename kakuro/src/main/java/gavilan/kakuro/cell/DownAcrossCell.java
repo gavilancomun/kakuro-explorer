@@ -1,26 +1,7 @@
 
 package gavilan.kakuro.cell;
 
-
-public class DownAcrossCell implements Cell, Across, Down {
-
-int down;
-int across;
-
-public DownAcrossCell(int down, int across) {
-  this.down = down;
-  this.across = across;
-}
-
-@Override
-public int getAcrossTotal() {
-  return across;
-}
-
-@Override
-public int getDownTotal() {
-  return down;
-}
+public record DownAcrossCell(int down, int across) implements Cell, Across, Down {
 
 @Override
 public void accept(Visitor visitor) {

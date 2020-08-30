@@ -8,7 +8,7 @@ public class Drawer implements Visitor {
 private String result;
 
 public static String draw(Cell cell) {
-  Drawer drawer = new Drawer();
+  var drawer = new Drawer();
   cell.accept(drawer);
   return drawer.result;
 }
@@ -35,17 +35,17 @@ public void visitValue(ValueCell cell) {
 
 @Override
 public void visitDown(DownCell cell) {
-  result = String.format("   %2d\\--  ", cell.total);
+  result = String.format("   %2d\\--  ", cell.down());
 }
 
 @Override
 public void visitAcross(AcrossCell cell) {
-  result = String.format("   --\\%-2d  ", cell.total);
+  result = String.format("   --\\%-2d  ", cell.across());
 }
 
 @Override
 public void visitDownAcross(DownAcrossCell cell) {
-  result = String.format("   %2d\\%-2d  ", cell.down, cell.across);
+  result = String.format("   %2d\\%-2d  ", cell.down(), cell.across());
 }
 
 }

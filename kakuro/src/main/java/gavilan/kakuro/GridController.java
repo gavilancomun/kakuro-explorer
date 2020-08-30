@@ -54,7 +54,7 @@ public void createAcrossSums() {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       row.get(c).filter(cell -> cell instanceof Across)
               .map(cell -> (Across) cell)
-              .ifPresent(cell -> sums.add(new Sum(cell.getAcrossTotal(),
+              .ifPresent(cell -> sums.add(new Sum(cell.across(),
                       row.stream()
                       .skip(c + 1)
                       .collect(new WhileValueCell()))));
@@ -67,7 +67,7 @@ public void createDownSums() {
     IntStream.range(0, rows.get(0).size()).forEach(c -> {
       rows.get(r).get(c).filter(cell -> cell instanceof Down)
               .map(cell -> (Down) cell)
-              .ifPresent(cell -> sums.add(new Sum(cell.getDownTotal(),
+              .ifPresent(cell -> sums.add(new Sum(cell.down(),
                       IntStream.range(r + 1, rows.size())
                       .mapToObj(pos -> rows.get(pos).get(c).orElse(new EmptyCell()))
                       .collect(new WhileValueCell()))));
