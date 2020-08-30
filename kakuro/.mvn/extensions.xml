@@ -1,7 +1,8 @@
 <extensions>
-    <extension>
+<!--     <extension>
         <groupId>com.gradle</groupId>
         <artifactId>gradle-enterprise-maven-extension</artifactId>
         <version>1.6.3</version>
     </extension>
-</extensions>
+ -->
+ </extensions>
