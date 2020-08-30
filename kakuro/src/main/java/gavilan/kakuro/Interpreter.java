@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -17,7 +17,7 @@ public class Interpreter {
 
 public static Optional<CreateModelListener> interpretRule(Reader r, Function<KakuroParser, ParseTree> rule) {
   try {
-    var input = new ANTLRInputStream(r);
+    var input = CharStreams.fromReader(r);
     var lexer = new KakuroLexer(input);
     var tokens = new CommonTokenStream(lexer);
     var parser = new KakuroParser(tokens);
