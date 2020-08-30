@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.flowlikeariver</groupId>
+  <groupId>gavq</groupId>
   <artifactId>kakuro-explorer</artifactId>
   <version>1.0.0</version>
 
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4-runtime</artifactId>
-      <version>4.5</version>
+      <version>4.8-1</version>
     </dependency>
     
     <dependency>
@@ -36,7 +36,7 @@
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.5.3</version>
+        <version>4.8-1</version>
         <executions>
           <execution>
             <goals>

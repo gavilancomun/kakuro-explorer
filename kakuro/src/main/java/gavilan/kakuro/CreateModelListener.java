@@ -1,7 +1,7 @@
 package gavilan.kakuro;
 
-import com.flowlikeariver.kakuro.KakuroBaseListener;
-import com.flowlikeariver.kakuro.KakuroParser;
+import gavq.kakuro.KakuroBaseListener;
+import gavq.kakuro.KakuroParser;
 
 public class CreateModelListener extends KakuroBaseListener {
 

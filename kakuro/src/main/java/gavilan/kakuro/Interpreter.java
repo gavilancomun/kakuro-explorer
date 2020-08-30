@@ -1,7 +1,7 @@
 package gavilan.kakuro;
 
-import com.flowlikeariver.kakuro.KakuroLexer;
-import com.flowlikeariver.kakuro.KakuroParser;
+import gavq.kakuro.KakuroLexer;
+import gavq.kakuro.KakuroParser;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Optional;
@@ -17,13 +17,13 @@ public class Interpreter {
 
 public static Optional<CreateModelListener> interpretRule(Reader r, Function<KakuroParser, ParseTree> rule) {
   try {
-    ANTLRInputStream input = new ANTLRInputStream(r);
-    KakuroLexer lexer = new KakuroLexer(input);
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    KakuroParser parser = new KakuroParser(tokens);
-    ParseTree tree = rule.apply(parser);
-    ParseTreeWalker walker = new ParseTreeWalker();
-    CreateModelListener modelListener = new CreateModelListener();
+    var input = new ANTLRInputStream(r);
+    var lexer = new KakuroLexer(input);
+    var tokens = new CommonTokenStream(lexer);
+    var parser = new KakuroParser(tokens);
+    var tree = rule.apply(parser);
+    var walker = new ParseTreeWalker();
+    var modelListener = new CreateModelListener();
     walker.walk(modelListener, tree);
     return Optional.of(modelListener);
   }
