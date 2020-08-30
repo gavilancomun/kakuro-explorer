@@ -7,3 +7,10 @@
 /kakuro/target/
 /kakuro-jacop/target/
 /kakuro-choco/target/
+.gradle-enterprise
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

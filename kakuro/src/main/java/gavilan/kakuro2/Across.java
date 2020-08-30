@@ -2,6 +2,6 @@ package gavilan.kakuro2;
 
 public interface Across {
 
-int getAcross();
+int across();
 
 }

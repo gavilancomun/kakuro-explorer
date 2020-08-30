@@ -19,6 +19,7 @@ import static gavilan.kakuro2.Kakuro.takeWhile;
 import static gavilan.kakuro2.Kakuro.transpose;
 import static gavilan.kakuro2.Kakuro.v;
 import static java.util.Arrays.asList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import static java.util.stream.Collectors.toList;
@@ -212,7 +213,7 @@ public void testSolvePair() {
   var line = asList(da(3, 4), v(), v(), d(4), e(), a(4), v(), v());
   var pairs = Kakuro.pairTargetsWithValues(line);
   var pair = pairs.get(0);
-  var result = solvePair(cell -> ((Down) cell).getDown(), pair);
+  var result = solvePair(cell -> ((Down) cell).down(), pair);
   assertEquals(3, result.size());
   assertEquals(v(1, 2), result.get(1));
   assertEquals(v(1, 2), result.get(2));
@@ -221,7 +222,7 @@ public void testSolvePair() {
 @Test
 public void testSolveLine() {
   var line = asList(da(3, 4), v(), v(), d(4), e(), a(5), v(), v());
-  var result = Kakuro.solveLine(line, x -> ((Across) x).getAcross());
+  var result = Kakuro.solveLine(line, x -> ((Across) x).across());
   assertEquals(8, result.size());
   assertEquals(v(1, 3), result.get(1));
   assertEquals(v(1, 3), result.get(2));
@@ -245,14 +246,14 @@ public void testSolveCol() {
 
 @Test
 public void testGridEquals() {
-  var grid1 = asList(
+  List<List<Cell>> grid1 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
           asList(e(), da(17, 23), v(), v(), v(), d(14)),
           asList(a(9), v(), v(), a(6), v(), v()),
           asList(a(15), v(), v(), a(12), v(), v()));
-  var grid2 = asList(
+  List<List<Cell>> grid2 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
@@ -264,14 +265,14 @@ public void testGridEquals() {
 
 @Test
 public void testGridEquals2() {
-  var grid1 = asList(
+  List<List<Cell>> grid1 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
           asList(e(), da(17, 23), v(), v(), v(), d(14)),
           asList(a(9), v(), v(), a(6), v(), v()),
           asList(a(15), v(), v(), a(12), v(), v()));
-  var grid2 = asList(
+  List<List<Cell>> grid2 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
@@ -282,14 +283,14 @@ public void testGridEquals2() {
 
 @Test
 public void testGridEquals3() {
-  var grid1 = asList(
+  List<List<Cell>> grid1 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
           asList(e(), da(17, 23), v(), v(), v(), d(14)),
           asList(a(9), v(), v(), a(6), v(), v()),
           asList(a(15), v(), v(), a(12), v(), v()));
-  var grid2 = asList(
+  List<List<Cell>> grid2 = asList(
           asList(e(), d(4), d(22), e(), d(16)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),
@@ -301,7 +302,7 @@ public void testGridEquals3() {
 
 @Test
 public void testSolver() {
-  var grid1 = asList(
+  List<List<Cell>> grid1 = asList(
           asList(e(), d(4), d(22), e(), d(16), d(3)),
           asList(a(3), v(), v(), da(16, 6), v(), v()),
           asList(a(18), v(), v(), v(), v(), v()),

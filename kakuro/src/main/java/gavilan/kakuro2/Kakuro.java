@@ -213,11 +213,11 @@ public static List<Cell> solveLine(List<Cell> line, Function<Cell, Integer> f) {
 }
 
 public static List<Cell> solveRow(List<Cell> row) {
-  return solveLine(row, x -> ((Across) x).getAcross());
+  return solveLine(row, x -> ((Across) x).across());
 }
 
 public static List<Cell> solveColumn(List<Cell> column) {
-  return solveLine(column, x -> ((Down) x).getDown());
+  return solveLine(column, x -> ((Down) x).down());
 }
 
 public static List<List<Cell>> solveGrid(List<List<Cell>> grid) {
