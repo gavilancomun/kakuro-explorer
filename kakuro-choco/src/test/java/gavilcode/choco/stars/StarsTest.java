@@ -27,12 +27,6 @@ List<String> stars1 = asList(
         "|               |           |       |",
         "-------------------------------------");
 
-//(deftest stars-test
-//  (let [grid (sb/grid-from-string stars1)]
-//    (->> grid
-//         stars/solve-draw
-//pp/pprint)))
-
 @Test
 public void starsTest() {
   var gb = new GridBuilder();

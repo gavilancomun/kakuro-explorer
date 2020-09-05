@@ -170,14 +170,6 @@ private void constrainNeighbour(Model model, Cell cell, int x, int y) {
     model.arithm(cell.intVar, "+", neighbour.intVar, "<", 2).post();
   }
 }
-// Only need to do:
-//
-// XX.
-// Xo.
-// ...
-//
-// for every cell to cover the whole grid
-//
 
 void constrainNeighbours(Model model) {
   for (int row = 0; row < cells.length; ++row) {
@@ -185,7 +177,10 @@ void constrainNeighbours(Model model) {
       var cell = cells[row][col];
       constrainNeighbour(model, cell, row - 1, col - 1);
       constrainNeighbour(model, cell, row - 1, col);
+      constrainNeighbour(model, cell, row - 1, col + 1);
+      
       constrainNeighbour(model, cell, row, col - 1);
+      constrainNeighbour(model, cell, row, col + 1);
     }
   }
 }
